@@ -1,0 +1,19 @@
+{
+  "name": "rabbit-grid",
+  "version": "1.0.0",
+  "description": "A javascript practice project",
+  "main": "index.js",
+  "scripts": {
+    "test": "test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/JohnM89/rabbit-dash.git"
+  },
+  "author": "JM89",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/JohnM89/rabbit-dash/issues"
+  },
+  "homepage": "https://github.com/JohnM89/rabbit-dash#readme"
+}
