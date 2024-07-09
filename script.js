@@ -15,12 +15,12 @@ class Canvas {
 }
 
 //test class
-class Rectangle extends Canvas{
+class Square extends Canvas{
 
 
-    drawRectangle(){
-    this.ctx.fillStyle = "green";
-    this.ctx.fillRect(10, 10, 100, 100);
+    drawSquare(x , y, colour ){
+    this.ctx.fillStyle = colour;
+    this.ctx.fillRect(x , y , 10 , 10);
 }
 
 
@@ -28,17 +28,40 @@ class Rectangle extends Canvas{
 // draw a 10 x 10 grid
 class GameTiles extends Canvas{
 
-    drawGrid(){
+    drawGrid(x , y, colour ){
+    this.ctx.fillStyle = colour;
+    this.ctx.fillRect(x , y , 10 , 10);
 
-
-    }
+}
 }
 
 
 let newCanvas = new Canvas("#canvasId")
-let rectangle1 = new Rectangle("#canvasId")
-rectangle1.drawRectangle()
+let square1 = new Square("#canvasId")
+let newGame1 = new GameTiles('#canvasId')
+square1.drawSquare()
+square1.drawSquare(10, 0, 'green' )
 
 
+
+
+// temp setup 
+
+const gameTiles = []
+for(let x = 0; x < 10; x++){
+    for(let y = 0; y < 10; y++){
+        gameTiles.push([y* 10, x * 10])
+    }   
+}
+for(let i = 0; i < gameTiles.length; i++){
+    if(i % 2 === 0){
+        gameTiles[i].push("White")
+    } else {
+       gameTiles[i].push("Green")  
+    }
+}
+
+let tileObj =[]
+    gameTiles.forEach(tile => square1.drawSquare(tile.toString()))
 
 
