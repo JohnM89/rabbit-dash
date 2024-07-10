@@ -73,6 +73,7 @@ class GameTiles extends Canvas {
 let newCanvas = new Canvas("#canvasId")
 let square1 = new Square("#canvasId")
 let newGame1 = new GameTiles('#canvasId')
+
 square1.drawSquare()
 square1.drawSquare(10, 0, 'green' )
 
@@ -102,25 +103,7 @@ for(let i = 0; i < gameTiles.length; i++){
         gameTiles[i].push("Green")
     }
 }
-//     for(let value of gameTiles){
-//  if (value < 10 && value % 2 === 0){
-//             gameTiles[i].push("White")
-//     } else if (value < 10 && value % 2 !== 0){
-//        gameTiles[i].push("Green")  
-//     } else if (value > 10 && value / 10 % 2 === 0){
-//         gameTiles[i].push("White")
-//     } else if (value > 10 && value / 10 % 2 !== 0){
-//         gameTiles[i].push("Green") }
-//  }       
-
-// for(let i = 0; i < gameTiles.length; i++){
-//     for(let value of gameTiles){
-//         let param;
-//         param += value
-//         square1.drawSquare(param)
-//     }
-// }
-
+let rabbit = gameTiles[0]
 //append Red Tiles
 //TODO
 //randomization needs to be better spaced 
@@ -139,10 +122,11 @@ function redTiles(gameTiles) {
 gameTiles.forEach(tiles => square1.drawSquare(...tiles))
 //Call redTiles filter
 redTiles(gameTiles);
+gameTiles[0][2] = "Blue"
 //Draw map with redTiles
 gameTiles.forEach(tiles => square1.drawSquare(...tiles))
 
-// greenTiles(gameTiles)
+
 //problem was i need the spread operator, i was passing the entire array as a single argument it needs to be "spread" across the 3 expected arguments
 // could have also selected each subarray tiles[0] tiles[1]
 //works but its a checkerboard I want

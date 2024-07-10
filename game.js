@@ -35,9 +35,7 @@ for(let i = 0; i < gameTiles.length; i++){
 }
 console.log(gameTiles)
 // map 2d array to 3d space
-const gameMap = {
-    
-}
+
 // for(let position of gameTiles){
 //     position = {
 //         x: position++,
@@ -68,13 +66,14 @@ const gameMap = {
 
 
 
-const greenTiles = (gameTiles) => {
+function redTiles(gameTiles) {
     for(let i = 0; i < gameTiles.length; i++){
         let min = 0;
         let max = 10;
         if(Math.floor(Math.random() * (max - min + 1)) + min === 3){
-            gameTiles[i][2].replace(/Green|White/g, "Red")
+        gameTiles[i][2] = "Red"
         }
+        // console.log(gameTiles)
     }
 }
 
