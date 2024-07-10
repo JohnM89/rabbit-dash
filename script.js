@@ -26,13 +26,29 @@ class Square extends Canvas{
 
 }
 // draw a 10 x 10 grid
-class GameTiles extends Canvas{
+class GameTiles extends Canvas {
 
-    drawGrid(x , y, colour ){
-    this.ctx.fillStyle = colour;
-    this.ctx.fillRect(x , y , 10 , 10);
+    drawGrid(x, y, colour) {
+        this.ctx.fillStyle = colour;
+        this.ctx.fillRect(x, y, 10, 10);
 
-}
+    }
+    static generateTiles() {
+        const gameTiles = []
+        for (let x = 0; x < 10; x++) {
+            for (let y = 0; y < 10; y++) {
+                gameTiles.push([y * 10, x * 10])
+            }
+        }
+        for (let i = 0; i < gameTiles.length; i++) {
+            if (i % 2 === 0) {
+                gameTiles[i].push("White")
+            } else {
+                gameTiles[i].push("Green")
+            }
+        }
+        return gameTiles
+    }
 }
 
 
@@ -53,15 +69,43 @@ for(let x = 0; x < 10; x++){
         gameTiles.push([y* 10, x * 10])
     }   
 }
+// DIVIDE BY 20 MAYBE AND USE MATH.FLOOR TO ROUND? NOPE LOL
 for(let i = 0; i < gameTiles.length; i++){
-    if(i % 2 === 0){
+
+
+// got it checkerboard!
+    if(Math.floor(i /10) % 2 === 0 && i % 2 === 0){
         gameTiles[i].push("White")
-    } else {
+    } else if (Math.floor(i /10) % 2 === 0 && i % 2 !== 0){
        gameTiles[i].push("Green")  
+    } else if (Math.floor(i /10) % 2 !== 0 && i % 2 !== 0){
+            gameTiles[i].push("White")
+    } else if(Math.floor(i /10) % 2 !== 0 && i % 2 === 0){
+        gameTiles[i].push("Green")
     }
 }
+//     for(let value of gameTiles){
+//  if (value < 10 && value % 2 === 0){
+//             gameTiles[i].push("White")
+//     } else if (value < 10 && value % 2 !== 0){
+//        gameTiles[i].push("Green")  
+//     } else if (value > 10 && value / 10 % 2 === 0){
+//         gameTiles[i].push("White")
+//     } else if (value > 10 && value / 10 % 2 !== 0){
+//         gameTiles[i].push("Green") }
+//  }       
 
-let tileObj =[]
-    gameTiles.forEach(tile => square1.drawSquare(tile.toString()))
+for(let i = 0; i < gameTiles.length; i++){
+    for(let value of gameTiles){
+        let param;
+        param += value
+        square1.drawSquare(param)
+    }
+}
+//problem was i need the spread operator, i was passing the entire array as a single argument it needs to be "spread" across the 3 expected arguments
+// could have also selected each subarray tiles[0] tiles[1]
+//works but its a checkerboard I want
+// need to iterate over the array in a way that checks the tens columns as well as the 1s for equal or odd 
+gameTiles.forEach(tiles => square1.drawSquare(...tiles))
 
 

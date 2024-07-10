@@ -20,10 +20,17 @@ for(let x = 0; x < 10; x++){
     }   
 }
 for(let i = 0; i < gameTiles.length; i++){
-    if(i % 2 === 0){
-        gameTiles[i].push("white")
-    } else {
-       gameTiles[i].push("green")  
+
+
+// got it checkerboard!
+    if(Math.floor(i /10) % 2 === 0 && i % 2 === 0){
+        gameTiles[i].push("White")
+    } else if (Math.floor(i /10) % 2 === 0 && i % 2 !== 0){
+       gameTiles[i].push("Green")  
+    } else if (Math.floor(i /10) % 2 !== 0 && i % 2 !== 0){
+            gameTiles[i].push("White")
+    } else if(Math.floor(i /10) % 2 !== 0 && i % 2 === 0){
+        gameTiles[i].push("Green")
     }
 }
 console.log(gameTiles)
@@ -62,7 +69,7 @@ const gameMap = {
 
 
 const greenTiles = (gameTiles) => {
-
+return gameTiles.splice(tile => )
 }
 
 // create Rabbit object 
