@@ -33,6 +33,8 @@ class GameTiles extends Canvas {
         this.ctx.fillRect(x, y, 10, 10);
 
     }
+
+    
     static generateTiles() {
         const gameTiles = []
         for (let x = 0; x < 10; x++) {
@@ -102,6 +104,19 @@ for(let i = 0; i < gameTiles.length; i++){
         square1.drawSquare(param)
     }
 }
+
+
+const greenTiles = (gameTiles) => {
+    for(let i = 0; i < gameTiles.length; i++){
+        let min = 0;
+        let max = 10;
+        if(Math.floor(Math.random() * (max - min + 1)) + min === 3){
+            gameTiles[i][2].replace(/Green|White/g, "Red")
+        }
+    }
+}
+
+// greenTiles(gameTiles)
 //problem was i need the spread operator, i was passing the entire array as a single argument it needs to be "spread" across the 3 expected arguments
 // could have also selected each subarray tiles[0] tiles[1]
 //works but its a checkerboard I want

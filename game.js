@@ -69,7 +69,13 @@ const gameMap = {
 
 
 const greenTiles = (gameTiles) => {
-return gameTiles.splice(tile => )
+    for(let i = 0; i < gameTiles.length; i++){
+        let min = 0;
+        let max = 10;
+        if(Math.floor(Math.random() * (max - min + 1)) + min === 3){
+            gameTiles[i][2].replace(/Green|White/g, "Red")
+        }
+    }
 }
 
 // create Rabbit object 
