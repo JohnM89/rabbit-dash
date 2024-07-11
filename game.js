@@ -79,7 +79,13 @@ function redTiles(gameTiles) {
 
 // create Rabbit object 
 // create function for traversal of tiles including limitations and how it can move 1space in a grid
-const rabbit = 0
+let rabbit = gameTiles[0]
+//make Rabbit Blue square
+gameTiles[0][2] = "Blue"
+
+// add event listeners? maybe just make it random at first 
+//how to target canvas "elements". . . 
+addEventListener("keydown" , rabbit)
 const move = () => {
 
 }

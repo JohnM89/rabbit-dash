@@ -28,51 +28,52 @@ class Square extends Canvas{
 // draw a 10 x 10 grid
 //TODO 
 //get this class working
-class GameTiles extends Canvas {
+// class GameTiles extends Canvas {
 
     
 
-    drawGrid(x, y, colour) {
-        this.ctx.fillStyle = colour;
-        this.ctx.fillRect(x, y, 10, 10);
+//     drawGrid(x, y, colour) {
+//         this.ctx.fillStyle = colour;
+//         this.ctx.fillRect(x, y, 10, 10);
 
-    }
+//     }
 
-    greenTiles(gameTiles){
-    for(let i = 0; i < gameTiles.length; i++){
-        let min = 0;
-        let max = 10;
-        if(Math.floor(Math.random() * (max - min + 1)) + min === 3){
-            console.log(gameTiles[i].join(",").replace("White", "Red").split(","))
-            gameTiles[i].join(",").replace(/^(white|green)\b/g, "Red").split(",")
-        }
-        return greenTiles
-    }
-}
+//     greenTiles(gameTiles){
+//     for(let i = 0; i < gameTiles.length; i++){
+//         let min = 0;
+//         let max = 10;
+//         if(Math.floor(Math.random() * (max - min + 1)) + min === 3){
+//             console.log(gameTiles[i].join(",").replace("White", "Red").split(","))
+//             gameTiles[i].join(",").replace(/^(white|green)\b/g, "Red").split(",")
+//         }
+//         return greenTiles
+//     }
+// }
 
     
-    static generateTiles() {
-        const gameTiles = []
-        for (let x = 0; x < 10; x++) {
-            for (let y = 0; y < 10; y++) {
-                gameTiles.push([y * 10, x * 10])
-            }
-        }
-        for (let i = 0; i < gameTiles.length; i++) {
-            if (i % 2 === 0) {
-                gameTiles[i].push("White")
-            } else {
-                gameTiles[i].push("Green")
-            }
-        }
-        return gameTiles
-    }
-}
+//     static generateTiles() {
+//         const gameTiles = []
+//         for (let x = 0; x < 10; x++) {
+//             for (let y = 0; y < 10; y++) {
+//                 gameTiles.push([y * 10, x * 10])
+//             }
+//         }
+//         for (let i = 0; i < gameTiles.length; i++) {
+//             if (i % 2 === 0) {
+//                 gameTiles[i].push("White")
+//             } else {
+//                 gameTiles[i].push("Green")
+//             }
+//         }
+//         return gameTiles
+//     }
+// }
 
 // temp setup 
 let newCanvas = new Canvas("#canvasId")
 let square1 = new Square("#canvasId")
-let newGame1 = new GameTiles('#canvasId')
+let square2 = new Square("#canvasId")
+// let newGame1 = new GameTiles('#canvasId')
 
 square1.drawSquare()
 square1.drawSquare(10, 0, 'green' )
@@ -92,7 +93,7 @@ for(let x = 0; x < 10; x++){
 for(let i = 0; i < gameTiles.length; i++){
 
 
-// got it checkerboard!
+// map checkerboard!
     if(Math.floor(i /10) % 2 === 0 && i % 2 === 0){
         gameTiles[i].push("White")
     } else if (Math.floor(i /10) % 2 === 0 && i % 2 !== 0){
@@ -103,7 +104,14 @@ for(let i = 0; i < gameTiles.length; i++){
         gameTiles[i].push("Green")
     }
 }
-let rabbit = gameTiles[0]
+// create rabbit after gameTiles set
+// highly probably this is not the right way to do this but it'll have to do till i figure it out
+//deep clone array position 0 and assign it to rabbit
+let stringify = JSON.stringify(gameTiles[0])
+let rabbit = JSON.parse(stringify)
+//make Rabbit Blue square
+rabbit[2] = "Blue"
+console.log(rabbit)
 //append Red Tiles
 //TODO
 //randomization needs to be better spaced 
@@ -122,10 +130,13 @@ function redTiles(gameTiles) {
 gameTiles.forEach(tiles => square1.drawSquare(...tiles))
 //Call redTiles filter
 redTiles(gameTiles);
-gameTiles[0][2] = "Blue"
+ 
+console.log(rabbit)
+
 //Draw map with redTiles
 gameTiles.forEach(tiles => square1.drawSquare(...tiles))
-
+//draw rabbit last so its not hidden beneath?
+square2.drawSquare(...rabbit)
 
 //problem was i need the spread operator, i was passing the entire array as a single argument it needs to be "spread" across the 3 expected arguments
 // could have also selected each subarray tiles[0] tiles[1]
