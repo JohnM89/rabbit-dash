@@ -97,7 +97,11 @@ function staminaTimer(){
 }
 // function to handle encounter with greenTiles to increase stamina by 1
 function addStamina(){
-
+ if(rabbit[x , y] === gameTiles[ x , y] && gameTiles[2] === "Red"){
+    console.log("stamina tile")
+    return staminaTimer + 1_000
+ }
+ return console.log("normal tile")
 }
 // handle scoring and end game conditions win or loss etc
 function score(){
