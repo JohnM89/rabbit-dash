@@ -25,12 +25,7 @@ class Square extends Canvas {
 
     drawRabbit(x, y) {
         this.ctx.fillStyle = "Blue";
-
-
         this.ctx.fillRect(x, y, 10, 10);
-
-
-
     }
 
 
@@ -82,11 +77,9 @@ class Square extends Canvas {
 // temp setup 
 let newCanvas = new Canvas("#canvasId")
 let square1 = new Square("#canvasId")
-let square2 = new Square("#canvasId")
-// let newGame1 = new GameTiles('#canvasId')
 
-square1.drawSquare()
-square1.drawSquare(10, 0, 'green')
+
+
 
 
 
@@ -119,86 +112,117 @@ for (let i = 0; i < gameTiles.length; i++) {
 // create rabbit after gameTiles set
 // highly probably this is not the right way to do this but it'll have to do till i figure it out
 //deep clone array position 0 and assign it to rabbit
-let stringify = JSON.stringify(gameTiles[0])
-let rabbit = JSON.parse(stringify)
-//make Rabbit Blue square
-// rabbit[2] = "Blue"
+let rabbit = [0 , 0 ]
+// square1.drawSquare(...rabbit)
+
 console.log(rabbit)
 //append Red Tiles
 //TODO
 //randomization needs to be better spaced 
 
+const staminaTile = []
+function redTiles() {
 
-function redTiles(gameTiles) {
     for (let i = 0; i < gameTiles.length; i++) {
         let min = 0;
         let max = 10;
         if (Math.floor(Math.random() * (max - min + 1)) + min === 3) {
-            gameTiles[i][2] = "Red"
-            square1.drawSquare(gameTiles[i])
+            if(gameTiles[i][0] < 90 && gameTiles[i][0] > 10 && gameTiles[i][1] < 90 && gameTiles[i][1] > 10){
+            let tempTile = structuredClone(gameTiles[i])
+            tempTile[2] = "Red"
+            console.log(tempTile)
+            staminaTile.push(tempTile)
+
+
+        }}
+
+    }
+    staminaTile.forEach(tile => square1.drawSquare(...tile))
+}
+
+let resetRedTiles = () => {
+    for (let j of staminaTile) {
+        for (let i of gameTiles) {
+            if (j[0] === i[0] && j[1] === i[1]) {
+
+                j = i
+                console.log(i)
+                square1.drawSquare(...j)
+            }
+
         }
-        // console.log(gameTiles)
     }
 }
-
 // //Call redTiles filter
-redTiles(gameTiles);
+// redTiles();
 
 // console.log(rabbit)
+// //Call redTiles filter
 
 //Draw map
-function drawMap(){
-gameTiles.forEach(tiles => square1.drawSquare(...tiles))
+function drawMap() {
+    gameTiles.forEach(tiles => square1.drawSquare(...tiles))
 }
 drawMap()
+redTiles();
 //draw rabbit last so its not hidden beneath?
 // square2.drawRabbit(...rabbit)
 // console.log(rabbit.at(0), rabbit.at(1))
-let staminaTile = () => console.log(`+10 sec`)
+let staminaLog = () => console.log(`+10 sec`)
 
 
 //iterate over gameTiles array with rabbits x y position to see what colour gameTile is
 //so far the array is off by some unknown value
 let reDraw = (rabbit) => {
     console.log(rabbit)
-    let occupiedSpace;
-
-    square2.drawRabbit(...rabbit)
-
     
+
+    square1.drawRabbit(...rabbit)
+    console.log(staminaTile)
+    //TODO
+    // need to work on this for some reason there are invisible staminaSquares but not consistently
     for (let value of gameTiles) {
 
-        if (value[0] === rabbit[0] && value[1] === rabbit[1] ? occupiedSpace = [...value] : false) {
-            rabbit[2] = value[2]
-            if (occupiedSpace[2] === "Red") {
+        if (value[0] === rabbit[0] && value[1] === rabbit[1] ? rabbit[2] = value[2] : false) {
+            // rabbit[2] = value[2]
+            for (let i of staminaTile){
+            if (i[0] === rabbit[0] && i[1] === rabbit[1] ? true : false){
+                let occupiedSpace;
+                occupiedSpace = [...i]
+                
+                    if (occupiedSpace[2] === "Red") {
                 console.log(`red square`)
-                staminaTile();
-                //TODO
-                //figure out what i've done here so that the square changes colour AFTER rabbit passes to next square, not while on it
-                occupiedSpace[2] = "Yellow"
-                square2.drawSquare(...occupiedSpace)
+                // i[2] = "Yellow"
+                // square1.drawSquare(...rabbit)
+                staminaTile.splice(staminaTile[i] ,1 )
+                staminaLog();
+                reset()
 
 
-                
-
-                
 
 
-            } 
+
+
+
+
+            }
+
+            }
+            }
+
 
         }
-   
+
 
     }
 
 
+}
 
-    //if game key equals some direction push new x , y coordinates to rabbit
-    // run a function that checks the gameTiles array for x, y coordinates that match rabbits new coordinates
-    // if the new coordinates match a tile with "Red"
-    // perform the staminaTile interaction function which should include changing the tile colour
-    //
-
+function reset(){
+    if (staminaTile.length === 1){
+        redTiles()
+    }
 }
 
 
@@ -215,17 +239,18 @@ let reDraw = (rabbit) => {
 //TODO
 //fix going out of bounds ~ done
 // some dodgy bodger method here im sure but its got the rabbit with the right colour now, ill take it 
-addEventListener("keydown", (event) => {
 
-    event.preventDefault();
+addEventListener("keydown", (event) => {
     square1.drawSquare(...rabbit)
+    event.preventDefault();
+
 
     if (event.code == "ArrowUp" && rabbit[1] >= 10) {
 
         rabbit[1] -= 10;
 
         reDraw(rabbit);
-    
+
     } else if (event.code == "ArrowDown" && rabbit[1] <= 80) {
 
         rabbit[1] += 10;
@@ -244,5 +269,3 @@ addEventListener("keydown", (event) => {
     }
 
 });
-// //Call redTiles filter
-redTiles(gameTiles);
