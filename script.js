@@ -23,6 +23,16 @@ class Square extends Canvas {
         this.ctx.fillRect(x, y, 10, 10);
     }
 
+    drawRabbit(x, y) {
+        this.ctx.fillStyle = "Blue";
+
+
+        this.ctx.fillRect(x, y, 10, 10);
+
+
+
+    }
+
 
 }
 // draw a 10 x 10 grid
@@ -110,11 +120,13 @@ for (let i = 0; i < gameTiles.length; i++) {
 let stringify = JSON.stringify(gameTiles[0])
 let rabbit = JSON.parse(stringify)
 //make Rabbit Blue square
-rabbit[2] = "Blue"
+// rabbit[2] = "Blue"
 console.log(rabbit)
 //append Red Tiles
 //TODO
 //randomization needs to be better spaced 
+
+
 function redTiles(gameTiles) {
     for (let i = 0; i < gameTiles.length; i++) {
         let min = 0;
@@ -131,17 +143,46 @@ gameTiles.forEach(tiles => square1.drawSquare(...tiles))
 //Call redTiles filter
 redTiles(gameTiles);
 
-console.log(rabbit)
+// console.log(rabbit)
 
 //Draw map with redTiles
 gameTiles.forEach(tiles => square1.drawSquare(...tiles))
 //draw rabbit last so its not hidden beneath?
-square2.drawSquare(...rabbit)
-console.log(rabbit.at(0), rabbit.at(1))
+square2.drawRabbit(...rabbit)
+// console.log(rabbit.at(0), rabbit.at(1))
+let staminaTile = () => console.log(`+10 sec`)
+
+//iterate over gameTiles array with rabbits x y position to see what colour gameTile is
+//so far the array is off by some unknown value
 let reDraw = (rabbit) => {
-    if(rabbit[0] && rabbit[1] === gameTiles[0] && gameTiles[1] && gameTiles[2] === "Red"){
-        staminaTile();
+    console.log(rabbit)
+    square2.drawRabbit(...rabbit)
+
+    let occupiedSpace;
+    for (let value of gameTiles) {
+        // let occupiedSpace;
+        if (value[0] === rabbit[0] && value[1] === rabbit[1] ? occupiedSpace = [...value] : false) {
+            rabbit[2] = value[2]
+            if (occupiedSpace[2] === "Red") {
+                console.log(`red square`)
+
+                value[2] = "Yellow"
+                console.log(value)
+                return
+
+            }
+
+        }
     }
+
+    //   gameTiles.filter( tile =>  tile[0]  === rabbit [0] && tile[1] === rabbit[1] ? occupiedSpace = [...tile] : false)
+    //   console.log(occupiedSpace)
+    //   console.log(occupiedSpace[2])
+    // if (occupiedSpace[2] === "Red") {
+    //     console.log(`red square`)
+    //     return occupiedSpace[2] = "Yellow"
+    // } 
+    return
     //if game key equals some direction push new x , y coordinates to rabbit
     // run a function that checks the gameTiles array for x, y coordinates that match rabbits new coordinates
     // if the new coordinates match a tile with "Red"
@@ -149,6 +190,9 @@ let reDraw = (rabbit) => {
     //
 
 }
+
+
+
 //problem was i need the spread operator, i was passing the entire array as a single argument it needs to be "spread" across the 3 expected arguments
 // could have also selected each subarray tiles[0] tiles[1]
 //works but its a checkerboard I want
@@ -158,16 +202,58 @@ let reDraw = (rabbit) => {
 // then call the stamina update and add time and redraw rabbit, perhaps need to redraw all the tiles too?
 //using event.code i can map out the keys & call redraw in the eventlistener function...  maybe
 
+//TODO
+//fix going out of bounds ~ done
+// some dodgy bodger method here im sure but its got the rabbit with the right colour now, ill take it 
 addEventListener("keydown", (event) => {
-     event.preventDefault();
-    if(event.code == "ArrowUp" && rabbit[1] > 0){
-        rabbit[1] -= 10;
-        reDraw(rabbit);
-        square2.drawSquare(...rabbit)
-    } else if(event.code == "ArrowDown" && rabbit[1] < 100){
-        rabbit[1] += 10;
-        // reDraw(rabbit);
-        square2.drawSquare(...rabbit)
+    event.preventDefault();
+        // let oldRabbit = JSON.stringify(rabbit)
+        // JSON.parse(oldRabbit)
+    if (event.code == "ArrowUp" && rabbit[1] >= 10) {
 
+
+        // console.log("old " + oldRabbit)
+
+        rabbit[1] -= 10;
+
+        console.log("new " + rabbit[2])
+        reDraw(rabbit);
+        // square2.drawRabbit(...rabbit)
+    } else if (event.code == "ArrowDown" && rabbit[1] <= 80) {
+ 
+        // console.log("old " + oldRabbit)
+        rabbit[1] += 10;
+        // if (oldRabbit[2] === "White") {
+        //     console.log(rabbit[2])
+        //     //  rabbit[2] = "Green"
+        // } else if (oldRabbit[2] === "Green") {
+        //     //  rabbit[2] = "White"
+        // }
+        console.log("new " + rabbit[2])
+        
+        reDraw(rabbit);
+
+        // square2.drawSquare(...oldRabbit)
+        // square2.drawRabbit(...rabbit)
+    } else if (event.code == "ArrowLeft" && rabbit[0] >= 10) {
+
+
+        // console.log("old " + [...oldRabbit])
+        rabbit[0] -= 10;
+        console.log("new " + rabbit[2])
+        reDraw(rabbit);
+        // square2.drawSquare(...oldRabbit)
+        // square2.drawRabbit(...rabbit)
+    } else if (event.code == "ArrowRight" && rabbit[0] <= 80) {
+
+
+        // console.log("old " + [...oldRabbit])
+        rabbit[0] += 10;
+
+        console.log("new " + rabbit[2])
+        reDraw(rabbit);
+        // square2.drawSquare(...oldRabbit)
+        // square2.drawRabbit(...rabbit)
     }
- });
+    
+});
