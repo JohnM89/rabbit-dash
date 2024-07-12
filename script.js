@@ -93,6 +93,8 @@ square1.drawSquare(10, 0, 'green')
 
 
 // Create tiles 
+//TODO
+//make map much bigger
 const gameTiles = []
 for (let x = 0; x < 10; x++) {
     for (let y = 0; y < 10; y++) {
@@ -133,56 +135,64 @@ function redTiles(gameTiles) {
         let max = 10;
         if (Math.floor(Math.random() * (max - min + 1)) + min === 3) {
             gameTiles[i][2] = "Red"
+            square1.drawSquare(gameTiles[i])
         }
         // console.log(gameTiles)
     }
 }
 
-//Draw map
-gameTiles.forEach(tiles => square1.drawSquare(...tiles))
-//Call redTiles filter
+// //Call redTiles filter
 redTiles(gameTiles);
 
 // console.log(rabbit)
 
-//Draw map with redTiles
+//Draw map
+function drawMap(){
 gameTiles.forEach(tiles => square1.drawSquare(...tiles))
+}
+drawMap()
 //draw rabbit last so its not hidden beneath?
-square2.drawRabbit(...rabbit)
+// square2.drawRabbit(...rabbit)
 // console.log(rabbit.at(0), rabbit.at(1))
 let staminaTile = () => console.log(`+10 sec`)
+
 
 //iterate over gameTiles array with rabbits x y position to see what colour gameTile is
 //so far the array is off by some unknown value
 let reDraw = (rabbit) => {
     console.log(rabbit)
+    let occupiedSpace;
+
     square2.drawRabbit(...rabbit)
 
-    let occupiedSpace;
+    
     for (let value of gameTiles) {
-        // let occupiedSpace;
+
         if (value[0] === rabbit[0] && value[1] === rabbit[1] ? occupiedSpace = [...value] : false) {
             rabbit[2] = value[2]
             if (occupiedSpace[2] === "Red") {
                 console.log(`red square`)
+                staminaTile();
+                //TODO
+                //figure out what i've done here so that the square changes colour AFTER rabbit passes to next square, not while on it
+                occupiedSpace[2] = "Yellow"
+                square2.drawSquare(...occupiedSpace)
 
-                value[2] = "Yellow"
-                console.log(value)
-                return
 
-            }
+                
+
+                
+
+
+            } 
 
         }
+   
+
     }
 
-    //   gameTiles.filter( tile =>  tile[0]  === rabbit [0] && tile[1] === rabbit[1] ? occupiedSpace = [...tile] : false)
-    //   console.log(occupiedSpace)
-    //   console.log(occupiedSpace[2])
-    // if (occupiedSpace[2] === "Red") {
-    //     console.log(`red square`)
-    //     return occupiedSpace[2] = "Yellow"
-    // } 
-    return
+
+
     //if game key equals some direction push new x , y coordinates to rabbit
     // run a function that checks the gameTiles array for x, y coordinates that match rabbits new coordinates
     // if the new coordinates match a tile with "Red"
@@ -206,54 +216,33 @@ let reDraw = (rabbit) => {
 //fix going out of bounds ~ done
 // some dodgy bodger method here im sure but its got the rabbit with the right colour now, ill take it 
 addEventListener("keydown", (event) => {
+
     event.preventDefault();
-        // let oldRabbit = JSON.stringify(rabbit)
-        // JSON.parse(oldRabbit)
+    square1.drawSquare(...rabbit)
+
     if (event.code == "ArrowUp" && rabbit[1] >= 10) {
-
-
-        // console.log("old " + oldRabbit)
 
         rabbit[1] -= 10;
 
-        console.log("new " + rabbit[2])
         reDraw(rabbit);
-        // square2.drawRabbit(...rabbit)
+    
     } else if (event.code == "ArrowDown" && rabbit[1] <= 80) {
- 
-        // console.log("old " + oldRabbit)
+
         rabbit[1] += 10;
-        // if (oldRabbit[2] === "White") {
-        //     console.log(rabbit[2])
-        //     //  rabbit[2] = "Green"
-        // } else if (oldRabbit[2] === "Green") {
-        //     //  rabbit[2] = "White"
-        // }
-        console.log("new " + rabbit[2])
-        
         reDraw(rabbit);
 
-        // square2.drawSquare(...oldRabbit)
-        // square2.drawRabbit(...rabbit)
     } else if (event.code == "ArrowLeft" && rabbit[0] >= 10) {
 
-
-        // console.log("old " + [...oldRabbit])
         rabbit[0] -= 10;
-        console.log("new " + rabbit[2])
         reDraw(rabbit);
-        // square2.drawSquare(...oldRabbit)
-        // square2.drawRabbit(...rabbit)
+
     } else if (event.code == "ArrowRight" && rabbit[0] <= 80) {
 
-
-        // console.log("old " + [...oldRabbit])
         rabbit[0] += 10;
-
-        console.log("new " + rabbit[2])
         reDraw(rabbit);
-        // square2.drawSquare(...oldRabbit)
-        // square2.drawRabbit(...rabbit)
+
     }
-    
+
 });
+// //Call redTiles filter
+redTiles(gameTiles);
