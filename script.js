@@ -81,10 +81,6 @@ let square1 = new Square("#canvasId")
 
 
 
-
-
-
-
 // Create tiles 
 //TODO
 //make map much bigger
@@ -112,7 +108,7 @@ for (let i = 0; i < gameTiles.length; i++) {
 // create rabbit after gameTiles set
 // highly probably this is not the right way to do this but it'll have to do till i figure it out
 //deep clone array position 0 and assign it to rabbit
-let rabbit = [0 , 0 ]
+let rabbit = [0, 0]
 // square1.drawSquare(...rabbit)
 
 console.log(rabbit)
@@ -127,14 +123,15 @@ function redTiles() {
         let min = 0;
         let max = 10;
         if (Math.floor(Math.random() * (max - min + 1)) + min === 3) {
-            if(gameTiles[i][0] < 90 && gameTiles[i][0] > 10 && gameTiles[i][1] < 90 && gameTiles[i][1] > 10){
-            let tempTile = structuredClone(gameTiles[i])
-            tempTile[2] = "Red"
-            console.log(tempTile)
-            staminaTile.push(tempTile)
+            if (gameTiles[i][0] < 90 && gameTiles[i][0] > 10 && gameTiles[i][1] < 90 && gameTiles[i][1] > 10) {
+                let tempTile = structuredClone(gameTiles[i])
+                tempTile[2] = "Red"
+                console.log(tempTile)
+                staminaTile.push(tempTile)
 
 
-        }}
+            }
+        }
 
     }
     staminaTile.forEach(tile => square1.drawSquare(...tile))
@@ -153,21 +150,13 @@ let resetRedTiles = () => {
         }
     }
 }
-// //Call redTiles filter
-// redTiles();
-
-// console.log(rabbit)
-// //Call redTiles filter
 
 //Draw map
-function drawMap() {
+(function drawMap() {
     gameTiles.forEach(tiles => square1.drawSquare(...tiles))
-}
-drawMap()
+})()
+// drawMap()
 redTiles();
-//draw rabbit last so its not hidden beneath?
-// square2.drawRabbit(...rabbit)
-// console.log(rabbit.at(0), rabbit.at(1))
 let staminaLog = () => console.log(`+10 sec`)
 
 
@@ -175,7 +164,6 @@ let staminaLog = () => console.log(`+10 sec`)
 //so far the array is off by some unknown value
 let reDraw = (rabbit) => {
     console.log(rabbit)
-    
 
     square1.drawRabbit(...rabbit)
     console.log(staminaTile)
@@ -185,42 +173,25 @@ let reDraw = (rabbit) => {
 
         if (value[0] === rabbit[0] && value[1] === rabbit[1] ? rabbit[2] = value[2] : false) {
             // rabbit[2] = value[2]
-            for (let i of staminaTile){
-            if (i[0] === rabbit[0] && i[1] === rabbit[1] ? true : false){
-                let occupiedSpace;
-                occupiedSpace = [...i]
-                
+            for (let i of staminaTile) {
+                if (i[0] === rabbit[0] && i[1] === rabbit[1] ? true : false) {
+                    let occupiedSpace;
+                    occupiedSpace = [...i]
+
                     if (occupiedSpace[2] === "Red") {
-                console.log(`red square`)
-                // i[2] = "Yellow"
-                // square1.drawSquare(...rabbit)
-                staminaTile.splice(staminaTile[i] ,1 )
-                staminaLog();
-                reset()
-
-
-
-
-
-
-
-
+                        console.log(`red square`)
+                        staminaTile.splice(staminaTile[i], 1)
+                        staminaLog();
+                        reset()
+                    }
+                }
             }
-
-            }
-            }
-
-
         }
-
-
     }
-
-
 }
 
-function reset(){
-    if (staminaTile.length === 1){
+function reset() {
+    if (staminaTile.length === 1) {
         redTiles()
     }
 }
