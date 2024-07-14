@@ -108,7 +108,8 @@ for (let i = 0; i < gameTiles.length; i++) {
 // create rabbit after gameTiles set
 // highly probably this is not the right way to do this but it'll have to do till i figure it out
 //deep clone array position 0 and assign it to rabbit
-let rabbit = [0, 0]
+//set to white so it can draw first exit tile
+let rabbit = [0, 0, "White"]
 // square1.drawSquare(...rabbit)
 
 console.log(rabbit)
@@ -118,6 +119,7 @@ console.log(rabbit)
 
 const staminaTile = []
 function redTiles() {
+   
 
     for (let i = 0; i < gameTiles.length; i++) {
         let min = 0;
@@ -137,14 +139,15 @@ function redTiles() {
     staminaTile.forEach(tile => square1.drawSquare(...tile))
 }
 
-let resetRedTiles = () => {
-    for (let j of staminaTile) {
-        for (let i of gameTiles) {
-            if (j[0] === i[0] && j[1] === i[1]) {
 
-                j = i
-                console.log(i)
-                square1.drawSquare(...j)
+let resetRedTiles = () => {
+    for (let value of staminaTile) {
+        for (let tile of gameTiles) {
+            if (value[0] === tile[0] && value[1] === tile[1]) {
+
+                value = tile
+                console.log(tile)
+                square1.drawSquare(...value)
             }
 
         }
@@ -212,8 +215,9 @@ function reset() {
 // some dodgy bodger method here im sure but its got the rabbit with the right colour now, ill take it 
 
 addEventListener("keydown", (event) => {
-    square1.drawSquare(...rabbit)
+    
     event.preventDefault();
+    square1.drawSquare(...rabbit)
 
 
     if (event.code == "ArrowUp" && rabbit[1] >= 10) {
