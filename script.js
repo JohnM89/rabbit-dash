@@ -108,9 +108,9 @@ for (let i = 0; i < gameTiles.length; i++) {
 // create rabbit after gameTiles set
 // highly probably this is not the right way to do this but it'll have to do till i figure it out
 //deep clone array position 0 and assign it to rabbit
-//set to white so it can draw first exit tile
+//set to white so it can draw first exit
 let rabbit = [0, 0, "White"]
-// square1.drawSquare(...rabbit)
+
 
 console.log(rabbit)
 //append Red Tiles
@@ -155,8 +155,11 @@ let resetRedTiles = () => {
 }
 
 //Draw map
+// added draw rabbit function to draw first square right away
 (function drawMap() {
+    
     gameTiles.forEach(tiles => square1.drawSquare(...tiles))
+    square1.drawRabbit(...rabbit)
 })()
 // drawMap()
 redTiles();
@@ -217,27 +220,28 @@ function reset() {
 addEventListener("keydown", (event) => {
     
     event.preventDefault();
-    square1.drawSquare(...rabbit)
+    
 
 
     if (event.code == "ArrowUp" && rabbit[1] >= 10) {
-
+        //redraw for every event to avoid out of bounds issue (not drawing when hitting border)
+        square1.drawSquare(...rabbit)
         rabbit[1] -= 10;
 
         reDraw(rabbit);
 
     } else if (event.code == "ArrowDown" && rabbit[1] <= 80) {
-
+        square1.drawSquare(...rabbit)
         rabbit[1] += 10;
         reDraw(rabbit);
 
     } else if (event.code == "ArrowLeft" && rabbit[0] >= 10) {
-
+        square1.drawSquare(...rabbit)
         rabbit[0] -= 10;
         reDraw(rabbit);
 
     } else if (event.code == "ArrowRight" && rabbit[0] <= 80) {
-
+        square1.drawSquare(...rabbit)
         rabbit[0] += 10;
         reDraw(rabbit);
 
