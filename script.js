@@ -79,7 +79,8 @@ let newCanvas = new Canvas("#canvasId")
 let square1 = new Square("#canvasId")
 
 
-
+//TODO 
+//function to create difficulty multiplier for every wave of staminaTiles cleared
 
 
 
@@ -172,7 +173,7 @@ let reDraw = (rabbit) => {
 
 
     square1.drawRabbit(...rabbit)
-    //TODO
+    //TODO - done
     // need to work on this for some reason there are invisible staminaSquares but not consistently
     //finally fixed it, the solution was using indexOf...
     for (let value of gameTiles) {
@@ -181,16 +182,13 @@ let reDraw = (rabbit) => {
         if (value[0] === rabbit[0] && value[1] === rabbit[1] ? rabbit[2] = value[2] : false) {
 
             for (let i of staminaTile) {
-                if (i[0] === rabbit[0] && i[1] === rabbit[1] ? true : false) {
+                if (i[0] === rabbit[0] && i[1] === rabbit[1]) {
 
-
-
-                        console.log(`red square`)
-
-                        let index = staminaTile.indexOf(i)
-                        staminaTile.splice(index , 1)
-                        staminaLog();
-                        reset()
+                    console.log(`red square`)
+                    let index = staminaTile.indexOf(i)
+                    staminaTile.splice(index, 1)
+                    staminaLog();
+                    reset()
                     // }
                 }
             }
