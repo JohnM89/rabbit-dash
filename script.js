@@ -32,47 +32,8 @@ class Square extends Canvas {
 }
 // draw a 10 x 10 grid
 //TODO 
-//get this class working
-// class GameTiles extends Canvas {
+//properly format OOP style
 
-
-
-//     drawGrid(x, y, colour) {
-//         this.ctx.fillStyle = colour;
-//         this.ctx.fillRect(x, y, 10, 10);
-
-//     }
-
-//     greenTiles(gameTiles){
-//     for(let i = 0; i < gameTiles.length; i++){
-//         let min = 0;
-//         let max = 10;
-//         if(Math.floor(Math.random() * (max - min + 1)) + min === 3){
-//             console.log(gameTiles[i].join(",").replace("White", "Red").split(","))
-//             gameTiles[i].join(",").replace(/^(white|green)\b/g, "Red").split(",")
-//         }
-//         return greenTiles
-//     }
-// }
-
-
-//     static generateTiles() {
-//         const gameTiles = []
-//         for (let x = 0; x < 10; x++) {
-//             for (let y = 0; y < 10; y++) {
-//                 gameTiles.push([y * 10, x * 10])
-//             }
-//         }
-//         for (let i = 0; i < gameTiles.length; i++) {
-//             if (i % 2 === 0) {
-//                 gameTiles[i].push("White")
-//             } else {
-//                 gameTiles[i].push("Green")
-//             }
-//         }
-//         return gameTiles
-//     }
-// }
 
 // temp setup 
 let newCanvas = new Canvas("#canvasId")
