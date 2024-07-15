@@ -20,12 +20,18 @@ class Square extends Canvas {
 
     drawSquare(x, y, colour) {
         this.ctx.fillStyle = colour;
-        this.ctx.fillRect(x, y, 10, 10);
+        this.ctx.fillRect(x, y, 40, 40);
     }
 
     drawRabbit(x, y) {
         this.ctx.fillStyle = "Blue";
-        this.ctx.fillRect(x, y, 10, 10);
+        this.ctx.fillRect(x, y, 40, 40);
+        this.ctx.drawImage(img1, x , y , 40 , 40)
+    }
+    drawCarrot(x , y, colour){
+    this.ctx.fillStyle = colour;
+    this.ctx.fillRect(x, y, 40, 40);
+    this.ctx.drawImage(img2, x , y , 40 , 40)
     }
 
 
@@ -34,6 +40,13 @@ class Square extends Canvas {
 //TODO 
 //properly format OOP style
 
+//temp image to trial future sprites
+//TODO
+//why image does not render on initial load
+const img1 = new Image()
+const img2 = new Image()
+img1.src = "rabbit.png"
+img2.src = "carrot.png"
 
 // temp setup 
 let newCanvas = new Canvas("#canvasId")
@@ -49,10 +62,11 @@ let square1 = new Square("#canvasId")
 // Create tiles 
 //TODO
 //make map much bigger
+// multiplied all values by 4 to create bigger map on a 400 x 400 canvas but it may need to be scaled for mobile later on
 const gameTiles = []
 for (let x = 0; x < 10; x++) {
     for (let y = 0; y < 10; y++) {
-        gameTiles.push([y * 10, x * 10])
+        gameTiles.push([y * 40, x * 40])
     }
 }
 // Colour tiles
@@ -88,7 +102,7 @@ function redTiles() {
         let min = 0;
         let max = 10;
         if (Math.floor(Math.random() * (max - min + 1)) + min === 3) {
-            if (gameTiles[i][0] <= 90 && gameTiles[i][0] >= 10 && gameTiles[i][1] <= 90 && gameTiles[i][1] >= 10) {
+            if (gameTiles[i][0] <= 360 && gameTiles[i][0] >= 40 && gameTiles[i][1] <= 360 && gameTiles[i][1] >= 40) {
                 let tempTile = structuredClone(gameTiles[i])
                 tempTile[2] = "Red"
                 console.log(tempTile)
@@ -99,7 +113,7 @@ function redTiles() {
         }
 
     }
-    staminaTile.forEach(tile => square1.drawSquare(...tile))
+    staminaTile.forEach(tile => square1.drawCarrot(...tile))
 }
 
 
@@ -110,7 +124,7 @@ let resetRedTiles = () => {
 
                 value = tile
                 // console.log(tile)
-                square1.drawSquare(...value)
+                square1.drawCarrot(...value)
             }
 
         }
@@ -120,6 +134,7 @@ let resetRedTiles = () => {
 //Draw map
 
 (function drawMap() {
+    
 
     gameTiles.forEach(tiles => square1.drawSquare(...tiles))
     square1.drawRabbit(...rabbit)
@@ -170,26 +185,26 @@ addEventListener("keydown", (event) => {
 
 
 
-    if (event.code == "ArrowUp" && rabbit[1] >= 10) {
+    if (event.code == "ArrowUp" && rabbit[1] >= 40) {
         //redraw for every event to avoid out of bounds issue (not drawing when hitting border)
         square1.drawSquare(...rabbit)
-        rabbit[1] -= 10;
+        rabbit[1] -= 40;
 
         reDraw(rabbit);
 
-    } else if (event.code == "ArrowDown" && rabbit[1] <= 80) {
+    } else if (event.code == "ArrowDown" && rabbit[1] <= 320) {
         square1.drawSquare(...rabbit)
-        rabbit[1] += 10;
+        rabbit[1] += 40;
         reDraw(rabbit);
 
-    } else if (event.code == "ArrowLeft" && rabbit[0] >= 10) {
+    } else if (event.code == "ArrowLeft" && rabbit[0] >= 40) {
         square1.drawSquare(...rabbit)
-        rabbit[0] -= 10;
+        rabbit[0] -= 40;
         reDraw(rabbit);
 
-    } else if (event.code == "ArrowRight" && rabbit[0] <= 80) {
+    } else if (event.code == "ArrowRight" && rabbit[0] <= 320) {
         square1.drawSquare(...rabbit)
-        rabbit[0] += 10;
+        rabbit[0] += 40;
         reDraw(rabbit);
 
     }
