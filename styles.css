@@ -29,3 +29,15 @@ html, body {
      
 
 }
+
+#time{
+text-align: center;
+}
+
+#score{
+text-align: center;
+}
+
+#instructions{
+    text-align: center;
+}

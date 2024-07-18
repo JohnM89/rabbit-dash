@@ -51,7 +51,7 @@ class Game extends Canvas {
         this.img2.src = "carrot.png";
         this.staminaLog = () => console.log(`+10 sec`);
         this.eventListener();
-        //onload method because the javascript runs before the images is loaded apparently, this is important 
+        //onload method because the script runs before the images is loaded
         this.img2.onload = () => this.drawMap();
     }
 
