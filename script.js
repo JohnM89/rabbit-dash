@@ -43,6 +43,7 @@ class Game extends Canvas {
 
     constructor(canvasId) {
         super(canvasId);
+        
         this.rabbit = [0, 0, "White"];
         this.img1 = new Image();
         this.img2 = new Image();
@@ -50,7 +51,8 @@ class Game extends Canvas {
         this.img2.src = "carrot.png";
         this.staminaLog = () => console.log(`+10 sec`);
         this.eventListener();
-        this.drawMap();
+        //onload method because the javascript runs before the images is loaded apparently, this is important 
+        this.img2.onload = () => this.drawMap();
     }
 
     drawMap() {
