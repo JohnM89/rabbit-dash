@@ -43,7 +43,9 @@ class Game extends Canvas {
 
     constructor(canvasId) {
         super(canvasId);
-        
+        this.time = document.querySelector("#time");
+        this.score = document.querySelector("#score");
+        this.score.textContent = parseInt(0);
         this.rabbit = [0, 0, "White"];
         this.img1 = new Image();
         this.img2 = new Image();
@@ -104,11 +106,29 @@ class Game extends Canvas {
         this.ctx.fillRect(x, y, 40, 40);
         this.ctx.drawImage(this.img2, x, y, 40, 40)
     }
+    drawFarmer(){
+
+
+    }
+    //TODO
+    //add scoring function 
+    //simple for now needs to be more advanced
+    addScore(){
+    this.score.textContent++
+
+    }
     reset() {
         if (this.staminaTile.length === 1) {
             this.redTiles()
         }
     }
+    //TODO
+    //create an enemy square that traverses a single axis back and forth at a set interval pace
+    //if rabbit is on same square at same time as enemy square take away stamina
+    // enemySquare(){
+    //     for 
+    // }
+
     reDraw = (rabbit) => {
         this.drawRabbit(...rabbit)
         for (let value of this.gameTiles) {
@@ -119,7 +139,8 @@ class Game extends Canvas {
                         let index = this.staminaTile.indexOf(i)
                         this.staminaTile.splice(index, 1)
                         this.staminaLog();
-                        this.reset()
+                        this.addScore();
+                        this.reset();
                     }
                 }
             }
