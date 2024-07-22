@@ -44,6 +44,7 @@ class Game extends Canvas {
     constructor(canvasId) {
         super(canvasId);
         this.time = document.querySelector("#time");
+        this.time.textContent = this.timeOut
         this.score = document.querySelector("#score");
         this.score.textContent = parseInt(0);
         this.rabbit = [0, 0, "White"];
@@ -51,10 +52,12 @@ class Game extends Canvas {
         this.img2 = new Image();
         this.img1.src = "rabbit.png";
         this.img2.src = "carrot.png";
+        this.timeOut = 5_000
         this.staminaLog = () => console.log(`+10 sec`);
         this.eventListener();
         //onload method because the script runs before the images is loaded
         this.img2.onload = () => this.drawMap();
+        this.timer()
     }
 
     drawMap() {
@@ -111,11 +114,16 @@ class Game extends Canvas {
 
     }
     //TODO
+    //timer function
+    timer(){
+        setTimeout(() => {
+         console.log("game over")}, this.timeOut)       
+    }
+    //TODO
     //add scoring function 
     //simple for now needs to be more advanced
     addScore(){
-    this.score.textContent++
-
+        this.score.textContent++
     }
     reset() {
         if (this.staminaTile.length === 1) {
@@ -126,7 +134,13 @@ class Game extends Canvas {
     //create an enemy square that traverses a single axis back and forth at a set interval pace
     //if rabbit is on same square at same time as enemy square take away stamina
     // enemySquare(){
-    //     for 
+    //         let min = 0;
+    //         let max = 400;
+    //         let randomX = Math.floor(Math.random() * (max - min + 1)) + min;
+    //     for(let value of this.gameTiles){
+    //         let start = [randomX , y ]
+
+    //     } 
     // }
 
     reDraw = (rabbit) => {
@@ -139,6 +153,7 @@ class Game extends Canvas {
                         let index = this.staminaTile.indexOf(i)
                         this.staminaTile.splice(index, 1)
                         this.staminaLog();
+                        this.timeOut += 10000;
                         this.addScore();
                         this.reset();
                     }
