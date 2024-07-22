@@ -50,14 +50,19 @@ class Game extends Canvas {
         this.rabbit = [0, 0, "White"];
         this.img1 = new Image();
         this.img2 = new Image();
+        this.img3 = new Image();
         this.img1.src = "rabbit.png";
         this.img2.src = "carrot.png";
+        this.img3.src = "fox.png";
+        //TODO
+        // game timer
         this.timeOut = 5_000
+        this.timer = setTimeout(() => console.log("game over"), this.timeOut)    
         this.staminaLog = () => console.log(`+10 sec`);
         this.eventListener();
         //onload method because the script runs before the images is loaded
         this.img2.onload = () => this.drawMap();
-        this.timer()
+        
     }
 
     drawMap() {
@@ -110,14 +115,19 @@ class Game extends Canvas {
         this.ctx.drawImage(this.img2, x, y, 40, 40)
     }
     drawFarmer(){
-
-
+        this.ctx.fillStyle = "Orange";
+        this.ctx.fillRect(x, y, 40, 40);
+        this.ctx.drawImage(this.img3, x, y, 40, 40)
     }
     //TODO
     //timer function
-    timer(){
-        setTimeout(() => {
-         console.log("game over")}, this.timeOut)       
+
+
+    clearTimer(){
+    clearTimeout(this.timer)
+    console.log("cleared")
+        this.timeOut += 10000;
+        this.timer = null;
     }
     //TODO
     //add scoring function 
@@ -152,8 +162,8 @@ class Game extends Canvas {
                         console.log(`red square`)
                         let index = this.staminaTile.indexOf(i)
                         this.staminaTile.splice(index, 1)
+                        this.clearTimer();
                         this.staminaLog();
-                        this.timeOut += 10000;
                         this.addScore();
                         this.reset();
                     }
