@@ -9,9 +9,12 @@ class Canvas {
         this.gameTiles = [];
         this.staminaTile = [];
         this.createGameTiles();
+        // this.reset = document.querySelector("button");
+        // this.button.eventListener("click", () => this.clearCanvas())
     }
 
     clearCanvas() {
+        clearRect(0, 0, 400, 400)
         return
     }
 
@@ -43,28 +46,30 @@ class Game extends Canvas {
 
     constructor(canvasId) {
         super(canvasId);
+        this.enemySquareStart()
         this.time = document.querySelector("#time");
         this.time.textContent = this.timeOut
         this.score = document.querySelector("#score");
         this.score.textContent = parseInt(0);
         this.rabbit = [0, 0, "White"];
+        this.farmer1 = [this.randomX, 400]
         this.img1 = new Image();
         this.img2 = new Image();
         this.img3 = new Image();
-        this.interval = 2_500;
+        this.interval = 1_000;
         this.img1.src = "rabbit.png";
         this.img2.src = "carrot.png";
         this.img3.src = "fox.png";
         //TODO
         // game timer
         this.timeOut = 5_000
-        this.timer = setTimeout(() => console.log("game over"), this.timeOut)    
+        this.timer = setTimeout(() => console.log("game over"), this.timeOut)
         this.staminaLog = () => console.log(`+10 sec`);
         this.eventListener();
         //onload method because the script runs before the images is loaded
         this.img2.onload = () => this.drawMap();
-        this.enemySquare()
-        
+
+
     }
 
     drawMap() {
@@ -99,7 +104,9 @@ class Game extends Canvas {
             }
         }
     }
-
+    clearSquare(x, y) {
+        this.ctx.clearRect(x, y, 40, 40)
+    }
 
     drawSquare(x, y, colour) {
         this.ctx.fillStyle = colour;
@@ -116,25 +123,25 @@ class Game extends Canvas {
         this.ctx.fillRect(x, y, 40, 40);
         this.ctx.drawImage(this.img2, x, y, 40, 40)
     }
-    drawFarmer(x, y){
+    drawFarmer(x, y) {
         this.ctx.fillStyle = "Orange";
         this.ctx.fillRect(x, y, 40, 40);
-        this.ctx.drawImage(this.img3, 360, 360, 40, 40)
+        this.ctx.drawImage(this.img3, x, y, 40, 40)
     }
     //TODO
     //timer function
 
 
-    clearTimer(){
-    clearTimeout(this.timer)
-    console.log("cleared")
+    clearTimer() {
+        clearTimeout(this.timer)
+        console.log("cleared")
         this.timeOut += 10000;
         this.timer = null;
     }
     //TODO
     //add scoring function 
     //simple for now needs to be more advanced
-    addScore(){
+    addScore() {
         this.score.textContent++
     }
     reset() {
@@ -145,14 +152,40 @@ class Game extends Canvas {
     //TODO
     //create an enemy square that traverses a single axis back and forth at a set interval pace
     //if rabbit is on same square at same time as enemy square take away stamina
-    enemySquare(){
-            let min = 0;
-            let max = 40;
-            let randomX = Math.floor(Math.random() * (max - min + 1) * 10) + min;
-            console.log(randomX)
+    // do the same for Y axis and create a second enemy (or multiple for each for increasing difficulty)
+    enemySquareStart() {
+        let step = 40
+        let max = 10;
+        this.randomX = Math.floor(Math.random() * max) * step;
+        console.log(this.randomX)
     }
-    moveEnemy(){           
-        this.gameTiles.forEach(tile => setInterval(this.drawFarmer(this.randomX , tile[1]), this.interval))
+    //TODO
+    //when "farmer" or fox w/e moves, then redraw the correct square in its wake
+    //when the farmer gets to the boundaries have them go back the other way
+    // some kind of function to detect occupying same square as rabbit
+    //some function to randomize a new start position after stamina tile respawn
+    moveEnemy() {
+        const moveEnemyPosition = () => {
+            for (let value of this.gameTiles) {
+                if (value[1] === this.farmer1[1] && value[0] === this.farmer1[0]) {
+                    this.farmer1[2] = value[2]
+                }
+            }
+            this.clearSquare(...this.farmer1)
+            this.drawSquare(...this.farmer1)
+            for (let value of this.staminaTile) {
+                if (value[1] === this.farmer1[1] && value[0] === this.farmer1[0]) {
+                    this.drawCarrot(...value)
+                }
+            }
+             if(this.farmer1[1] <= 400 && this.farmer1[1] > 0){this.farmer1[1] -= 40}
+            else if (this.farmer1[1] === 0) {
+                this.farmer1[1] += 40 
+            } else if(this.farmer1[1] >= 0){this.farmer1[1] += 40}
+            console.log(...this.farmer1)
+            this.drawFarmer(...this.farmer1)
+        }
+        setInterval(moveEnemyPosition, this.interval)
     }
 
     reDraw = (rabbit) => {
