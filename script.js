@@ -51,6 +51,7 @@ class Game extends Canvas {
         this.img1 = new Image();
         this.img2 = new Image();
         this.img3 = new Image();
+        this.interval = 2_500;
         this.img1.src = "rabbit.png";
         this.img2.src = "carrot.png";
         this.img3.src = "fox.png";
@@ -62,6 +63,7 @@ class Game extends Canvas {
         this.eventListener();
         //onload method because the script runs before the images is loaded
         this.img2.onload = () => this.drawMap();
+        this.enemySquare()
         
     }
 
@@ -114,9 +116,9 @@ class Game extends Canvas {
         this.ctx.fillRect(x, y, 40, 40);
         this.ctx.drawImage(this.img2, x, y, 40, 40)
     }
-    drawFarmer(){
+    drawFarmer(x , y){
         this.ctx.fillStyle = "Orange";
-        this.ctx.fillRect(x, y, 40, 40);
+        this.ctx.fillRect(300, 300, 40, 40);
         this.ctx.drawImage(this.img3, x, y, 40, 40)
     }
     //TODO
@@ -143,15 +145,15 @@ class Game extends Canvas {
     //TODO
     //create an enemy square that traverses a single axis back and forth at a set interval pace
     //if rabbit is on same square at same time as enemy square take away stamina
-    // enemySquare(){
-    //         let min = 0;
-    //         let max = 400;
-    //         let randomX = Math.floor(Math.random() * (max - min + 1)) + min;
-    //     for(let value of this.gameTiles){
-    //         let start = [randomX , y ]
-
-    //     } 
-    // }
+    enemySquare(){
+            let min = 0;
+            let max = 400;
+            let randomX = Math.floor(Math.random() * (max - min + 1)) + min;
+            console.log(randomX)
+    }
+    moveEnemy(){           
+        this.gameTiles.forEach(tile => setInterval(this.drawFarmer(this.randomX , tile[1]), this.interval))
+    }
 
     reDraw = (rabbit) => {
         this.drawRabbit(...rabbit)
@@ -162,6 +164,7 @@ class Game extends Canvas {
                         console.log(`red square`)
                         let index = this.staminaTile.indexOf(i)
                         this.staminaTile.splice(index, 1)
+                        this.moveEnemy()
                         this.clearTimer();
                         this.staminaLog();
                         this.addScore();
