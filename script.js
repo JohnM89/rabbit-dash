@@ -116,10 +116,10 @@ class Game extends Canvas {
         this.ctx.fillRect(x, y, 40, 40);
         this.ctx.drawImage(this.img2, x, y, 40, 40)
     }
-    drawFarmer(x , y){
+    drawFarmer(x, y){
         this.ctx.fillStyle = "Orange";
-        this.ctx.fillRect(300, 300, 40, 40);
-        this.ctx.drawImage(this.img3, x, y, 40, 40)
+        this.ctx.fillRect(x, y, 40, 40);
+        this.ctx.drawImage(this.img3, 360, 360, 40, 40)
     }
     //TODO
     //timer function
@@ -147,8 +147,8 @@ class Game extends Canvas {
     //if rabbit is on same square at same time as enemy square take away stamina
     enemySquare(){
             let min = 0;
-            let max = 400;
-            let randomX = Math.floor(Math.random() * (max - min + 1)) + min;
+            let max = 40;
+            let randomX = Math.floor(Math.random() * (max - min + 1) * 10) + min;
             console.log(randomX)
     }
     moveEnemy(){           
