@@ -48,26 +48,29 @@ class Game extends Canvas {
         super(canvasId);
         this.enemySquareStart()
         this.time = document.querySelector("#time");
-        this.time.textContent = this.timeOut
         this.score = document.querySelector("#score");
         this.score.textContent = parseInt(0);
         this.rabbit = [0, 0, "White"];
-        this.farmer1 = [this.randomX, 400]
+        this.farmer1 = [this.randomX, 400];
+        this.farmer2 = [360, this.randomY];
         this.img1 = new Image();
         this.img2 = new Image();
         this.img3 = new Image();
-        this.interval = 1_000;
+        this.interval = 1000;
+        this.countdownInterval = 10000;
+        // this.time.textContent = this.interval
         this.img1.src = "rabbit.png";
         this.img2.src = "carrot.png";
         this.img3.src = "fox.png";
         //TODO
         // game timer
-        this.timeOut = 5_000
-        this.timer = setTimeout(() => console.log("game over"), this.timeOut)
+        this.setTimer()
+        // this.timer = setTimeout(() => console.log("game over"), this.timeOut)
         this.staminaLog = () => console.log(`+10 sec`);
         this.eventListener();
         //onload method because the script runs before the images is loaded
-        this.img2.onload = () => this.drawMap();
+        this.img1.onload = () => this.drawMap();
+        // this.img2.onload = () => this.drawMap();
 
 
     }
@@ -132,11 +135,16 @@ class Game extends Canvas {
     //timer function
 
 
-    clearTimer() {
-        clearTimeout(this.timer)
-        console.log("cleared")
-        this.timeOut += 10000;
-        this.timer = null;
+    setTimer() {
+        const timer = setInterval(() => {
+            this.countdownInterval -= 10;
+            // console.log(this.countdownInterval)
+            this.time.textContent = this.countdownInterval
+            if (this.countdownInterval === 0) {
+                clearInterval(timer);
+                console.log("game over")
+            }
+        })
     }
     //TODO
     //add scoring function 
@@ -157,15 +165,17 @@ class Game extends Canvas {
         let step = 40
         let max = 10;
         this.randomX = Math.floor(Math.random() * max) * step;
+        this.randomY = Math.floor(Math.random() * max) * step;
         console.log(this.randomX)
+        console.log(this.randomY)
     }
     //TODO
     //when "farmer" or fox w/e moves, then redraw the correct square in its wake
     //when the farmer gets to the boundaries have them go back the other way
     // some kind of function to detect occupying same square as rabbit
     //some function to randomize a new start position after stamina tile respawn
-    moveEnemy() {
-        const moveEnemyPosition = () => {
+    moveEnemy1() {
+        const moveEnemyPosition1 = () => {
             for (let value of this.gameTiles) {
                 if (value[1] === this.farmer1[1] && value[0] === this.farmer1[0]) {
                     this.farmer1[2] = value[2]
@@ -178,14 +188,39 @@ class Game extends Canvas {
                     this.drawCarrot(...value)
                 }
             }
-             if(this.farmer1[1] <= 400 && this.farmer1[1] > 0){this.farmer1[1] -= 40}
+            if (this.farmer1[1] <= 400 && this.farmer1[1] > 0) { this.farmer1[1] -= 40 }
             else if (this.farmer1[1] === 0) {
-                this.farmer1[1] += 40 
-            } else if(this.farmer1[1] >= 0){this.farmer1[1] += 40}
+                this.farmer1[1] += 40
+            } else if (this.farmer1[1] >= 0) { this.farmer1[1] += 40 }
             console.log(...this.farmer1)
             this.drawFarmer(...this.farmer1)
         }
-        setInterval(moveEnemyPosition, this.interval)
+        setInterval(moveEnemyPosition1, this.interval)
+    }
+
+    
+    moveEnemy2() {
+        const moveEnemyPosition2 = () => {
+            for (let value of this.gameTiles) {
+                if (value[1] === this.farmer2[1] && value[0] === this.farmer2[0]) {
+                    this.farmer2[2] = value[2]
+                }
+            }
+            this.clearSquare(...this.farmer2)
+            this.drawSquare(...this.farmer2)
+            for (let value of this.staminaTile) {
+                if (value[1] === this.farmer2[1] && value[0] === this.farmer2[0]) {
+                    this.drawCarrot(...value)
+                }
+            }
+            if (this.farmer2[0] <= 400 && this.farmer2[0] > 0) { this.farmer2[0] -= 40 }
+            else if (this.farmer2[0] === 0) {
+                this.farmer2[0] += 40
+            } else if (this.farmer2[0] >= 0) { this.farmer2[0] += 40 }
+            console.log(...this.farmer2)
+            this.drawFarmer(...this.farmer2)
+        }
+        setInterval(moveEnemyPosition2, this.interval)
     }
 
     reDraw = (rabbit) => {
@@ -197,8 +232,9 @@ class Game extends Canvas {
                         console.log(`red square`)
                         let index = this.staminaTile.indexOf(i)
                         this.staminaTile.splice(index, 1)
-                        this.moveEnemy()
-                        this.clearTimer();
+                        this.moveEnemy1();
+                        this.moveEnemy2();
+                        this.countdownInterval += 2_000;
                         this.staminaLog();
                         this.addScore();
                         this.reset();
