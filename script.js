@@ -53,6 +53,7 @@ class Game extends Canvas {
         this.rabbit = [0, 0, "White"];
         this.farmer1 = [this.randomX, 400];
         this.farmer2 = [360, this.randomY];
+        this.directionalState = true;
         this.img1 = new Image();
         this.img2 = new Image();
         this.img3 = new Image();
@@ -175,24 +176,42 @@ class Game extends Canvas {
     // some kind of function to detect occupying same square as rabbit
     //some function to randomize a new start position after stamina tile respawn
     moveEnemy1() {
+
+        
         const moveEnemyPosition1 = () => {
+            
             for (let value of this.gameTiles) {
                 if (value[1] === this.farmer1[1] && value[0] === this.farmer1[0]) {
                     this.farmer1[2] = value[2]
                 }
             }
+
+
             this.clearSquare(...this.farmer1)
             this.drawSquare(...this.farmer1)
+
             for (let value of this.staminaTile) {
                 if (value[1] === this.farmer1[1] && value[0] === this.farmer1[0]) {
                     this.drawCarrot(...value)
                 }
             }
-            if (this.farmer1[1] <= 400 && this.farmer1[1] > 0) { this.farmer1[1] -= 40 }
-            else if (this.farmer1[1] === 0) {
-                this.farmer1[1] += 40
-            } else if (this.farmer1[1] >= 0) { this.farmer1[1] += 40 }
+
+            if (this.farmer1[1] === 400) {
+                 this.directionalState = true; 
+                }
+            
+            if (this.farmer1[1] === 0) {
+                 this.directionalState = false; 
+                }
+
             console.log(...this.farmer1)
+            if(this.directionalState){
+                this.farmer1[1] -= 40 
+            }
+            else if(!this.directionalState){
+                this.farmer1[1] += 40
+            }
+
             this.drawFarmer(...this.farmer1)
         }
         setInterval(moveEnemyPosition1, this.interval)
@@ -200,24 +219,42 @@ class Game extends Canvas {
 
     
     moveEnemy2() {
+
+        
         const moveEnemyPosition2 = () => {
+            
             for (let value of this.gameTiles) {
                 if (value[1] === this.farmer2[1] && value[0] === this.farmer2[0]) {
                     this.farmer2[2] = value[2]
                 }
             }
+
+
             this.clearSquare(...this.farmer2)
             this.drawSquare(...this.farmer2)
+
             for (let value of this.staminaTile) {
                 if (value[1] === this.farmer2[1] && value[0] === this.farmer2[0]) {
                     this.drawCarrot(...value)
                 }
             }
-            if (this.farmer2[0] <= 400 && this.farmer2[0] > 0) { this.farmer2[0] -= 40 }
-            else if (this.farmer2[0] === 0) {
-                this.farmer2[0] += 40
-            } else if (this.farmer2[0] >= 0) { this.farmer2[0] += 40 }
+
+            if (this.farmer2[0] === 360) {
+                 this.directionalState = true; 
+                }
+            
+            if (this.farmer2[0] === 0) {
+                 this.directionalState = false; 
+                }
+
             console.log(...this.farmer2)
+            if(this.directionalState){
+                this.farmer2[0] -= 40 
+            }
+            else if(!this.directionalState){
+                this.farmer2[0] += 40
+            }
+
             this.drawFarmer(...this.farmer2)
         }
         setInterval(moveEnemyPosition2, this.interval)
