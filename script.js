@@ -133,9 +133,7 @@ class Game extends Canvas {
         this.ctx.drawImage(this.img3, x, y, 40, 40)
     }
     //TODO
-    //timer function
-
-
+    //timer function to real seconds
     setTimer() {
         const timer = setInterval(() => {
             this.countdownInterval -= 10;
@@ -159,6 +157,14 @@ class Game extends Canvas {
         }
     }
     //TODO
+    //running into enemy function to remove stamina (time)
+    checkTakeDamage(){
+        if(this.rabbit[0] === this.farmer1[0] && this.rabbit[1] === this.farmer1[1] || this.rabbit[0] === this.farmer2[0] && this.rabbit[1] === this.farmer2[1]){
+            this.countdownInterval -= 10000
+        } 
+    }
+
+    //TODO
     //create an enemy square that traverses a single axis back and forth at a set interval pace
     //if rabbit is on same square at same time as enemy square take away stamina
     // do the same for Y axis and create a second enemy (or multiple for each for increasing difficulty)
@@ -177,9 +183,9 @@ class Game extends Canvas {
     //some function to randomize a new start position after stamina tile respawn
     moveEnemy1() {
 
-        
+
         const moveEnemyPosition1 = () => {
-            
+
             for (let value of this.gameTiles) {
                 if (value[1] === this.farmer1[1] && value[0] === this.farmer1[0]) {
                     this.farmer1[2] = value[2]
@@ -197,32 +203,32 @@ class Game extends Canvas {
             }
 
             if (this.farmer1[1] === 400) {
-                 this.directionalState = true; 
-                }
-            
+                this.directionalState = true;
+            }
+
             if (this.farmer1[1] === 0) {
-                 this.directionalState = false; 
-                }
+                this.directionalState = false;
+            }
 
             console.log(...this.farmer1)
-            if(this.directionalState){
-                this.farmer1[1] -= 40 
+            if (this.directionalState) {
+                this.farmer1[1] -= 40
             }
-            else if(!this.directionalState){
+            else if (!this.directionalState) {
                 this.farmer1[1] += 40
             }
-
+            this.checkTakeDamage()
             this.drawFarmer(...this.farmer1)
         }
         setInterval(moveEnemyPosition1, this.interval)
     }
 
-    
+
     moveEnemy2() {
 
-        
+
         const moveEnemyPosition2 = () => {
-            
+
             for (let value of this.gameTiles) {
                 if (value[1] === this.farmer2[1] && value[0] === this.farmer2[0]) {
                     this.farmer2[2] = value[2]
@@ -240,21 +246,21 @@ class Game extends Canvas {
             }
 
             if (this.farmer2[0] === 360) {
-                 this.directionalState = true; 
-                }
-            
+                this.directionalState = true;
+            }
+
             if (this.farmer2[0] === 0) {
-                 this.directionalState = false; 
-                }
+                this.directionalState = false;
+            }
 
             console.log(...this.farmer2)
-            if(this.directionalState){
-                this.farmer2[0] -= 40 
+            if (this.directionalState) {
+                this.farmer2[0] -= 40
             }
-            else if(!this.directionalState){
+            else if (!this.directionalState) {
                 this.farmer2[0] += 40
             }
-
+            this.checkTakeDamage()
             this.drawFarmer(...this.farmer2)
         }
         setInterval(moveEnemyPosition2, this.interval)
