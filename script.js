@@ -142,6 +142,7 @@ class Game extends Canvas {
             if (this.countdownInterval === 0) {
                 clearInterval(timer);
                 console.log("game over")
+                this.endGame()
             }
         })
     }
@@ -162,6 +163,12 @@ class Game extends Canvas {
         if(this.rabbit[0] === this.farmer1[0] && this.rabbit[1] === this.farmer1[1] || this.rabbit[0] === this.farmer2[0] && this.rabbit[1] === this.farmer2[1]){
             this.countdownInterval -= 10000
         } 
+    }
+    //TODO
+    //function to create game so that i can end it as well
+
+    endGame(){
+        this.clearCanvas()
     }
 
     //TODO
