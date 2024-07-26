@@ -5,17 +5,20 @@ class Canvas {
         if (!this.canvas) {
             console.log(`canvas id ${canvasId} not found`)
         }
+        // this.canvas.style.display = "none"
         this.ctx = this.canvas.getContext("2d");
         this.gameTiles = [];
         this.staminaTile = [];
         this.createGameTiles();
-        // this.reset = document.querySelector("button");
-        // this.button.eventListener("click", () => this.clearCanvas())
+        this.button = document.querySelector("#resetGame");
+        this.button.addEventListener("click", () => {
+            this.clearCanvas()
+            })
     }
 
     clearCanvas() {
-        clearRect(0, 0, 400, 400)
-        return
+        console.log("clicked")
+        this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height)
     }
 
     createGameTiles() {
@@ -49,6 +52,10 @@ class Game extends Canvas {
         this.enemySquareStart()
         this.time = document.querySelector("#time");
         this.score = document.querySelector("#score");
+        // this.reset = document.querySelector("#resetGame");
+        // this.body = document.body
+        // this.body.style.backgroundColor = "black"
+        // this.reset.addEventListener("click" , () => this.clearCanvas())
         this.score.textContent = parseInt(0);
         this.rabbit = [0, 0, "White"];
         this.farmer1 = [this.randomX, 400];
@@ -65,7 +72,8 @@ class Game extends Canvas {
         this.img3.src = "fox.png";
         //TODO
         // game timer
-        this.setTimer()
+        //dont start till game begins
+        // this.setTimer()
         // this.timer = setTimeout(() => console.log("game over"), this.timeOut)
         this.staminaLog = () => console.log(`+10 sec`);
         this.eventListener();
@@ -152,7 +160,7 @@ class Game extends Canvas {
     addScore() {
         this.score.textContent++
     }
-    reset() {
+    resetRed() {
         if (this.staminaTile.length === 1) {
             this.redTiles()
         }
@@ -208,6 +216,7 @@ class Game extends Canvas {
                     this.drawCarrot(...value)
                 }
             }
+            0.
 
             if (this.farmer1[1] === 400) {
                 this.directionalState = true;
@@ -287,7 +296,7 @@ class Game extends Canvas {
                         this.countdownInterval += 2_000;
                         this.staminaLog();
                         this.addScore();
-                        this.reset();
+                        this.resetRed();
                     }
                 }
             }
@@ -295,8 +304,9 @@ class Game extends Canvas {
     }
     eventListener() {
         document.addEventListener("keydown", (event) => {
-
+            
             event.preventDefault();
+            
 
 
 
