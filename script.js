@@ -15,6 +15,14 @@ class Canvas {
             this.clearCanvas()
             })
     }
+    //TODO
+    //game state needs to be implemented (currently it really does not exist)
+    //probably some startup canvas screen that displays something like "press arrow key to start"
+    //when the time runs out the game should end and the score be logged to a high score chart
+    //store that on local storage for now and then later just in a SQL database
+    //there needs to be some way to reposition the enemies after every "wave" of stamina blocks are collected
+    //need to extend the borders of the game and add some kind of image for borders, find a way to animate sprites and make the game look nicer
+
 
     clearCanvas() {
         console.log("clicked")
@@ -52,10 +60,7 @@ class Game extends Canvas {
         this.enemySquareStart()
         this.time = document.querySelector("#time");
         this.score = document.querySelector("#score");
-        // this.reset = document.querySelector("#resetGame");
-        // this.body = document.body
-        // this.body.style.backgroundColor = "black"
-        // this.reset.addEventListener("click" , () => this.clearCanvas())
+
         this.score.textContent = parseInt(0);
         this.rabbit = [0, 0, "White"];
         this.farmer1 = [this.randomX, 400];
@@ -170,6 +175,7 @@ class Game extends Canvas {
     checkTakeDamage(){
         if(this.rabbit[0] === this.farmer1[0] && this.rabbit[1] === this.farmer1[1] || this.rabbit[0] === this.farmer2[0] && this.rabbit[1] === this.farmer2[1]){
             this.countdownInterval -= 10000
+            // removeEventListener("keydown", this.eventListener(event))
         } 
     }
     //TODO
