@@ -11,9 +11,6 @@ class Canvas {
         this.staminaTile = [];
         this.createGameTiles();
         this.button = document.querySelector("#resetGame");
-        this.button.addEventListener("click", () => {
-            this.clearCanvas()
-            })
     }
     //TODO
     //game state needs to be implemented (currently it really does not exist)
@@ -50,6 +47,12 @@ class Canvas {
         }
     }
 
+    createNewGame(){
+
+
+    }
+
+
 }
 
 //test class
@@ -60,7 +63,12 @@ class Game extends Canvas {
         this.enemySquareStart()
         this.time = document.querySelector("#time");
         this.score = document.querySelector("#score");
-
+        this.highScore = document.querySelector(".highscores");
+        this.button.addEventListener("click", () => {
+            this.clearCanvas()
+            this.highScore.insertAdjacentHTML("beforeend" , `<li>${this.score.textContent}</li>`)
+            this.highScore.style.display = "block"
+        })
         this.score.textContent = parseInt(0);
         this.rabbit = [0, 0, "White"];
         this.farmer1 = [this.randomX, 400];
@@ -78,7 +86,7 @@ class Game extends Canvas {
         //TODO
         // game timer
         //dont start till game begins
-        // this.setTimer()
+        this.setTimer()
         // this.timer = setTimeout(() => console.log("game over"), this.timeOut)
         this.staminaLog = () => console.log(`+10 sec`);
         this.eventListener();
@@ -152,7 +160,7 @@ class Game extends Canvas {
             this.countdownInterval -= 10;
             // console.log(this.countdownInterval)
             this.time.textContent = this.countdownInterval
-            if (this.countdownInterval === 0) {
+            if (this.countdownInterval <= 0) {
                 clearInterval(timer);
                 console.log("game over")
                 this.endGame()
@@ -187,7 +195,7 @@ class Game extends Canvas {
 
     //TODO
     //create an enemy square that traverses a single axis back and forth at a set interval pace
-    //if rabbit is on same square at same time as enemy square take away stamina
+    //if rabbit is on same square at same time as enemy square take away stamina (or time)
     // do the same for Y axis and create a second enemy (or multiple for each for increasing difficulty)
     enemySquareStart() {
         let step = 40
@@ -308,13 +316,15 @@ class Game extends Canvas {
             }
         }
     }
+
     eventListener() {
         document.addEventListener("keydown", (event) => {
             
             event.preventDefault();
             
 
-
+            console.log(event)
+            console.log(event.code)
 
             if (event.code == "ArrowUp" && this.rabbit[1] >= 40) {
                 this.drawSquare(...this.rabbit)
