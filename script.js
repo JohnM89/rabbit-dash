@@ -5,6 +5,8 @@ class Canvas {
         if (!this.canvas) {
             console.log(`canvas id ${canvasId} not found`)
         }
+        this.canvas.height = 400
+        this.canvas.width = 400
         // this.canvas.style.display = "none"
         this.ctx = this.canvas.getContext("2d");
         this.gameTiles = [];
@@ -80,7 +82,7 @@ class Game extends Canvas {
         this.interval = 1000;
         this.countdownInterval = 10000;
         // this.time.textContent = this.interval
-        this.img1.src = "rabbit.png";
+        this.img1.src = "bunnysheet5.png";
         this.img2.src = "carrot.png";
         this.img3.src = "fox.png";
         //TODO
@@ -139,9 +141,12 @@ class Game extends Canvas {
     }
 
     drawRabbit(x, y) {
+
         this.ctx.fillStyle = "Blue";
         this.ctx.fillRect(x, y, 40, 40);
-        this.ctx.drawImage(this.img1, x, y, 40, 40)
+        //sprite sheet one "animation" down
+        this.ctx.drawImage(this.img1, 25 , 50, 30 , 30 ,  x, y, 40, 40)
+
     }
     drawCarrot(x, y, colour) {
         this.ctx.fillStyle = colour;
@@ -316,7 +321,10 @@ class Game extends Canvas {
             }
         }
     }
+    animate(){
 
+
+    }
     eventListener() {
         document.addEventListener("keydown", (event) => {
             
