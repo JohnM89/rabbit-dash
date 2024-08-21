@@ -1,34 +1,85 @@
 
-
-class Canvas {
-    constructor(canvasId) {
-        this.canvas = document.querySelector(canvasId)
-        if (!this.canvas) {
-            console.log(`canvas id ${canvasId} not found`)
-        }
+window.addEventListener('load', function(){
+    const canvas = document.querySelector('#canvasId');
+    const ctx = canvas.getContext("2d");
         this.canvas.height = 400
         this.canvas.width = 400
 
-        this.ctx = this.canvas.getContext("2d");
-        this.button = document.querySelector("#resetGame");
+    class InputHandler {
+            constructor(game){
+            this.game = game;
+            console.log("input handler created")
+            window.addEventListener('keydown', event => {
+                this.game.lastKey = "P" + event.code;
+            });
+            window.addEventListener('keyup', event => {
+                this.game.lastKey = "R" + event.code;
+            });
+            }
+    }
+    class Animation{
+        constructor(game){
+            this.game = game;
+            this.spriteWidth = 36;
+            this.spriteHeight = 39;
+            this.frameX = 0;
+            this.frameY = 4;
+            this.maxFrame = 30;
+            this.width = this.spriteWidth;
+            this.height = this.spriteHeight;
+            this.speedX = 0;
+            this.speedY = 0;
+            this.fps = 60;
+            this.frameInterval = 1000/this.fps;
+            this.frameTimer = 0;
+        }
+        draw(context){
+            context.drawImage(this.image, this.frameX * this.spriteWidth, this.frameY * this.spriteHeight, this.spriteWidth, this.spriteHeight, this.x, this.y, this.width, this.height);
+        }
+
+
+    }
+
+    class Rabbit extends Animation{
+            constructor(game){
+                super(game)
+                this.x = 0;
+                this.y = 0;
+            }
+    }
+
+    class Farmer extends Animation{
+
+    }
+
+    class Carrot extends Animation{
+
     }
 
 
-    clearCanvas() {
-        console.log("clicked")
-        this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height)
-    }
-}
+//     clearCanvas() {
+//         console.log("clicked")
+//         this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height)
+//     }
+// }
 
 
 
 //test class
-class Game extends Canvas {
+class Game {
 
-    constructor(canvasId) {
-        super(canvasId);
-        this.canvas = new Canvas(canvasId)
-        this.ctx = this.canvas.ctx;
+    constructor(width, height) {
+        // super(canvasId);
+        // this.canvas = new Canvas(canvasId)
+        // this.ctx = this.canvas.ctx;
+        this.width = width;
+        this.height = height;
+        this.lastKey = undefined;
+        this.input = new InputHandler(this);
+        this.animation = new Animation(this);
+        //
+
+        // 
         this.gameTiles = [];
         this.staminaTile = [];
         this.createGameTiles();
@@ -68,6 +119,10 @@ class Game extends Canvas {
 
 
     }
+        render(context, deltaTime){
+
+        }
+     
 
         createGameTiles() {
         for (let x = 0; x < 10; x++) {
@@ -361,5 +416,17 @@ class Game extends Canvas {
 
 
 }
+    const game = new Game(canvas.width, canvas.height);
+    // game.init();
+    let lastTime = 0;
+    function animate(timeStamp){
+        const deltaTime = timeStamp - lastTime;
+        lastTime = timeStamp;
+        ctx.clearRect(0,0, canvas.width, canvas.height);
+        game.render(ctx , deltaTime)
+        requestAnimationFrame(animate);
 
-let newGame = new Game('#canvasId');
+    }
+    animate(0);
+// let newGame = new Game('#canvasId');
+});
