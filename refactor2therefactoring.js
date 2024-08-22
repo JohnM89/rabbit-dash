@@ -10,9 +10,11 @@ window.addEventListener('load', function () {
             this.game = game;
             console.log("input handler created")
             window.addEventListener('keydown', event => {
+                event.preventDefault();
                 this.game.lastKey = "P" + event.code;
             });
             window.addEventListener('keyup', event => {
+                event.preventDefault();
                 this.game.lastKey = "R" + event.code;
             });
         }
@@ -43,7 +45,7 @@ window.addEventListener('load', function () {
         }
         draw(ctx) {
             //context aka ctx and deltaTime
-            ctx.drawImage(this.image, this.frameX * this.spriteWidth, this.frameY * this.spriteHeight,  this.spriteWidth, this.spriteHeight, this.x, this.y, this.width, this.height);
+            ctx.drawImage(this.image, this.frameX * this.spriteWidth, this.frameY * this.spriteHeight, this.spriteWidth, this.spriteHeight, this.x, this.y, this.width, this.height);
         }
         setSpeed(speedX, speedY) {
             this.speedX = speedX;
@@ -66,7 +68,7 @@ window.addEventListener('load', function () {
             this.y = 0;
         }
         update(deltaTime) {
-            if (this.game.lastKey == 'PArrowLeft'){
+            if (this.game.lastKey == 'PArrowLeft') {
                 this.setSpeed(-this.maxSpeed, 0);
                 this.maxFrame = 3;
                 this.frameY = 7;
@@ -102,22 +104,22 @@ window.addEventListener('load', function () {
             this.x += this.speedX;
             this.y += this.speedY;
             // horizontal boundaries
-            if (this.x < 0){
+            if (this.x < 0) {
                 this.x = 0;
-            } else if (this.x > this.game.width - this.width){
+            } else if (this.x > this.game.width - this.width) {
                 this.x = this.game.width - this.width;
             }
             //vertical
-            if (this.y < 0){
+            if (this.y < 0) {
                 this.y = 0;
-            } else if (this.y > this.game.height - this.height){
+            } else if (this.y > this.game.height - this.height) {
                 this.y = this.game.height - this.height;
             }
             //frame animation
             // deltaTime which is (timeStamp - last time), gives context to framerTimer
             //since its continuously called by the animate function every frame
             //and framerTimer 
-            if(this.frameTimer > this.frameInterval){
+            if (this.frameTimer > this.frameInterval) {
                 this.frameX < this.maxFrame ? this.frameX++ : this.frameX = 0;
                 this.frameTimer = 0;
             } else {
@@ -128,28 +130,69 @@ window.addEventListener('load', function () {
     }
 
     class Farmer extends Animation {
-            constructor(game){
-                super(game)
-                this.x = this.randomX
-                this.y = 400
-                this.image = new Image();
-                this.image.src = "farmerTemp.png";
-            }
+        constructor(game) {
+            super(game)
+            this.x = this.randomX
+            this.y = 400
+            this.image = new Image();
+            this.image.src = "farmerTemp.png";
+        }
+
     }
 
+    class Grass extends Animation {
+        constructor(game, x, y) {
+            super(game);
+            this.game = game;
+            this.image = new Image();
+            this.image.src = "grass2.jpg";
+            this.spriteWidth = 40;
+            this.spriteHeight = 40;
+            this.frameX = 0;
+            this.frameY = 1;
+            this.x = x
+            this.y = y
+            this.frameInterval = 25000 / this.fps;
+        }
+        update(deltaTime) {
+            this.maxFrame = 9;
+            this.frameY = 10;
+            if (this.frameTimer > this.frameInterval) {
+                this.frameX < this.maxFrame ? this.frameX++ : this.frameX = 0;
+                this.frameTimer = 0;
+            } else {
+                this.frameTimer += deltaTime
+            }
+
+        }
+    }
 
     class Carrot extends Animation {
-            constructor(game){
-                super(game);
-                this.game = game;
-                this.image = new Image();
-                this.image.src = "carrotTEMP"
-                this.spriteWidth = 36.2;
-                this.spriteHeight = 39;
-                this.frameX = 0;
-                this.frameY = 0;
-                
+        constructor(game, x, y) {
+            super(game);
+            this.game = game;
+            this.image = new Image();
+            this.image.src = "carrotTEMP.png"
+            this.spriteWidth = 92.5;
+            this.spriteHeight = 50;
+            this.frameX = 0;
+            this.frameY = 0;
+            this.x = x
+            this.y = y
+            this.frameInterval = 15000 / this.fps;
+
+        }
+        update(deltaTime) {
+            this.maxFrame = 2;
+            this.frameY = 1;
+            if (this.frameTimer > this.frameInterval) {
+                this.frameX < this.maxFrame ? this.frameX++ : this.frameX = 0;
+                this.frameTimer = 0;
+            } else {
+                this.frameTimer += deltaTime
             }
+
+        }
     }
 
     class Game {
@@ -158,22 +201,69 @@ window.addEventListener('load', function () {
             this.width = width;
             this.height = height;
             this.gameObjects = [];
+            this.gameTiles = [];
+            this.staminaTile = []
             this.lastKey = undefined;
             this.input = new InputHandler(this);
             this.animation = new Animation(this);
-            this.rabbit = new Rabbit(this)
+            this.rabbit = new Rabbit(this);
+            // this.carrot = new Carrot(this);
+            this.grass = []
+            this.carrots= []
         }
-        render(ctx, deltaTime){
-            this.gameObjects = [this.rabbit];
-            
+        render(ctx, deltaTime) {
+            this.gameObjects = [...this.grass,...this.carrots, this.rabbit];
+            // this.gameObjects.sort((a,b) => {
+            //     return (a.y + a.height) - (b.y + b.height);
+            // });
             this.gameObjects.forEach(obj => {
                 obj.draw(ctx);
                 obj.update(deltaTime);
             })
 
         }
-        init(){
-            
+        init() {
+            for (let x = 0; x < 10; x++) {
+                for (let y = 0; y < 10; y++) {
+                    this.gameTiles.push([y * 40, x * 40])
+                }
+            }
+            // colour tiles
+            for (let i = 0; i < this.gameTiles.length; i++) {
+                //capture x & y
+                const [x, y] = this.gameTiles[i]
+                // map checkerboard!
+                if (Math.floor(i / 10) % 2 === 0 && i % 2 === 0) {
+                    this.gameTiles[i].push("White")
+                } else if (Math.floor(i / 10) % 2 === 0 && i % 2 !== 0) {
+                    this.gameTiles[i].push("Green")
+                    this.grass.push(new Grass(this, x, y))
+                } else if (Math.floor(i / 10) % 2 !== 0 && i % 2 !== 0) {
+                    this.gameTiles[i].push("White")
+                } else if (Math.floor(i / 10) % 2 !== 0 && i % 2 === 0) {
+                    this.gameTiles[i].push("Green")
+                    this.grass.push(new Grass(this, x, y))
+                }
+            }
+        }
+        redTiles() {
+            for (let i = 0; i < this.gameTiles.length; i++) {
+                let min = 0;
+                let max = 10;
+                if (Math.floor(Math.random() * (max - min + 1)) + min === 3) {
+                    if (this.gameTiles[i][0] <= 360 && this.gameTiles[i][0] >= 40 && this.gameTiles[i][1] <= 360 && this.gameTiles[i][1] >= 40) {
+                        let tempTile = structuredClone(this.gameTiles[i])
+                        tempTile[2] = "Red"
+                        console.log(tempTile)
+                        this.staminaTile.push(tempTile)
+                    }
+                }
+            }
+            this.staminaTile.forEach(tile => {
+                const [x, y] = tile
+                console.log(tile)
+                this.carrots.push(new Carrot(this, x , y))
+                })
         }
     }
     // //test class
@@ -530,13 +620,16 @@ window.addEventListener('load', function () {
 
     // }
     const game = new Game(canvas.width, canvas.height);
-    // game.init();
+    
+    game.init();
+    game.redTiles();
+    
     //animation function
     // set lasttime to 0
     let lastTime = 0;
     //timestamp is handled by requestAnimationFrame API
     function animate(timeStamp) {
-        console.log(timeStamp)
+        // console.log(timeStamp)
         // completion time in seconds since the last frame is the current time minus the last time
         const deltaTime = timeStamp - lastTime;
         // then set last time to time stamp to update last time
