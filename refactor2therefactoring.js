@@ -1,9 +1,13 @@
-
+const tileSize = 40;
+const row = 10;
+const column = 10;
+const gameHeight = tileSize * column
+const gameWidth = tileSize * row
 window.addEventListener('load', function () {
     const canvas = document.querySelector('#canvasId');
     const ctx = canvas.getContext("2d");
-    canvas.height = 400
-    canvas.width = 400
+    canvas.height = gameHeight
+    canvas.width = gameWidth
 
     class InputHandler {
         constructor(game) {
@@ -24,8 +28,8 @@ window.addEventListener('load', function () {
             this.game = game;
             // this.spriteWidth = 36;
             // this.spriteHeight = 39.5;
-            this.width = 40;
-            this.height = 40;
+            this.width = tileSize;
+            this.height = tileSize;
             this.frameX = 0;
             this.frameY = 0;
             this.maxFrame = 0;
@@ -70,6 +74,8 @@ window.addEventListener('load', function () {
             this.collisionY = this.y;
             this.collisionWidth = this.spriteWidth;
             this.collisionHeight = this.spriteHeight;
+            this.grid = tileSize;
+            
         }
         update(deltaTime) {
             if (this.game.lastKey == 'PArrowLeft') {
@@ -150,8 +156,8 @@ window.addEventListener('load', function () {
             this.game = game;
             this.image = new Image();
             this.image.src = "grass2.jpg";
-            this.spriteWidth = 40;
-            this.spriteHeight = 40;
+            this.spriteWidth = tileSize;
+            this.spriteHeight = tileSize;
             this.frameX = 0;
             this.frameY = 1;
             this.x = x
@@ -171,6 +177,42 @@ window.addEventListener('load', function () {
         }
     }
 
+    class babyCarrot extends Animation{
+                constructor(game, x, y) {
+            super(game);
+            this.game = game;
+            this.image = new Image();
+            this.image.src = "carrotTEMP.png"
+            this.spriteWidth = 92.5;
+            this.spriteHeight = 50;
+            // this.width = 20;
+            // this.height = 20;
+            this.frameX = 0;
+            this.frameY = 0;
+            this.x = x
+            this.y = y
+            this.collisionX = this.x;
+            this.collisionY = this.y;
+            this.collisionWidth = this.spriteWidth;
+            this.collisionHeight = this.spriteHeight;
+            this.frameInterval = 50000 / this.fps;
+
+        }
+        update(deltaTime) {
+            this.maxFrame = 2;
+            this.frameY = 1;
+            if (this.frameTimer > this.frameInterval) {
+                this.frameX < this.maxFrame ? this.frameX++ : this.frameX = 0;
+                this.frameTimer = 2;
+            } else {
+                this.frameTimer += deltaTime
+            }
+
+        }
+        
+
+    }
+
     class Carrot extends Animation {
         constructor(game, x, y) {
             super(game);
@@ -179,8 +221,10 @@ window.addEventListener('load', function () {
             this.image.src = "carrotTEMP.png"
             this.spriteWidth = 92.5;
             this.spriteHeight = 50;
-            this.frameX = 0;
-            this.frameY = 0;
+            // this.width = 20;
+            // this.height = 20;
+            this.frameX = 2;
+            this.frameY = 1;
             this.x = x
             this.y = y
             this.collisionX = this.x;
@@ -191,14 +235,14 @@ window.addEventListener('load', function () {
 
         }
         update(deltaTime) {
-            this.maxFrame = 2;
-            this.frameY = 1;
-            if (this.frameTimer > this.frameInterval) {
-                this.frameX < this.maxFrame ? this.frameX++ : this.frameX = 0;
-                this.frameTimer = 0;
-            } else {
-                this.frameTimer += deltaTime
-            }
+            // this.maxFrame = 2;
+            // this.frameY = 1;
+            // if (this.frameTimer > this.frameInterval) {
+            //     this.frameX < this.maxFrame ? this.frameX++ : this.frameX = 0;
+            //     this.frameTimer = 0;
+            // } else {
+            //     this.frameTimer += deltaTime
+            // }
 
         }
     }
@@ -211,12 +255,15 @@ window.addEventListener('load', function () {
             this.gameObjects = [];
             this.gameTiles = [];
             this.staminaTile = []
+            this.carrotTimer = 0;
+            this.carrotInterval = 1000;
             this.lastKey = undefined;
             this.input = new InputHandler(this);
             this.animation = new Animation(this);
             this.rabbit = new Rabbit(this);
             this.grass = []
             this.carrots = []
+            this.babyCarrots = []
             this.countdownInterval = 10000;
             this.time = document.querySelector("#time");
             this.score = document.querySelector("#score");
@@ -224,8 +271,13 @@ window.addEventListener('load', function () {
             this.setTimer()
 
         }
+
         render(ctx, deltaTime) {
-            this.gameObjects = [...this.grass, ...this.carrots, this.rabbit];
+            this.gameObjects = [...this.grass,...this.babyCarrots, ...this.carrots, this.rabbit];
+            this.checkCollision();
+            this.spawnCarrot(deltaTime)
+            this.carrotGrow();
+            //determines draw order by height 
             // this.gameObjects.sort((a,b) => {
             //     return (a.y + a.height) - (b.y + b.height);
             // });
@@ -235,10 +287,24 @@ window.addEventListener('load', function () {
             })
 
         }
+        checkCollision() {
+            this.carrots.forEach((obj, index) => {
+                if (this.rabbit.x < obj.x + obj.width &&
+                    this.rabbit.x + this.rabbit.width > obj.x &&
+                    this.rabbit.y < obj.y + obj.height &&
+                    this.rabbit.y + this.rabbit.height > obj.y) {
+                    console.log("colission detected")
+                    this.score.textContent++
+                    this.carrots.splice(index, 1)
+                }
+            }
+            )
+
+        }
         init() {
             for (let x = 0; x < 10; x++) {
                 for (let y = 0; y < 10; y++) {
-                    this.gameTiles.push([y * 40, x * 40])
+                    this.gameTiles.push([y * tileSize, x * tileSize])
                 }
             }
             // colour tiles
@@ -258,6 +324,7 @@ window.addEventListener('load', function () {
                     this.grass.push(new Grass(this, x, y))
                 }
             }
+            // game.redTiles();
 
         }
         setTimer() {
@@ -275,57 +342,54 @@ window.addEventListener('load', function () {
         addScore() {
             this.score.textContent++
         }
-        redTiles() {
-            for (let i = 0; i < this.gameTiles.length; i++) {
-                let min = 0;
-                let max = 10;
-                if (Math.floor(Math.random() * (max - min + 1)) + min === 3) {
-                    if (this.gameTiles[i][0] <= 360 && this.gameTiles[i][0] >= 40 && this.gameTiles[i][1] <= 360 && this.gameTiles[i][1] >= 40) {
-                        let tempTile = structuredClone(this.gameTiles[i])
-                        tempTile[2] = "Red"
-                        console.log(tempTile)
-                        this.staminaTile.push(tempTile)
-                    }
-                }
-            }
-            this.staminaTile.forEach(tile => {
-                const [x, y] = tile
-                console.log(tile)
-                this.carrots.push(new Carrot(this, x, y))
-            })
-
-        }
-        resetRed() {
-        if (this.staminaTile.length === 1) {
-            this.redTiles()
-        }
-        }
-        }
-        // check = (rabbit) => {
-        //     for (let value of this.gameTiles) {
-        //         if (value[0] === rabbit[0] && value[1] === rabbit[1] ? rabbit[2] = value[2] : false) {
-        //             for (let i of this.staminaTile) {
-        //                 if (i[0] === rabbit[0] && i[1] === rabbit[1]) {
-        //                     let index = this.staminaTile.indexOf(i)
-        //                     this.carrots.splice(index, 1)
-        //                     // this.moveEnemy1();
-        //                     // this.moveEnemy2();
-        //                     this.countdownInterval += 2_000;
-        //                     this.staminaLog();
-        //                     this.addScore();
-        //                     this.resetRed();
-        //                 }
+        // redTiles() {
+        //     for (let i = 0; i < this.gameTiles.length; i++) {
+        //         let min = 0;
+        //         let max = 10;
+        //         if (Math.floor(Math.random() * (max - min + 1)) + min === 3) {
+        //             if (this.gameTiles[i][0] <= 360 && this.gameTiles[i][0] >= tileSize && this.gameTiles[i][1] <= 360 && this.gameTiles[i][1] >= tileSize) {
+        //                 let tempTile = structuredClone(this.gameTiles[i])
+        //                 tempTile[2] = "Red"
+        //                 console.log(tempTile)
+        //                 this.staminaTile.push(tempTile)
         //             }
         //         }
         //     }
+        //     this.staminaTile.forEach(tile => {
+        //         const [x, y] = tile
+        //         console.log(tile)
+        //         this.carrots.push(new Carrot(this, x, y))
+        //     })
+
         // }
-    
+        carrotGrow(){
+            this.babyCarrots.forEach((carrot, index) => {
+                if(carrot.frameTimer === 2){
+                    let x = carrot.x
+                    let y = carrot.y
+                    this.carrots.push(new Carrot(this, x, y))
+                    this.babyCarrots.splice(index , 1)}
+                })
+        }
+        spawnCarrot(deltaTime) {
+            if (this.carrotTimer > this.carrotInterval && this.carrots.length < 10) {
+                let x = Math.floor(Math.random() * row) * tileSize;
+                let y = Math.floor(Math.random() * column) * tileSize;               
+                this.babyCarrots.push(new babyCarrot(this, x, y))
+                this.carrotTimer = 0;
+            } else {
+                this.carrotTimer += deltaTime;
+            }
+        }
+    }
+
+
     // //test class
 
     const game = new Game(canvas.width, canvas.height);
 
     game.init();
-    game.redTiles();
+
 
     //animation function
     // set lasttime to 0
@@ -340,6 +404,7 @@ window.addEventListener('load', function () {
         ctx.clearRect(0, 0, canvas.width, canvas.height);
         //pass delta time to render for frame context
         game.render(ctx, deltaTime)
+
         //use requestAnimationFrame (in lieu of setInterval or something) and pass it the animate function as an arg
         //call it inside the function to ensure the loop
         requestAnimationFrame(animate);
