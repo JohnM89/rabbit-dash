@@ -66,6 +66,10 @@ window.addEventListener('load', function () {
             this.frameY = 1;
             this.x = 0;
             this.y = 0;
+            this.collisionX = this.x;
+            this.collisionY = this.y;
+            this.collisionWidth = this.spriteWidth;
+            this.collisionHeight = this.spriteHeight;
         }
         update(deltaTime) {
             if (this.game.lastKey == 'PArrowLeft') {
@@ -179,6 +183,10 @@ window.addEventListener('load', function () {
             this.frameY = 0;
             this.x = x
             this.y = y
+            this.collisionX = this.x;
+            this.collisionY = this.y;
+            this.collisionWidth = this.spriteWidth;
+            this.collisionHeight = this.spriteHeight;
             this.frameInterval = 15000 / this.fps;
 
         }
