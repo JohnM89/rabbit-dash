@@ -158,13 +158,19 @@ window.addEventListener('load', function () {
             this.randomInt = 0;
             this.steps = 0;
         }
-        random(){
-            this.randomInt = Math.floor(Math.random() * 4) + 1
+        random(deltaTime){
+            if (this.frameTimer > this.frameInterval) {
+                this.frameX < this.maxFrame ? this.frameX++ : this.frameX = 0;
+                this.randomInt = Math.floor(Math.random() * 4) + 1
+                this.frameTimer = 0;
+            } else {
+                this.frameTimer += deltaTime
+            }
         }
         update(deltaTime) {
 
             if (this.randomInt == 1) {
-                this.setSpeed(-this.maxSpeed, 0);
+                this.setSpeed(-tileSize, 0);
                 this.maxFrame = 2;
                 this.frameY = 2;
             } else if (this.randomInt == 1 && this.speedX < 0) {
@@ -172,7 +178,7 @@ window.addEventListener('load', function () {
                 this.maxFrame = 0;
                 this.frameY = 2;
             } else if (this.randomInt == 2) {
-                this.setSpeed(this.maxSpeed, 0);
+                this.setSpeed(tileSize, 0);
                 this.maxFrame = 2;
                 this.frameY = 3;
             } else if (this.randomInt == 2 && this.speedX > 0) {
@@ -180,7 +186,7 @@ window.addEventListener('load', function () {
                 this.maxFrame = 0;
                 this.frameY = 3;
             } else if (this.randomInt == 3) {
-                this.setSpeed(0, -this.maxSpeed * 0.6);
+                this.setSpeed(0, -tileSize * 0.6);
                 this.maxFrame = 2;
                 this.frameY = 1;
             } else if (this.randomInt == 3 && this.speedY < 0) {
@@ -188,7 +194,7 @@ window.addEventListener('load', function () {
                 this.maxFrame = 0;
                 this.frameY = 1;
             } else if (this.randomInt == 4) {
-                this.setSpeed(0, this.maxSpeed * 0.6);
+                this.setSpeed(0, tileSize * 0.6);
                 this.maxFrame = 2;
                 this.frameY = 0;
             } else if (this.randomInt == 4 && this.speedY > 0) {
@@ -198,7 +204,7 @@ window.addEventListener('load', function () {
             }
             this.x += this.speedX;
             this.y += this.speedY;
-            this.random()
+            this.random(deltaTime)
             // horizontal boundaries
             if (this.x < 0) {
                 this.x = 0;
