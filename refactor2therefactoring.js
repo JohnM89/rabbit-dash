@@ -1,8 +1,8 @@
 const tileSize = 32;
-const ROWS = 15;
-const COLUMNS = 10;
-const gameHeight = tileSize * COLUMNS
-const gameWidth = tileSize * ROWS
+const ROWS = 10;
+const COLUMNS = 15;
+const gameHeight = tileSize * ROWS
+const gameWidth = tileSize * COLUMNS
 window.addEventListener('load', function () {
     const canvas = document.querySelector('#canvasId');
     const ctx = canvas.getContext("2d");
@@ -438,6 +438,7 @@ window.addEventListener('load', function () {
             this.spriteHeight = 60;
             this.frameX = 0;
             this.frameY = 0;
+    
             this.x = x
             this.y = y
             this.collisionWidth = this.tileSize / 4;
@@ -470,16 +471,16 @@ window.addEventListener('load', function () {
             this.levelImage = this.image
             this.imageColumns = this.levelImage.width / tileSize;
             this.level = [
-                1, 2, 2, 3, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-                0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 0, 0, 0,
-                0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-                0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-                0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-                0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0,
-                0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-                0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0,
-                0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-                0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+                14, 15, 14, 14, 14, 14, 9, 14, 14, 14, 14, 14, 14, 4, 14,
+                1, 2, 2, 2, 3, 4, 14, 5, 5, 14, 14, 4, 14, 9, 14,
+                6, 7, 7, 7, 8, 9, 5, 10, 10, 14, 14, 9, 14, 15, 14,
+                6, 7, 7, 7, 8, 15, 10, 14, 14, 14, 14, 14, 14, 14, 14,
+                6, 7, 7, 7, 21, 3,14 , 14, 1, 2, 2, 2, 3, 14, 14,
+                6, 7, 7, 7, 7, 21, 3, 14, 6, 7, 7, 7, 21, 3, 14,
+                6, 23, 7, 19, 7, 7, 8, 14, 6, 23, 7, 7, 7, 21, 3,
+                6, 7, 7, 24, 19, 7, 8, 14, 6, 7, 7, 7, 7, 7, 8,
+                6, 7, 23, 7, 24, 7, 8, 14, 6 , 7, 7, 7, 18, 7, 8,
+                11, 12, 12, 12, 12, 12, 13, 14, 11, 12, 12, 12, 12, 12, 13,
             ]
         }
         getTile(levelImage, col, row) {
@@ -606,6 +607,42 @@ window.addEventListener('load', function () {
         }
 
     }
+        class World6 extends Animation {
+        constructor(game) {
+            super(game)
+            this.image = new Image();
+            this.image.src = "tilemap1simple.png"
+            this.levelImage = this.image
+            this.imageColumns = this.levelImage.width / tileSize;
+            this.level = [
+                1, 2, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+                0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 0, 0, 0,
+                0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+                0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+                0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+                0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0,
+                0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+                0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0,
+                0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+                0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+            ]
+        }
+        getTile(levelImage, col, row) {
+            return levelImage[row * COLUMNS + col]
+        }
+        draw() {
+            for (let row = 0; row < ROWS; row++) {
+                for (let col = 0; col < COLUMNS; col++) {
+                    const tile = this.getTile(this.level, col, row);
+                    ctx.drawImage(this.levelImage, ((tile - 1) * tileSize) % this.levelImage.width, Math.floor((tile - 1) / this.imageColumns) * tileSize, tileSize, tileSize, col * tileSize, row * tileSize, tileSize, tileSize);
+                }
+            }
+        }
+        update(deltaTime) {
+
+        }
+
+    }
 
     class Game {
 
@@ -646,9 +683,9 @@ window.addEventListener('load', function () {
             this.carrotGrow();
             this.checkLevel();
             //determines draw order by height 
-            // this.gameObjects.sort((a,b) => {
-            //     return (a.y + a.height) - (b.y + b.height);
-            // });
+            this.gameObjects.sort((a,b) => {
+                return (a.y + a.height) - (b.y + b.height);
+            });
             this.gameObjects.forEach(obj => {
                 obj.draw(ctx);
                 obj.hitbox(ctx);
