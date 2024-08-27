@@ -317,6 +317,32 @@ window.addEventListener('load', function () {
 
         }
     }
+        class AltGrass extends Animation {
+        constructor(game, x, y) {
+            super(game);
+            this.game = game;
+            this.image = new Image();
+            this.image.src = "grass.png";
+            this.spriteWidth = 32;
+            this.spriteHeight = 32;
+            this.frameX = 0;
+            this.frameY = 0;
+            this.x = x
+            this.y = y
+            this.frameInterval = 25000 / this.fps;
+        }
+        update(deltaTime) {
+            // this.maxFrame = 9;
+            // this.frameY = 10;
+            // if (this.frameTimer > this.frameInterval) {
+            //     this.frameX < this.maxFrame ? this.frameX++ : this.frameX = 0;
+            //     this.frameTimer = 0;
+            // } else {
+            //     this.frameTimer += deltaTime
+            // }
+
+        }
+    }
 
     class BabyCarrot extends Animation {
         constructor(game, x, y) {
@@ -472,11 +498,13 @@ window.addEventListener('load', function () {
                 // map checkerboard!
                 if (Math.floor(i / 10) % 2 === 0 && i % 2 === 0) {
                     this.gameTiles[i].push("White")
+                    this.grass.push(new AltGrass(this, x, y))
                 } else if (Math.floor(i / 10) % 2 === 0 && i % 2 !== 0) {
                     this.gameTiles[i].push("Green")
                     this.grass.push(new Grass(this, x, y))
                 } else if (Math.floor(i / 10) % 2 !== 0 && i % 2 !== 0) {
                     this.gameTiles[i].push("White")
+                    this.grass.push(new AltGrass(this, x, y))
                 } else if (Math.floor(i / 10) % 2 !== 0 && i % 2 === 0) {
                     this.gameTiles[i].push("Green")
                     this.grass.push(new Grass(this, x, y))
