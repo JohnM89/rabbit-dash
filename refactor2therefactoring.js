@@ -146,16 +146,16 @@ window.addEventListener('load', function () {
             this.x = x
             this.y = y
             this.image = new Image();
-            this.image.src = "farmerTEMP.png";
-            this.spriteWidth = 95;
-            this.spriteHeight = 80;
+            this.image.src = "farmers12.png";
+            this.spriteWidth = 64;
+            this.spriteHeight = 64;
             this.frameX = 0;
             this.frameY = 0;
-            this.collisionX = this.x;
-            this.collisionY = this.y;
-            this.collisionWidth = this.spriteWidth;
-            this.collisionHeight = this.spriteHeight;
-            this.frameInterval = 58000 / this.fps;
+            this.collisionX = this.x + (this.spriteWidth - this.collisionWidth) / 2;
+            this.collisionY = this.xy + (this.spriteWidth - this.collisionWidth) / 2;
+            this.collisionWidth = this.spriteWidth / 2;
+            this.collisionHeight = this.spriteHeight / 2;
+            this.frameInterval = 48000 / this.fps;
             this.randomInt = 0
             this.steps = 0;
             this.loop = 0
@@ -179,13 +179,13 @@ window.addEventListener('load', function () {
                 if (this.frameTimer > this.frameInterval) {
                     if (this.loop < this.steps) {
                         this.setSpeed(-tileSize / 80, 0)
-                        this.maxFrame = 2;
-                        this.frameY = 2;
+                        this.maxFrame = 8;
+                        this.frameY = 9;
                         this.loop++
                     } else {
                         this.setSpeed(0, 0)
                         this.maxFrame = 0;
-                        this.frameY = 2
+                        this.frameY = 9
                         this.frameTimer = 0;
                         this.loop = 0
                     }
@@ -200,13 +200,13 @@ window.addEventListener('load', function () {
                 if (this.frameTimer > this.frameInterval) {
                     if (this.loop < this.steps) {
                         this.setSpeed(tileSize / 80, 0)
-                        this.maxFrame = 2;
-                        this.frameY = 3;
+                        this.maxFrame = 8;
+                        this.frameY = 11;
                         this.loop++
                     } else {
                         this.setSpeed(0, 0)
                         this.maxFrame = 0;
-                        this.frameY = 3;
+                        this.frameY = 11;
                         this.frameTimer = 0;
                         this.loop = 0
                     }
@@ -221,13 +221,13 @@ window.addEventListener('load', function () {
                 if (this.frameTimer > this.frameInterval) {
                     if (this.loop < this.steps) {
                         this.setSpeed(0, -tileSize / 80 * 0.6)
-                                        this.maxFrame = 2;
-                this.frameY = 1;
+                                        this.maxFrame = 8;
+                this.frameY = 8;
                         this.loop++
                     } else {
                         this.setSpeed(0, 0)
                         this.maxFrame = 0;
-                        this.frameY = 1;
+                        this.frameY = 8;
                         this.frameTimer = 0;
                         this.loop = 0
                     }
@@ -241,13 +241,13 @@ window.addEventListener('load', function () {
                 if (this.frameTimer > this.frameInterval) {
                     if (this.loop < this.steps) {
                         this.setSpeed(0, tileSize / 80 * 0.6)
-                                        this.maxFrame = 2;
-                this.frameY = 0;
+                                        this.maxFrame = 8;
+                this.frameY = 10;
                         this.loop++
                     } else {
                         this.setSpeed(0, 0)
                         this.maxFrame = 0;
-                        this.frameY = 0;
+                        this.frameY = 10;
                         this.frameTimer = 0;
                         this.loop = 0
                     }
@@ -323,9 +323,9 @@ window.addEventListener('load', function () {
             super(game);
             this.game = game;
             this.image = new Image();
-            this.image.src = "carrotTEMP.png"
-            this.spriteWidth = 92.5;
-            this.spriteHeight = 50;
+            this.image.src = "carrot3.png"
+            this.spriteWidth = 40;
+            this.spriteHeight = 60;
             // this.width = 20;
             // this.height = 20;
             this.frameX = 0;
@@ -340,11 +340,11 @@ window.addEventListener('load', function () {
 
         }
         update(deltaTime) {
-            this.maxFrame = 2;
-            this.frameY = 1;
+            this.maxFrame = 3;
+            this.frameX = 0;
             if (this.frameTimer > this.frameInterval) {
-                this.frameX < this.maxFrame ? this.frameX++ : this.frameX = 0;
-                this.frameTimer = 2;
+                this.frameY < this.maxFrame ? this.frameY++ : this.frameY = 0;
+                this.frameTimer = 0;
             } else {
                 this.frameTimer += deltaTime
             }
@@ -359,19 +359,19 @@ window.addEventListener('load', function () {
             super(game);
             this.game = game;
             this.image = new Image();
-            this.image.src = "carrotTEMP.png"
-            this.spriteWidth = 92.5;
-            this.spriteHeight = 50;
+            this.image.src = "carrot3.png"
+            this.spriteWidth = 40;
+            this.spriteHeight = 60;
             // this.width = 20;
             // this.height = 20;
-            this.frameX = 2;
-            this.frameY = 1;
+            this.frameX = 0;
+            this.frameY = 3;
             this.x = x
             this.y = y
-            this.collisionX = this.x;
-            this.collisionY = this.y;
-            this.collisionWidth = this.spriteWidth;
-            this.collisionHeight = this.spriteHeight;
+            this.collisionX = this.x + (this.spriteWidth - this.collisionWidth) / 2;
+            this.collisionY = this.y + (this.spriteWidth - this.collisionWidth) / 2;
+            this.collisionWidth = this.spriteWidth / 2;
+            this.collisionHeight = this.spriteHeight / 2;
             this.frameInterval = 15000 / this.fps;
 
         }
@@ -495,15 +495,7 @@ window.addEventListener('load', function () {
                 }
             })
         }
-        // random(){
-        //     // if (this.frameTimer > this.frameInterval) {
-        //     //     this.frameX < this.maxFrame ? this.frameX++ : this.frameX = 0;
-        //         this.enemies.forEach(obj => obj.move( Math.floor(Math.random() * 4) + 1))
-        //         // this.frameTimer = 0;
-        //     // } else {
-        //     //     this.frameTimer += deltaTime
-        //     // }
-        // }
+
 
         addScore() {
             this.score.textContent++
@@ -520,7 +512,7 @@ window.addEventListener('load', function () {
         }
         carrotGrow() {
             this.babyCarrots.forEach((carrot, index) => {
-                if (carrot.frameTimer === 2) {
+                if (carrot.frameY === 3) {
                     let x = carrot.x
                     let y = carrot.y
                     this.carrots.push(new Carrot(this, x, y))
