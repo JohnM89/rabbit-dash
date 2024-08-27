@@ -49,10 +49,10 @@ window.addEventListener('load', function () {
             //context aka ctx and deltaTime
             ctx.drawImage(this.image, this.frameX * this.spriteWidth, this.frameY * this.spriteHeight, this.spriteWidth, this.spriteHeight, this.x, this.y, this.width, this.height);
         }
-        hitbox(ctx) {
-            ctx.fillStyle = 'black';
-            ctx.fillRect(this.collisionX, this.collisionY, this.collisionWidth, this.collisionHeight);
-        }
+        // hitbox(ctx) {
+        //     ctx.fillStyle = 'black';
+        //     ctx.fillRect(this.collisionX, this.collisionY, this.collisionWidth, this.collisionHeight);
+        // }
         setSpeed(speedX, speedY) {
             this.speedX = speedX;
             this.speedY = speedY;
@@ -80,11 +80,11 @@ window.addEventListener('load', function () {
 
         }
         //test
-        hitbox(ctx) {
-            ctx.fillStyle = 'black';
-            ctx.fillRect(this.collisionX, this.collisionY, this.collisionWidth, this.collisionHeight);
+        // hitbox(ctx) {
+        //     ctx.fillStyle = 'black';
+        //     ctx.fillRect(this.collisionX, this.collisionY, this.collisionWidth, this.collisionHeight);
 
-        }
+        // }
         update(deltaTime) {
             if (this.game.lastKey == 'PArrowLeft') {
                 this.setSpeed(-this.maxSpeed, 0);
@@ -172,12 +172,12 @@ window.addEventListener('load', function () {
             this.steps = 0;
             this.loop = 0
         }
-        hitbox(ctx) {
-            ctx.fillStyle = 'black';
-            ctx.fillRect(this.collisionX, this.collisionY, this.collisionWidth, this.collisionHeight);
+        // hitbox(ctx) {
+        //     ctx.fillStyle = 'black';
+        //     ctx.fillRect(this.collisionX, this.collisionY, this.collisionWidth, this.collisionHeight);
 
 
-        }
+        // }
         random(deltaTime) {
             if (this.frameTimer > this.frameInterval) {
                 this.frameX < this.maxFrame ? this.frameX++ : this.frameX = 0;
@@ -334,7 +334,7 @@ window.addEventListener('load', function () {
 
         }
     }
-    class AltGrass extends Animation {
+    class Treetop extends Animation {
         constructor(game, x, y) {
             super(game);
             this.game = game;
@@ -348,6 +348,7 @@ window.addEventListener('load', function () {
             this.y = y
             this.frameInterval = 25000 / this.fps;
         }
+        
         update(deltaTime) {
 
 
@@ -376,11 +377,11 @@ window.addEventListener('load', function () {
             this.frameInterval = 50000 / this.fps;
 
         }
-        hitbox(ctx) {
-            ctx.fillStyle = 'black';
-            ctx.fillRect(this.collisionX, this.collisionY, this.collisionWidth, this.collisionHeight);
+        // hitbox(ctx) {
+        //     ctx.fillStyle = 'black';
+        //     ctx.fillRect(this.collisionX, this.collisionY, this.collisionWidth, this.collisionHeight);
 
-        }
+        // }
         update(deltaTime) {
             this.maxFrame = 3;
             this.frameX = 0;
@@ -417,11 +418,11 @@ window.addEventListener('load', function () {
             this.frameInterval = 15000 / this.fps;
 
         }
-        hitbox(ctx) {
-            ctx.fillStyle = 'black';
-            ctx.fillRect(this.collisionX, this.collisionY, this.collisionWidth, this.collisionHeight);
+        // hitbox(ctx) {
+        //     ctx.fillStyle = 'black';
+        //     ctx.fillRect(this.collisionX, this.collisionY, this.collisionWidth, this.collisionHeight);
 
-        }
+        // }
         update(deltaTime) {
 
 
@@ -450,11 +451,11 @@ window.addEventListener('load', function () {
             this.frameInterval = 50000 / this.fps;
 
         }
-        hitbox(ctx) {
-            ctx.fillStyle = 'black';
-            ctx.fillRect(this.collisionX, this.collisionY, this.collisionWidth, this.collisionHeight);
+        // hitbox(ctx) {
+        //     ctx.fillStyle = 'black';
+        //     ctx.fillRect(this.collisionX, this.collisionY, this.collisionWidth, this.collisionHeight);
 
-        }
+        // }
         update(deltaTime) {
 
 
@@ -464,6 +465,56 @@ window.addEventListener('load', function () {
     }
 
     class World0 extends Animation {
+        constructor(game) {
+            super(game)
+            this.image = new Image();
+            this.image.src = "tilemap1simple.png"
+            this.levelImage = this.image
+            this.imageColumns = this.levelImage.width / tileSize;
+            this.level = [
+                14, 15, 14, 14, 14, 14, 9, 14, 14, 14, 14, 14, 14, 4, 14,
+                1, 2, 2, 2, 3, 4, 14, 5, 5, 14, 14, 4, 14, 9, 14,
+                6, 7, 7, 7, 8, 9, 5, 10, 10, 14, 14, 9, 14, 15, 14,
+                6, 7, 7, 7, 8, 15, 10, 14, 14, 14, 14, 14, 14, 14, 14,
+                6, 7, 7, 7, 21, 3,14 , 14, 1, 2, 2, 2, 3, 14, 14,
+                6, 7, 7, 7, 7, 21, 3, 14, 6, 7, 7, 7, 21, 3, 14,
+                6, 23, 7, 19, 7, 7, 8, 14, 6, 23, 7, 7, 7, 21, 3,
+                6, 7, 7, 24, 19, 7, 8, 14, 6, 7, 7, 7, 7, 7, 8,
+                6, 7, 23, 7, 24, 7, 8, 14, 6 , 7, 7, 7, 18, 7, 8,
+                11, 12, 12, 12, 12, 12, 13, 14, 11, 12, 12, 12, 12, 12, 13,
+            ]
+            //for top layers
+            
+        }
+        getTile(levelImage, col, row) {
+            return levelImage[row * COLUMNS + col]
+        }
+        draw() {
+            for (let row = 0; row < ROWS; row++) {
+                for (let col = 0; col < COLUMNS; col++) {
+                    const tile = this.getTile(this.level, col, row);
+                    ctx.drawImage(this.levelImage, ((tile - 1) * tileSize) % this.levelImage.width, Math.floor((tile - 1) / this.imageColumns) * tileSize, tileSize, tileSize, col * tileSize, row * tileSize, tileSize, tileSize);
+                    // example way i can pass a tile I want to animate
+                    //also using similar method to create top layer objects
+                                    //if the tile is a 4 (for example, a tree base), add a treetop object
+                // if (tile === 4 || tile === 5  ) {
+                //       // Treetop positioned above the tree base
+                //     this.game.topLayerObjects.push(new TreeTop(this.game, x, y - tileSize));  // Add it to the top layer array
+                // }
+            //             if (tile === 4) {
+            //         const newObject = new Rock(this.game, x, y);  // Example: creating a Rock object
+            //         this.game.gameObjects.push(newObject); // Add it to the game's object array
+                
+            // }
+                }
+            }
+        }
+        update(deltaTime) {
+
+        }
+
+    }
+    class World1 extends Animation {
         constructor(game) {
             super(game)
             this.image = new Image();
@@ -499,42 +550,6 @@ window.addEventListener('load', function () {
         }
 
     }
-    class World1 extends Animation {
-        constructor(game) {
-            super(game)
-            this.image = new Image();
-            this.image.src = "tilemap1simple.png"
-            this.levelImage = this.image
-            this.imageColumns = this.levelImage.width / tileSize;
-            this.level = [
-                1, 2, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-                0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 0, 0, 0,
-                0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-                0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-                0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-                0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0,
-                0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-                0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0,
-                0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-                0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-            ]
-        }
-        getTile(levelImage, col, row) {
-            return levelImage[row * COLUMNS + col]
-        }
-        draw() {
-            for (let row = 0; row < ROWS; row++) {
-                for (let col = 0; col < COLUMNS; col++) {
-                    const tile = this.getTile(this.level, col, row);
-                    ctx.drawImage(this.levelImage, ((tile - 1) * tileSize) % this.levelImage.width, Math.floor((tile - 1) / this.imageColumns) * tileSize, tileSize, tileSize, col * tileSize, row * tileSize, tileSize, tileSize);
-                }
-            }
-        }
-        update(deltaTime) {
-
-        }
-
-    }
     class World2 extends Animation {
         constructor(game) {
             super(game)
@@ -543,16 +558,16 @@ window.addEventListener('load', function () {
             this.levelImage = this.image
             this.imageColumns = this.levelImage.width / tileSize;
             this.level = [
-                1, 2, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-                0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 0, 0, 0,
-                0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-                0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-                0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-                0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0,
-                0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-                0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0,
-                0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-                0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+                14, 15, 14, 14, 14, 14, 9, 14, 14, 14, 14, 14, 14, 4, 14,
+                1, 2, 2, 2, 3, 4, 14, 5, 5, 14, 14, 4, 14, 9, 14,
+                6, 7, 7, 7, 8, 9, 5, 10, 10, 14, 14, 9, 14, 15, 14,
+                6, 7, 7, 7, 8, 15, 10, 14, 14, 14, 14, 14, 14, 14, 14,
+                6, 7, 7, 7, 21, 3,14 , 14, 1, 2, 2, 2, 3, 14, 14,
+                6, 7, 7, 7, 7, 21, 3, 14, 6, 7, 7, 7, 21, 3, 14,
+                6, 23, 7, 19, 7, 7, 8, 14, 6, 23, 7, 7, 7, 21, 3,
+                6, 7, 7, 24, 19, 7, 8, 14, 6, 7, 7, 7, 7, 7, 8,
+                6, 7, 23, 7, 24, 7, 8, 14, 6 , 7, 7, 7, 18, 7, 8,
+                11, 12, 12, 12, 12, 12, 13, 14, 11, 12, 12, 12, 12, 12, 13,
             ]
         }
         getTile(levelImage, col, row) {
@@ -579,16 +594,16 @@ window.addEventListener('load', function () {
             this.levelImage = this.image
             this.imageColumns = this.levelImage.width / tileSize;
             this.level = [
-                1, 2, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-                0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 0, 0, 0,
-                0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-                0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-                0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-                0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0,
-                0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-                0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0,
-                0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-                0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+                14, 15, 14, 14, 14, 14, 9, 14, 14, 14, 14, 14, 14, 4, 14,
+                1, 2, 2, 2, 3, 4, 14, 5, 5, 14, 14, 4, 14, 9, 14,
+                6, 7, 7, 7, 8, 9, 5, 10, 10, 14, 14, 9, 14, 15, 14,
+                6, 7, 7, 7, 8, 15, 10, 14, 14, 14, 14, 14, 14, 14, 14,
+                6, 7, 7, 7, 21, 3,14 , 14, 1, 2, 2, 2, 3, 14, 14,
+                6, 7, 7, 7, 7, 21, 3, 14, 6, 7, 7, 7, 21, 3, 14,
+                6, 23, 7, 19, 7, 7, 8, 14, 6, 23, 7, 7, 7, 21, 3,
+                6, 7, 7, 24, 19, 7, 8, 14, 6, 7, 7, 7, 7, 7, 8,
+                6, 7, 23, 7, 24, 7, 8, 14, 6 , 7, 7, 7, 18, 7, 8,
+                11, 12, 12, 12, 12, 12, 13, 14, 11, 12, 12, 12, 12, 12, 13,
             ]
         }
         getTile(levelImage, col, row) {
@@ -607,7 +622,7 @@ window.addEventListener('load', function () {
         }
 
     }
-        class World6 extends Animation {
+        class World4 extends Animation {
         constructor(game) {
             super(game)
             this.image = new Image();
@@ -651,6 +666,7 @@ window.addEventListener('load', function () {
             this.height = height;
             this.gameObjects = [];
             this.gameTiles = [];
+            this.animatedTiles = []
             this.staminaTile = []
             this.level = 0
             this.carrotTimer = 0;
@@ -659,11 +675,14 @@ window.addEventListener('load', function () {
             this.input = new InputHandler(this);
             this.animation = new Animation(this);
             this.rabbit = new Rabbit(this);
-            this.grass = []
+            // this.treetop = new Treetop(this)
+            this.tiles = []
+            this.topLayerObjects = [];
             this.carrots = []
             this.babyCarrots = []
             this.enemies = []
             this.portals = []
+            this.impassable = []
             this.portalCount = 0
             this.randomInt = 0
             this.countdownInterval = 10000;
@@ -676,7 +695,8 @@ window.addEventListener('load', function () {
         }
 
         render(ctx, deltaTime) {
-            this.gameObjects = [...this.grass, ...this.portals, ...this.babyCarrots, ...this.carrots, ...this.enemies, this.rabbit];
+            this.gameObjects = [...this.tiles, ...this.portals, ...this.babyCarrots, ...this.carrots, ...this.enemies, this.rabbit];
+            
             this.checkCollision();
             this.spawnCarrot(deltaTime)
             this.spawnEnemy(deltaTime)
@@ -688,9 +708,13 @@ window.addEventListener('load', function () {
             });
             this.gameObjects.forEach(obj => {
                 obj.draw(ctx);
-                obj.hitbox(ctx);
+                // obj.hitbox(ctx);
                 obj.update(deltaTime);
             })
+            this.topLayerObjects.forEach(obj => {
+            obj.draw(ctx);
+            obj.update(deltaTime);
+        });
 
         }
         checkLevel() {
@@ -733,18 +757,19 @@ window.addEventListener('load', function () {
                     this.rabbit.collisionY + this.rabbit.collisionHeight > obj.collisionY) {
                     this.level++;
                     this.portals.splice(index, 1);
-                    this.grass = [];
+                    this.tiles = [];
                     this.carrots = [];
                     this.enemies = [];
                     this.babyCarrots = [];
+                    this.topLayerObjects = [];
                     if (this.level === 1) {
-                        this.grass.push(new World1(this));
+                        this.tiles.push(new World1(this));
                     } else if (this.level === 2) {
-                        this.grass.push(new World2(this));
+                        this.tiles.push(new World2(this));
                     } else if (this.level === 3) {
-                        this.grass.push(new World3(this));
+                        this.tiles.push(new World3(this));
                     } else if (this.level === 4) {
-                        this.grass.push(new World0(this));
+                        this.tiles.push(new World0(this));
                         this.level = 0;
                     }
                 }
@@ -752,7 +777,7 @@ window.addEventListener('load', function () {
         }
 
         init() {
-            this.grass.push(new World0(this))
+            this.tiles.push(new World0(this))
         }
         setTimer() {
             const timer = setInterval(() => {
