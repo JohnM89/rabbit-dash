@@ -146,7 +146,7 @@ window.addEventListener('load', function () {
             this.x = x
             this.y = y
             this.image = new Image();
-            this.image.src = "farmerTemp.png";
+            this.image.src = "farmerTEMP.png";
             this.spriteWidth = 95;
             this.spriteHeight = 80;
             this.frameX = 0;
