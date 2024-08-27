@@ -75,7 +75,7 @@ window.addEventListener('load', function () {
             this.collisionWidth = this.spriteWidth;
             this.collisionHeight = this.spriteHeight;
             this.grid = tileSize;
-            
+
         }
         update(deltaTime) {
             if (this.game.lastKey == 'PArrowLeft') {
@@ -140,13 +140,85 @@ window.addEventListener('load', function () {
     }
 
     class Farmer extends Animation {
-        constructor(game) {
+        constructor(game, x, y) {
             super(game)
-            this.x = this.randomX
-            this.y = 400
+            this.x = x
+            this.y = y
             this.image = new Image();
             this.image.src = "farmerTemp.png";
+            this.spriteWidth = 95;
+            this.spriteHeight = 80;
+            this.frameX = 0;
+            this.frameY = 0;
+            this.collisionX = this.x;
+            this.collisionY = this.y;
+            this.collisionWidth = this.spriteWidth;
+            this.collisionHeight = this.spriteHeight;
+            this.frameInterval = 8000 / this.fps;
+            this.randomInt = 0;
+            this.steps = 0;
         }
+        random(){
+            this.randomInt = Math.floor(Math.random() * 4) + 1
+        }
+        update(deltaTime) {
+
+            if (this.randomInt == 1) {
+                this.setSpeed(-this.maxSpeed, 0);
+                this.maxFrame = 2;
+                this.frameY = 2;
+            } else if (this.randomInt == 1 && this.speedX < 0) {
+                this.setSpeed(0, 0);
+                this.maxFrame = 0;
+                this.frameY = 2;
+            } else if (this.randomInt == 2) {
+                this.setSpeed(this.maxSpeed, 0);
+                this.maxFrame = 2;
+                this.frameY = 3;
+            } else if (this.randomInt == 2 && this.speedX > 0) {
+                this.setSpeed(0, 0);
+                this.maxFrame = 0;
+                this.frameY = 3;
+            } else if (this.randomInt == 3) {
+                this.setSpeed(0, -this.maxSpeed * 0.6);
+                this.maxFrame = 2;
+                this.frameY = 1;
+            } else if (this.randomInt == 3 && this.speedY < 0) {
+                this.setSpeed(0, 0);
+                this.maxFrame = 0;
+                this.frameY = 1;
+            } else if (this.randomInt == 4) {
+                this.setSpeed(0, this.maxSpeed * 0.6);
+                this.maxFrame = 2;
+                this.frameY = 0;
+            } else if (this.randomInt == 4 && this.speedY > 0) {
+                this.setSpeed(0, 0);
+                this.maxFrame = 0;
+                this.frameY = 0;
+            }
+            this.x += this.speedX;
+            this.y += this.speedY;
+            this.random()
+            // horizontal boundaries
+            if (this.x < 0) {
+                this.x = 0;
+            } else if (this.x > this.game.width - this.width) {
+                this.x = this.game.width - this.width;
+            }
+            //vertical
+            if (this.y < 0) {
+                this.y = 0;
+            } else if (this.y > this.game.height - this.height) {
+                this.y = this.game.height - this.height;
+            }
+            if (this.frameTimer > this.frameInterval) {
+                this.frameX < this.maxFrame ? this.frameX++ : this.frameX = 0;
+                this.frameTimer = 0;
+            } else {
+                this.frameTimer += deltaTime
+            }
+        }
+
 
     }
 
@@ -177,8 +249,8 @@ window.addEventListener('load', function () {
         }
     }
 
-    class babyCarrot extends Animation{
-                constructor(game, x, y) {
+    class BabyCarrot extends Animation {
+        constructor(game, x, y) {
             super(game);
             this.game = game;
             this.image = new Image();
@@ -209,7 +281,7 @@ window.addEventListener('load', function () {
             }
 
         }
-        
+
 
     }
 
@@ -264,18 +336,21 @@ window.addEventListener('load', function () {
             this.grass = []
             this.carrots = []
             this.babyCarrots = []
+            this.enemies = []
             this.countdownInterval = 10000;
             this.time = document.querySelector("#time");
             this.score = document.querySelector("#score");
+            this.scoreIncrement = 0
             this.score.textContent = parseInt(0);
             this.setTimer()
 
         }
 
         render(ctx, deltaTime) {
-            this.gameObjects = [...this.grass,...this.babyCarrots, ...this.carrots, this.rabbit];
+            this.gameObjects = [...this.grass, ...this.babyCarrots, ...this.carrots, ...this.enemies, this.rabbit];
             this.checkCollision();
             this.spawnCarrot(deltaTime)
+            this.spawnEnemy(deltaTime)
             this.carrotGrow();
             //determines draw order by height 
             // this.gameObjects.sort((a,b) => {
@@ -293,12 +368,24 @@ window.addEventListener('load', function () {
                     this.rabbit.x + this.rabbit.width > obj.x &&
                     this.rabbit.y < obj.y + obj.height &&
                     this.rabbit.y + this.rabbit.height > obj.y) {
-                    console.log("colission detected")
+                    this.countdownInterval += 4000
                     this.score.textContent++
                     this.carrots.splice(index, 1)
                 }
             }
             )
+            this.enemies.forEach((obj) =>{
+                if (this.rabbit.x < obj.x + obj.width &&
+                    this.rabbit.x + this.rabbit.width > obj.x &&
+                    this.rabbit.y < obj.y + obj.height &&
+                    this.rabbit.y + this.rabbit.height > obj.y)
+                    {
+                    this.countdownInterval -= 4000
+                    this.score.textContent--
+
+                    }
+
+            })
 
         }
         init() {
@@ -324,7 +411,6 @@ window.addEventListener('load', function () {
                     this.grass.push(new Grass(this, x, y))
                 }
             }
-            // game.redTiles();
 
         }
         setTimer() {
@@ -342,43 +428,35 @@ window.addEventListener('load', function () {
         addScore() {
             this.score.textContent++
         }
-        // redTiles() {
-        //     for (let i = 0; i < this.gameTiles.length; i++) {
-        //         let min = 0;
-        //         let max = 10;
-        //         if (Math.floor(Math.random() * (max - min + 1)) + min === 3) {
-        //             if (this.gameTiles[i][0] <= 360 && this.gameTiles[i][0] >= tileSize && this.gameTiles[i][1] <= 360 && this.gameTiles[i][1] >= tileSize) {
-        //                 let tempTile = structuredClone(this.gameTiles[i])
-        //                 tempTile[2] = "Red"
-        //                 console.log(tempTile)
-        //                 this.staminaTile.push(tempTile)
-        //             }
-        //         }
-        //     }
-        //     this.staminaTile.forEach(tile => {
-        //         const [x, y] = tile
-        //         console.log(tile)
-        //         this.carrots.push(new Carrot(this, x, y))
-        //     })
-
-        // }
-        carrotGrow(){
-            this.babyCarrots.forEach((carrot, index) => {
-                if(carrot.frameTimer === 2){
-                    let x = carrot.x
-                    let y = carrot.y
-                    this.carrots.push(new Carrot(this, x, y))
-                    this.babyCarrots.splice(index , 1)}
-                })
-        }
         spawnCarrot(deltaTime) {
             if (this.carrotTimer > this.carrotInterval && this.carrots.length < 10) {
                 let x = Math.floor(Math.random() * row) * tileSize;
-                let y = Math.floor(Math.random() * column) * tileSize;               
-                this.babyCarrots.push(new babyCarrot(this, x, y))
+                let y = Math.floor(Math.random() * column) * tileSize;
+                this.babyCarrots.push(new BabyCarrot(this, x, y))
                 this.carrotTimer = 0;
             } else {
                 this.carrotTimer += deltaTime;
+            }
+        }
+        carrotGrow() {
+            this.babyCarrots.forEach((carrot, index) => {
+                if (carrot.frameTimer === 2) {
+                    let x = carrot.x
+                    let y = carrot.y
+                    this.carrots.push(new Carrot(this, x, y))
+                    this.babyCarrots.splice(index, 1)
+                }
+            })
+        }
+        spawnEnemy(deltaTime) {
+            if (this.enemies.length < 2) {
+                let x = Math.floor(Math.random() * row) * tileSize;
+                let y = Math.floor(Math.random() * column) * tileSize;
+                this.enemies.push(new Farmer(this, x, y))
+                console.log('spawned')
+                this.scoreIncrement = 0;
+            } else {
+                this.carrotIncrement += deltaTime;
             }
         }
     }
