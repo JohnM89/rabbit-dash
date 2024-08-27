@@ -1,11 +1,12 @@
-const tileSize = 40;
-const row = 10;
-const column = 10;
-const gameHeight = tileSize * column
-const gameWidth = tileSize * row
+const tileSize = 32;
+const ROWS = 15;
+const COLUMNS = 10;
+const gameHeight = tileSize * COLUMNS
+const gameWidth = tileSize * ROWS
 window.addEventListener('load', function () {
     const canvas = document.querySelector('#canvasId');
     const ctx = canvas.getContext("2d");
+    ctx.imageSmoothingEnabled = false
     canvas.height = gameHeight
     canvas.width = gameWidth
 
@@ -26,19 +27,15 @@ window.addEventListener('load', function () {
     class Animation {
         constructor(game) {
             this.game = game;
-            // this.spriteWidth = 36;
-            // this.spriteHeight = 39.5;
+            this.tileSize = tileSize
             this.width = tileSize;
             this.height = tileSize;
             this.frameX = 0;
             this.frameY = 0;
             this.maxFrame = 0;
-            // this.width = this.spriteWidth;
-            // this.height = this.spriteHeight;
             this.speedX = 0;
             this.speedY = 0;
             this.maxSpeed = 2;
-
             //standard frame rate 
             this.fps = 60;
             //calculates the time interval between frames based on fps
@@ -51,6 +48,10 @@ window.addEventListener('load', function () {
         draw(ctx) {
             //context aka ctx and deltaTime
             ctx.drawImage(this.image, this.frameX * this.spriteWidth, this.frameY * this.spriteHeight, this.spriteWidth, this.spriteHeight, this.x, this.y, this.width, this.height);
+        }
+        hitbox(ctx) {
+            ctx.fillStyle = 'black';
+            ctx.fillRect(this.collisionX, this.collisionY, this.collisionWidth, this.collisionHeight);
         }
         setSpeed(speedX, speedY) {
             this.speedX = speedX;
@@ -71,11 +72,17 @@ window.addEventListener('load', function () {
             this.frameY = 1;
             this.x = 0;
             this.y = 0;
-            this.collisionX = this.x;
-            this.collisionY = this.y;
-            this.collisionWidth = this.spriteWidth;
-            this.collisionHeight = this.spriteHeight;
-            this.grid = tileSize;
+            this.collisionX = this.x + (this.tileSize - this.collisionWidth) / 2;
+            this.collisionY = this.y + (this.tileSize - this.collisionHeight) / 2
+            this.collisionWidth = this.tileSize / 2;
+            this.collisionHeight = this.tileSize / 2;
+
+
+        }
+        //test
+        hitbox(ctx) {
+            ctx.fillStyle = 'black';
+            ctx.fillRect(this.collisionX, this.collisionY, this.collisionWidth, this.collisionHeight);
 
         }
         update(deltaTime) {
@@ -114,6 +121,8 @@ window.addEventListener('load', function () {
             }
             this.x += this.speedX;
             this.y += this.speedY;
+            this.collisionX = this.x + (this.tileSize - this.collisionWidth) / 2;
+            this.collisionY = this.y + (this.tileSize - this.collisionHeight) / 2;
             // horizontal boundaries
             if (this.x < 0) {
                 this.x = 0;
@@ -146,23 +155,29 @@ window.addEventListener('load', function () {
             this.x = x
             this.y = y
             this.image = new Image();
-            this.image.src = "farmers12.png";
+            this.image.src = "imnotevensure.png";
             this.spriteWidth = 64;
             this.spriteHeight = 64;
+            this.width = this.spriteWidth;
+            this.height = this.spriteHeight;
             this.frameX = 0;
             this.frameY = 0;
-            this.collisionX = this.x + (this.spriteWidth - this.collisionWidth) / 2;
-            this.collisionY = this.xy + (this.spriteWidth - this.collisionWidth) / 2;
-            this.collisionWidth = this.spriteWidth / 2;
+            this.collisionWidth = this.spriteWidth / 3;
             this.collisionHeight = this.spriteHeight / 2;
+            this.collisionX = this.x + (this.width - this.collisionWidth) / 2;
+            this.collisionY = this.y + (this.height - this.collisionHeight) / 1.5;
+
             this.frameInterval = 48000 / this.fps;
             this.randomInt = 0
             this.steps = 0;
             this.loop = 0
         }
-        // move(randomInt){
-        //     this.randomInt = randomInt
-        // }
+        hitbox(ctx) {
+            ctx.fillStyle = 'black';
+            ctx.fillRect(this.collisionX, this.collisionY, this.collisionWidth, this.collisionHeight);
+
+
+        }
         random(deltaTime) {
             if (this.frameTimer > this.frameInterval) {
                 this.frameX < this.maxFrame ? this.frameX++ : this.frameX = 0;
@@ -221,8 +236,8 @@ window.addEventListener('load', function () {
                 if (this.frameTimer > this.frameInterval) {
                     if (this.loop < this.steps) {
                         this.setSpeed(0, -tileSize / 80 * 0.6)
-                                        this.maxFrame = 8;
-                this.frameY = 8;
+                        this.maxFrame = 8;
+                        this.frameY = 8;
                         this.loop++
                     } else {
                         this.setSpeed(0, 0)
@@ -241,8 +256,8 @@ window.addEventListener('load', function () {
                 if (this.frameTimer > this.frameInterval) {
                     if (this.loop < this.steps) {
                         this.setSpeed(0, tileSize / 80 * 0.6)
-                                        this.maxFrame = 8;
-                this.frameY = 10;
+                        this.maxFrame = 8;
+                        this.frameY = 10;
                         this.loop++
                     } else {
                         this.setSpeed(0, 0)
@@ -260,6 +275,8 @@ window.addEventListener('load', function () {
             }
             this.x += this.speedX;
             this.y += this.speedY;
+            this.collisionX = this.x + (this.width - this.collisionWidth) / 2;
+            this.collisionY = this.y + (this.height - this.collisionHeight) / 1.5;
 
             this.random(deltaTime)
 
@@ -317,7 +334,7 @@ window.addEventListener('load', function () {
 
         }
     }
-        class AltGrass extends Animation {
+    class AltGrass extends Animation {
         constructor(game, x, y) {
             super(game);
             this.game = game;
@@ -332,14 +349,7 @@ window.addEventListener('load', function () {
             this.frameInterval = 25000 / this.fps;
         }
         update(deltaTime) {
-            // this.maxFrame = 9;
-            // this.frameY = 10;
-            // if (this.frameTimer > this.frameInterval) {
-            //     this.frameX < this.maxFrame ? this.frameX++ : this.frameX = 0;
-            //     this.frameTimer = 0;
-            // } else {
-            //     this.frameTimer += deltaTime
-            // }
+
 
         }
     }
@@ -352,17 +362,23 @@ window.addEventListener('load', function () {
             this.image.src = "carrot3.png"
             this.spriteWidth = 40;
             this.spriteHeight = 60;
-            // this.width = 20;
-            // this.height = 20;
+
             this.frameX = 0;
             this.frameY = 0;
             this.x = x
             this.y = y
-            this.collisionX = this.x;
-            this.collisionY = this.y;
-            this.collisionWidth = this.spriteWidth;
-            this.collisionHeight = this.spriteHeight;
+            this.collisionWidth = this.tileSize / 4;
+            this.collisionHeight = this.tileSize / 4;
+
+            this.collisionX = this.x + (this.tileSize - this.collisionWidth) / 2;
+            this.collisionY = this.y + (this.tileSize - this.collisionHeight) / 2;
+
             this.frameInterval = 50000 / this.fps;
+
+        }
+        hitbox(ctx) {
+            ctx.fillStyle = 'black';
+            ctx.fillRect(this.collisionX, this.collisionY, this.collisionWidth, this.collisionHeight);
 
         }
         update(deltaTime) {
@@ -388,30 +404,207 @@ window.addEventListener('load', function () {
             this.image.src = "carrot3.png"
             this.spriteWidth = 40;
             this.spriteHeight = 60;
-            // this.width = 20;
-            // this.height = 20;
             this.frameX = 0;
             this.frameY = 3;
             this.x = x
             this.y = y
-            this.collisionX = this.x + (this.spriteWidth - this.collisionWidth) / 2;
-            this.collisionY = this.y + (this.spriteWidth - this.collisionWidth) / 2;
-            this.collisionWidth = this.spriteWidth / 2;
-            this.collisionHeight = this.spriteHeight / 2;
+            this.collisionWidth = this.tileSize / 4;
+            this.collisionHeight = this.tileSize / 4;
+
+            this.collisionX = this.x + (this.tileSize - this.collisionWidth) / 2;
+            this.collisionY = this.y + (this.tileSize - this.collisionHeight) / 2;
+
             this.frameInterval = 15000 / this.fps;
 
         }
-        update(deltaTime) {
-            // this.maxFrame = 2;
-            // this.frameY = 1;
-            // if (this.frameTimer > this.frameInterval) {
-            //     this.frameX < this.maxFrame ? this.frameX++ : this.frameX = 0;
-            //     this.frameTimer = 0;
-            // } else {
-            //     this.frameTimer += deltaTime
-            // }
+        hitbox(ctx) {
+            ctx.fillStyle = 'black';
+            ctx.fillRect(this.collisionX, this.collisionY, this.collisionWidth, this.collisionHeight);
 
         }
+        update(deltaTime) {
+
+
+        }
+    }
+
+    class Burrow extends Animation {
+        constructor(game, x, y) {
+            super(game);
+            this.game = game;
+            this.image = new Image();
+            this.image.src = "farmerTEMP.png"
+            this.spriteWidth = 40;
+            this.spriteHeight = 60;
+            this.frameX = 0;
+            this.frameY = 0;
+            this.x = x
+            this.y = y
+            this.collisionWidth = this.tileSize / 4;
+            this.collisionHeight = this.tileSize / 4;
+
+            this.collisionX = this.x + (this.tileSize - this.collisionWidth) / 2;
+            this.collisionY = this.y + (this.tileSize - this.collisionHeight) / 2;
+
+            this.frameInterval = 50000 / this.fps;
+
+        }
+        hitbox(ctx) {
+            ctx.fillStyle = 'black';
+            ctx.fillRect(this.collisionX, this.collisionY, this.collisionWidth, this.collisionHeight);
+
+        }
+        update(deltaTime) {
+
+
+        }
+
+
+    }
+
+    class World0 extends Animation {
+        constructor(game) {
+            super(game)
+            this.image = new Image();
+            this.image.src = "tilemap1simple.png"
+            this.levelImage = this.image
+            this.imageColumns = this.levelImage.width / tileSize;
+            this.level = [
+                1, 2, 2, 3, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+                0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 0, 0, 0,
+                0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+                0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+                0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+                0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0,
+                0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+                0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0,
+                0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+                0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+            ]
+        }
+        getTile(levelImage, col, row) {
+            return levelImage[row * COLUMNS + col]
+        }
+        draw() {
+            for (let row = 0; row < ROWS; row++) {
+                for (let col = 0; col < COLUMNS; col++) {
+                    const tile = this.getTile(this.level, col, row);
+                    ctx.drawImage(this.levelImage, ((tile - 1) * tileSize) % this.levelImage.width, Math.floor((tile - 1) / this.imageColumns) * tileSize, tileSize, tileSize, col * tileSize, row * tileSize, tileSize, tileSize);
+                }
+            }
+        }
+        update(deltaTime) {
+
+        }
+
+    }
+    class World1 extends Animation {
+        constructor(game) {
+            super(game)
+            this.image = new Image();
+            this.image.src = "tilemap1simple.png"
+            this.levelImage = this.image
+            this.imageColumns = this.levelImage.width / tileSize;
+            this.level = [
+                1, 2, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+                0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 0, 0, 0,
+                0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+                0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+                0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+                0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0,
+                0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+                0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0,
+                0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+                0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+            ]
+        }
+        getTile(levelImage, col, row) {
+            return levelImage[row * COLUMNS + col]
+        }
+        draw() {
+            for (let row = 0; row < ROWS; row++) {
+                for (let col = 0; col < COLUMNS; col++) {
+                    const tile = this.getTile(this.level, col, row);
+                    ctx.drawImage(this.levelImage, ((tile - 1) * tileSize) % this.levelImage.width, Math.floor((tile - 1) / this.imageColumns) * tileSize, tileSize, tileSize, col * tileSize, row * tileSize, tileSize, tileSize);
+                }
+            }
+        }
+        update(deltaTime) {
+
+        }
+
+    }
+    class World2 extends Animation {
+        constructor(game) {
+            super(game)
+            this.image = new Image();
+            this.image.src = "tilemap1simple.png"
+            this.levelImage = this.image
+            this.imageColumns = this.levelImage.width / tileSize;
+            this.level = [
+                1, 2, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+                0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 0, 0, 0,
+                0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+                0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+                0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+                0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0,
+                0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+                0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0,
+                0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+                0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+            ]
+        }
+        getTile(levelImage, col, row) {
+            return levelImage[row * COLUMNS + col]
+        }
+        draw() {
+            for (let row = 0; row < ROWS; row++) {
+                for (let col = 0; col < COLUMNS; col++) {
+                    const tile = this.getTile(this.level, col, row);
+                    ctx.drawImage(this.levelImage, ((tile - 1) * tileSize) % this.levelImage.width, Math.floor((tile - 1) / this.imageColumns) * tileSize, tileSize, tileSize, col * tileSize, row * tileSize, tileSize, tileSize);
+                }
+            }
+        }
+        update(deltaTime) {
+
+        }
+
+    }
+    class World3 extends Animation {
+        constructor(game) {
+            super(game)
+            this.image = new Image();
+            this.image.src = "tilemap1simple.png"
+            this.levelImage = this.image
+            this.imageColumns = this.levelImage.width / tileSize;
+            this.level = [
+                1, 2, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+                0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 0, 0, 0,
+                0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+                0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+                0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+                0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0,
+                0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+                0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0,
+                0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+                0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+            ]
+        }
+        getTile(levelImage, col, row) {
+            return levelImage[row * COLUMNS + col]
+        }
+        draw() {
+            for (let row = 0; row < ROWS; row++) {
+                for (let col = 0; col < COLUMNS; col++) {
+                    const tile = this.getTile(this.level, col, row);
+                    ctx.drawImage(this.levelImage, ((tile - 1) * tileSize) % this.levelImage.width, Math.floor((tile - 1) / this.imageColumns) * tileSize, tileSize, tileSize, col * tileSize, row * tileSize, tileSize, tileSize);
+                }
+            }
+        }
+        update(deltaTime) {
+
+        }
+
     }
 
     class Game {
@@ -422,6 +615,7 @@ window.addEventListener('load', function () {
             this.gameObjects = [];
             this.gameTiles = [];
             this.staminaTile = []
+            this.level = 0
             this.carrotTimer = 0;
             this.carrotInterval = 1000;
             this.lastKey = undefined;
@@ -432,6 +626,8 @@ window.addEventListener('load', function () {
             this.carrots = []
             this.babyCarrots = []
             this.enemies = []
+            this.portals = []
+            this.portalCount = 0
             this.randomInt = 0
             this.countdownInterval = 10000;
             this.time = document.querySelector("#time");
@@ -443,74 +639,83 @@ window.addEventListener('load', function () {
         }
 
         render(ctx, deltaTime) {
-            this.gameObjects = [...this.grass, ...this.babyCarrots, ...this.carrots, ...this.enemies, this.rabbit];
-            this.checkCollision(deltaTime);
+            this.gameObjects = [...this.grass, ...this.portals, ...this.babyCarrots, ...this.carrots, ...this.enemies, this.rabbit];
+            this.checkCollision();
             this.spawnCarrot(deltaTime)
             this.spawnEnemy(deltaTime)
             this.carrotGrow();
+            this.checkLevel();
             //determines draw order by height 
             // this.gameObjects.sort((a,b) => {
             //     return (a.y + a.height) - (b.y + b.height);
             // });
             this.gameObjects.forEach(obj => {
                 obj.draw(ctx);
+                obj.hitbox(ctx);
                 obj.update(deltaTime);
             })
 
         }
-        checkCollision(deltaTime) {
-            this.carrots.forEach((obj, index) => {
-                if (this.rabbit.x < obj.x + obj.width &&
-                    this.rabbit.x + this.rabbit.width > obj.x &&
-                    this.rabbit.y < obj.y + obj.height &&
-                    this.rabbit.y + this.rabbit.height > obj.y) {
-                    this.countdownInterval += 4000
-                    this.score.textContent++
-                    this.carrots.splice(index, 1)
-                }
+        checkLevel() {
+            if (this.portalCount > 2 && this.portals.length <= 0) {
+                let x = Math.floor(Math.random() * ROWS) * tileSize;
+                let y = Math.floor(Math.random() * COLUMNS) * tileSize;
+                this.portals.push(new Burrow(this, x, y))
+
             }
-            )
-            this.enemies.forEach((obj) => {
-                if (this.rabbit.x < obj.x + obj.width &&
-                    this.rabbit.x + this.rabbit.width > obj.x &&
-                    this.rabbit.y < obj.y + obj.height &&
-                    this.rabbit.y + this.rabbit.height > obj.y) {
-                    this.countdownInterval -= 4000
-                    this.score.textContent--
-
-                }
-
-            })
-            // this.random();
-
 
         }
-        init() {
-            for (let x = 0; x < 10; x++) {
-                for (let y = 0; y < 10; y++) {
-                    this.gameTiles.push([y * tileSize, x * tileSize])
+        checkCollision() {
+            this.carrots.forEach((obj, index) => {
+                    //useing colission coordinates for hitbox
+                if (this.rabbit.collisionX < obj.collisionX + obj.collisionWidth &&
+                    this.rabbit.collisionX + this.rabbit.collisionWidth > obj.collisionX &&
+                    this.rabbit.collisionY < obj.collisionY + obj.collisionHeight &&
+                    this.rabbit.collisionY + this.rabbit.collisionHeight > obj.collisionY) {
+                    this.countdownInterval += 4000;
+                    this.score.textContent++;
+                    this.portalCount++;
+                    this.carrots.splice(index, 1);
                 }
-            }
-            // colour tiles
-            for (let i = 0; i < this.gameTiles.length; i++) {
-                //capture x & y
-                const [x, y] = this.gameTiles[i]
-                // map checkerboard!
-                if (Math.floor(i / 10) % 2 === 0 && i % 2 === 0) {
-                    this.gameTiles[i].push("White")
-                    this.grass.push(new AltGrass(this, x, y))
-                } else if (Math.floor(i / 10) % 2 === 0 && i % 2 !== 0) {
-                    this.gameTiles[i].push("Green")
-                    this.grass.push(new Grass(this, x, y))
-                } else if (Math.floor(i / 10) % 2 !== 0 && i % 2 !== 0) {
-                    this.gameTiles[i].push("White")
-                    this.grass.push(new AltGrass(this, x, y))
-                } else if (Math.floor(i / 10) % 2 !== 0 && i % 2 === 0) {
-                    this.gameTiles[i].push("Green")
-                    this.grass.push(new Grass(this, x, y))
-                }
-            }
+            });
 
+            this.enemies.forEach((obj) => {
+                if (this.rabbit.collisionX < obj.collisionX + obj.collisionWidth &&
+                    this.rabbit.collisionX + this.rabbit.collisionWidth > obj.collisionX &&
+                    this.rabbit.collisionY < obj.collisionY + obj.collisionHeight &&
+                    this.rabbit.collisionY + this.rabbit.collisionHeight > obj.collisionY) {
+                    this.countdownInterval -= 4000;
+                    this.score.textContent--;
+                }
+            });
+
+            this.portals.forEach((obj, index) => {
+                if (this.rabbit.collisionX < obj.collisionX + obj.collisionWidth &&
+                    this.rabbit.collisionX + this.rabbit.collisionWidth > obj.collisionX &&
+                    this.rabbit.collisionY < obj.collisionY + obj.collisionHeight &&
+                    this.rabbit.collisionY + this.rabbit.collisionHeight > obj.collisionY) {
+                    this.level++;
+                    this.portals.splice(index, 1);
+                    this.grass = [];
+                    this.carrots = [];
+                    this.enemies = [];
+                    this.babyCarrots = [];
+                    if (this.level === 1) {
+                        this.grass.push(new World1(this));
+                    } else if (this.level === 2) {
+                        this.grass.push(new World2(this));
+                    } else if (this.level === 3) {
+                        this.grass.push(new World3(this));
+                    } else if (this.level === 4) {
+                        this.grass.push(new World0(this));
+                        this.level = 0;
+                    }
+                }
+            });
+        }
+
+        init() {
+            this.grass.push(new World0(this))
         }
         setTimer() {
             const timer = setInterval(() => {
@@ -524,14 +729,13 @@ window.addEventListener('load', function () {
             })
         }
 
-
         addScore() {
             this.score.textContent++
         }
         spawnCarrot(deltaTime) {
             if (this.carrotTimer > this.carrotInterval && this.carrots.length < 10) {
-                let x = Math.floor(Math.random() * row) * tileSize;
-                let y = Math.floor(Math.random() * column) * tileSize;
+                let x = Math.floor(Math.random() * ROWS) * tileSize;
+                let y = Math.floor(Math.random() * COLUMNS) * tileSize;
                 this.babyCarrots.push(new BabyCarrot(this, x, y))
                 this.carrotTimer = 0;
             } else {
@@ -549,12 +753,17 @@ window.addEventListener('load', function () {
             })
         }
         spawnEnemy(deltaTime) {
-            if (this.enemies.length < 2) {
-                let x = Math.floor(Math.random() * row) * tileSize;
-                let y = Math.floor(Math.random() * column) * tileSize;
-                this.enemies.push(new Farmer(this, x, y))
-                console.log('spawned')
+            if (this.enemies.length < 2 && !this.spawnScheduled) {
+                this.spawnScheduled = true;
+                let x = Math.floor(Math.random() * ROWS) * tileSize;
+                let y = Math.floor(Math.random() * COLUMNS) * tileSize;
+                setTimeout(() => {
+                    this.enemies.push(new Farmer(this, x, y))
+                    console.log('spawned')
+                    this.spawnScheduled = false;
+                }, 1000)
                 this.scoreIncrement = 0;
+
             } else {
                 this.carrotIncrement += deltaTime;
             }

@@ -12,6 +12,8 @@ html, body {
     display: flex;
     justify-content: center;
     align-items: center;
+    image-rendering: crisp-edges;
+    image-rendering: pixelated;
     
  
 }
@@ -43,7 +45,9 @@ text-align: center;
 #instructions{
     text-align: center;
 }
-
+#tilemap1{
+    display: none;
+}
 .highscores{
     z-index: 3;
     text-align: center;
