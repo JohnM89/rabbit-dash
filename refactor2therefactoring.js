@@ -38,6 +38,7 @@ window.addEventListener('load', function () {
             this.speedX = 0;
             this.speedY = 0;
             this.maxSpeed = 2;
+
             //standard frame rate 
             this.fps = 60;
             //calculates the time interval between frames based on fps
@@ -154,14 +155,19 @@ window.addEventListener('load', function () {
             this.collisionY = this.y;
             this.collisionWidth = this.spriteWidth;
             this.collisionHeight = this.spriteHeight;
-            this.frameInterval = 8000 / this.fps;
-            this.randomInt = 0;
+            this.frameInterval = 58000 / this.fps;
+            this.randomInt = 0
             this.steps = 0;
+            this.loop = 0
         }
-        random(deltaTime){
+        // move(randomInt){
+        //     this.randomInt = randomInt
+        // }
+        random(deltaTime) {
             if (this.frameTimer > this.frameInterval) {
                 this.frameX < this.maxFrame ? this.frameX++ : this.frameX = 0;
                 this.randomInt = Math.floor(Math.random() * 4) + 1
+                this.steps = Math.floor(Math.random() * 5) + 1
                 this.frameTimer = 0;
             } else {
                 this.frameTimer += deltaTime
@@ -170,52 +176,109 @@ window.addEventListener('load', function () {
         update(deltaTime) {
 
             if (this.randomInt == 1) {
-                this.setSpeed(-tileSize, 0);
-                this.maxFrame = 2;
-                this.frameY = 2;
-            } else if (this.randomInt == 1 && this.speedX < 0) {
-                this.setSpeed(0, 0);
-                this.maxFrame = 0;
-                this.frameY = 2;
+                if (this.frameTimer > this.frameInterval) {
+                    if (this.loop < this.steps) {
+                        this.setSpeed(-tileSize / 80, 0)
+                        this.maxFrame = 2;
+                        this.frameY = 2;
+                        this.loop++
+                    } else {
+                        this.setSpeed(0, 0)
+                        this.maxFrame = 0;
+                        this.frameY = 2
+                        this.frameTimer = 0;
+                        this.loop = 0
+                    }
+
+                } else {
+                    this.frameTimer += deltaTime
+                }
+                // this.maxFrame = 2;
+                // this.frameY = 2;
             } else if (this.randomInt == 2) {
-                this.setSpeed(tileSize, 0);
-                this.maxFrame = 2;
-                this.frameY = 3;
-            } else if (this.randomInt == 2 && this.speedX > 0) {
-                this.setSpeed(0, 0);
-                this.maxFrame = 0;
-                this.frameY = 3;
+
+                if (this.frameTimer > this.frameInterval) {
+                    if (this.loop < this.steps) {
+                        this.setSpeed(tileSize / 80, 0)
+                        this.maxFrame = 2;
+                        this.frameY = 3;
+                        this.loop++
+                    } else {
+                        this.setSpeed(0, 0)
+                        this.maxFrame = 0;
+                        this.frameY = 3;
+                        this.frameTimer = 0;
+                        this.loop = 0
+                    }
+
+                } else {
+                    this.frameTimer += deltaTime
+                }
+                // this.maxFrame = 2;
+                // this.frameY = 3;
             } else if (this.randomInt == 3) {
-                this.setSpeed(0, -tileSize * 0.6);
-                this.maxFrame = 2;
+
+                if (this.frameTimer > this.frameInterval) {
+                    if (this.loop < this.steps) {
+                        this.setSpeed(0, -tileSize / 80 * 0.6)
+                                        this.maxFrame = 2;
                 this.frameY = 1;
-            } else if (this.randomInt == 3 && this.speedY < 0) {
-                this.setSpeed(0, 0);
-                this.maxFrame = 0;
-                this.frameY = 1;
+                        this.loop++
+                    } else {
+                        this.setSpeed(0, 0)
+                        this.maxFrame = 0;
+                        this.frameY = 1;
+                        this.frameTimer = 0;
+                        this.loop = 0
+                    }
+
+                } else {
+                    this.frameTimer += deltaTime
+                }
+                // this.maxFrame = 2;
+                // this.frameY = 1;
             } else if (this.randomInt == 4) {
-                this.setSpeed(0, tileSize * 0.6);
-                this.maxFrame = 2;
+                if (this.frameTimer > this.frameInterval) {
+                    if (this.loop < this.steps) {
+                        this.setSpeed(0, tileSize / 80 * 0.6)
+                                        this.maxFrame = 2;
                 this.frameY = 0;
-            } else if (this.randomInt == 4 && this.speedY > 0) {
-                this.setSpeed(0, 0);
-                this.maxFrame = 0;
-                this.frameY = 0;
+                        this.loop++
+                    } else {
+                        this.setSpeed(0, 0)
+                        this.maxFrame = 0;
+                        this.frameY = 0;
+                        this.frameTimer = 0;
+                        this.loop = 0
+                    }
+                } else {
+                    this.frameTimer += deltaTime
+                }
+
+                // this.maxFrame = 2;
+                // this.frameY = 0;
             }
             this.x += this.speedX;
             this.y += this.speedY;
+
             this.random(deltaTime)
+
             // horizontal boundaries
             if (this.x < 0) {
                 this.x = 0;
+                //STOP ANIMATING IF HIT BORDER
+                this.maxFrame = 0;
             } else if (this.x > this.game.width - this.width) {
                 this.x = this.game.width - this.width;
+                this.maxFrame = 0;
             }
             //vertical
             if (this.y < 0) {
                 this.y = 0;
+                this.maxFrame = 0;
             } else if (this.y > this.game.height - this.height) {
                 this.y = this.game.height - this.height;
+                this.maxFrame = 0;
             }
             if (this.frameTimer > this.frameInterval) {
                 this.frameX < this.maxFrame ? this.frameX++ : this.frameX = 0;
@@ -343,6 +406,7 @@ window.addEventListener('load', function () {
             this.carrots = []
             this.babyCarrots = []
             this.enemies = []
+            this.randomInt = 0
             this.countdownInterval = 10000;
             this.time = document.querySelector("#time");
             this.score = document.querySelector("#score");
@@ -354,7 +418,7 @@ window.addEventListener('load', function () {
 
         render(ctx, deltaTime) {
             this.gameObjects = [...this.grass, ...this.babyCarrots, ...this.carrots, ...this.enemies, this.rabbit];
-            this.checkCollision();
+            this.checkCollision(deltaTime);
             this.spawnCarrot(deltaTime)
             this.spawnEnemy(deltaTime)
             this.carrotGrow();
@@ -368,7 +432,7 @@ window.addEventListener('load', function () {
             })
 
         }
-        checkCollision() {
+        checkCollision(deltaTime) {
             this.carrots.forEach((obj, index) => {
                 if (this.rabbit.x < obj.x + obj.width &&
                     this.rabbit.x + this.rabbit.width > obj.x &&
@@ -380,18 +444,19 @@ window.addEventListener('load', function () {
                 }
             }
             )
-            this.enemies.forEach((obj) =>{
+            this.enemies.forEach((obj) => {
                 if (this.rabbit.x < obj.x + obj.width &&
                     this.rabbit.x + this.rabbit.width > obj.x &&
                     this.rabbit.y < obj.y + obj.height &&
-                    this.rabbit.y + this.rabbit.height > obj.y)
-                    {
+                    this.rabbit.y + this.rabbit.height > obj.y) {
                     this.countdownInterval -= 4000
                     this.score.textContent--
 
-                    }
+                }
 
             })
+            // this.random();
+
 
         }
         init() {
@@ -430,6 +495,15 @@ window.addEventListener('load', function () {
                 }
             })
         }
+        // random(){
+        //     // if (this.frameTimer > this.frameInterval) {
+        //     //     this.frameX < this.maxFrame ? this.frameX++ : this.frameX = 0;
+        //         this.enemies.forEach(obj => obj.move( Math.floor(Math.random() * 4) + 1))
+        //         // this.frameTimer = 0;
+        //     // } else {
+        //     //     this.frameTimer += deltaTime
+        //     // }
+        // }
 
         addScore() {
             this.score.textContent++
