@@ -119,6 +119,7 @@ window.addEventListener('load', function () {
                 this.maxFrame = 0;
                 this.frameY = 1;
             }
+
             this.x += this.speedX;
             this.y += this.speedY;
             this.collisionX = this.x + (this.tileSize - this.collisionWidth) / 2;
@@ -497,14 +498,14 @@ window.addEventListener('load', function () {
             ]
             this.groundObjects = [
               0,15,0,0,0,0,9,0,0,0,0,0,0,0,0,
-              0,0,0,0,0,0,0,0,0,0,0,0,0,0,0, 
-              0,0,0,0,0,0,0,0,0,0,0,0,0,15,0, 
-              0,0,0,0,0,15,0,0,0,0,0,0,0,0,0, 
+              0,0,0,0,0,0,0,0,0,0,0,0,0,9,0, 
+              0,0,0,0,0,9,0,10,10,0,0,9,0,15,0, 
+              0,0,0,0,0,15,10,0,0,0,0,0,0,0,0, 
               0,0,0,0,0,0,0,0,0,0,0,0,0,0,0, 
               0,0,0,0,0,0,0,0,0,0,0,0,0,0,0, 
               0,23,0,0,0,0,0,0,0,23,0,0,0,0,0, 
-              0,0,0,0,0,0,0,0,0,0,0,0,0,0,0, 
-              0,0,23,0,0,0,0,0,0,0,0,0,18,0,0, 
+              0,0,0,24,0,0,0,0,0,0,0,0,0,0,0, 
+              0,0,23,0,24,0,0,0,0,0,0,0,18,0,0, 
               0,0,0,0,0,0,0,0,0,0,0,0,0,0,0, 
  
             ]
@@ -541,8 +542,8 @@ window.addEventListener('load', function () {
                         for (let row = 0; row < ROWS; row++) {
                 for (let col = 0; col < COLUMNS; col++) {
                     const tile = this.getTile(this.groundObjects, col, row);
-                    // const x = col * tileSize;
-                    // const y = row * tileSize;
+                    const x = col * tileSize;
+                    const y = row * tileSize;
                     ctx.drawImage(this.levelImage, ((tile - 1) * tileSize) % this.levelImage.width, Math.floor((tile - 1) / this.imageColumns) * tileSize, tileSize, tileSize, col * tileSize, row * tileSize, tileSize, tileSize);
                 }
             }
@@ -851,8 +852,15 @@ window.addEventListener('load', function () {
             if (this.carrotTimer > this.carrotInterval && this.carrots.length < 10) {
                 let x = Math.floor(Math.random() * ROWS) * tileSize;
                 let y = Math.floor(Math.random() * COLUMNS) * tileSize;
-                this.babyCarrots.push(new BabyCarrot(this, x, y))
-                this.carrotTimer = 0;
+                let tileX = x / tileSize;
+                let tileY = y / tileSize;
+                let tile = this.tiles[0].getTile(this.tiles[0].groundObjects, tileX, tileY);
+
+                if (tile === 0) { // If the tile is free, spawn the carrot
+                    this.babyCarrots.push(new BabyCarrot(this, x, y));
+                    this.carrotTimer = 0;
+                }
+                
             } else {
                 this.carrotTimer += deltaTime;
             }
@@ -872,13 +880,24 @@ window.addEventListener('load', function () {
                 this.spawnScheduled = true;
                 let x = Math.floor(Math.random() * ROWS) * tileSize;
                 let y = Math.floor(Math.random() * COLUMNS) * tileSize;
+                // let tileX = x / tileSize;
+                // let tileY = y / tileSize;
+                // let tile = this.tiles[0].getTile(this.tiles[0].groundObjects, tileX, tileY);
+                // if (tile === 0) {
                 setTimeout(() => {
                     this.enemies.push(new Farmer(this, x, y))
                     console.log('spawned')
                     this.spawnScheduled = false;
+                    
                 }, 1000)
+                console.log('spawned?')
                 this.scoreIncrement = 0;
-
+                // }
+                
+                
+                
+                //refactor to tryagain
+                
             } else {
                 this.carrotIncrement += deltaTime;
             }
