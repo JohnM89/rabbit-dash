@@ -334,26 +334,35 @@ window.addEventListener('load', function () {
 
         }
     }
-    class Treetop extends Animation {
-        constructor(game, x, y) {
-            super(game);
-            this.game = game;
-            this.image = new Image();
-            this.image.src = "grass.png";
-            this.spriteWidth = 32;
-            this.spriteHeight = 32;
-            this.frameX = 0;
-            this.frameY = 0;
-            this.x = x
-            this.y = y
-            this.frameInterval = 25000 / this.fps;
-        }
+    // class TreeTop extends Animation {
+    //     constructor(game,ax, ay ,x, y) {
+    //         super(game);
+    //         this.game = game;
+    //         this.image = new Image();
+    //         this.image.src = "tilemap1simpleTOP.png";
+    //         this.spriteWidth = tileSize;
+    //         this.spriteHeight = tileSize;
+    //         this.width = tileSize
+    //         this.height = tileSize
+    //         this.ax = this.frameX * this.spriteWidth
+    //         this.ay = this.frameY * this.spriteHeight
+    //         this.frameX = ax;
+    //         this.frameY = ay;
+    //         this.x = x
+    //         this.y = y
+    //         // this.frameInterval = 25000 / this.fps;
+    //     }
+    //         draw(ctx) {
+    //     // Draw the TreeTop
+    //         //context aka ctx and deltaTime
+    //         ctx.drawImage(this.image, this.ax, this.ay, this.spriteWidth, this.spriteHeight, this.x, this.y, this.width, this.height);
         
-        update(deltaTime) {
+    // }
+    //     update(deltaTime) {
 
 
-        }
-    }
+    //     }
+    // }
 
     class BabyCarrot extends Animation {
         constructor(game, x, y) {
@@ -468,20 +477,49 @@ window.addEventListener('load', function () {
         constructor(game) {
             super(game)
             this.image = new Image();
+            this.image1 = new Image();
+            this.image1.src = "tilemap1simpleTOP.png"
             this.image.src = "tilemap1simple.png"
+            this.levelTOP = this.image1
             this.levelImage = this.image
             this.imageColumns = this.levelImage.width / tileSize;
             this.level = [
-                14, 15, 14, 14, 14, 14, 9, 14, 14, 14, 14, 14, 14, 4, 14,
-                1, 2, 2, 2, 3, 4, 14, 5, 5, 14, 14, 4, 14, 9, 14,
-                6, 7, 7, 7, 8, 9, 5, 10, 10, 14, 14, 9, 14, 15, 14,
-                6, 7, 7, 7, 8, 15, 10, 14, 14, 14, 14, 14, 14, 14, 14,
+                14, 0, 14, 14, 14, 14, 0, 14, 14, 14, 14, 14, 14, 14, 14,
+                1, 2, 2, 2, 3, 14, 14, 14, 14, 14, 14, 14, 14, 9, 14,
+                6, 7, 7, 7, 8, 9, 14, 10, 10, 14, 14, 9, 14, 0, 14,
+                6, 7, 7, 7, 8, 0, 10, 14, 14, 14, 14, 14, 14, 14, 14,
                 6, 7, 7, 7, 21, 3,14 , 14, 1, 2, 2, 2, 3, 14, 14,
                 6, 7, 7, 7, 7, 21, 3, 14, 6, 7, 7, 7, 21, 3, 14,
-                6, 23, 7, 19, 7, 7, 8, 14, 6, 23, 7, 7, 7, 21, 3,
-                6, 7, 7, 24, 19, 7, 8, 14, 6, 7, 7, 7, 7, 7, 8,
-                6, 7, 23, 7, 24, 7, 8, 14, 6 , 7, 7, 7, 18, 7, 8,
+                6, 0, 7, 7, 7, 7, 8, 14, 6, 0, 7, 7, 7, 21, 3,
+                6, 7, 7, 24, 7, 7, 8, 14, 6, 7, 7, 7, 7, 7, 8,
+                6, 7, 0, 7, 24, 7, 8, 14, 6 , 7, 7, 7, 0, 7, 8,
                 11, 12, 12, 12, 12, 12, 13, 14, 11, 12, 12, 12, 12, 12, 13,
+            ]
+            this.groundObjects = [
+              0,15,0,0,0,0,9,0,0,0,0,0,0,0,0,
+              0,0,0,0,0,0,0,0,0,0,0,0,0,0,0, 
+              0,0,0,0,0,0,0,0,0,0,0,0,0,15,0, 
+              0,0,0,0,0,15,0,0,0,0,0,0,0,0,0, 
+              0,0,0,0,0,0,0,0,0,0,0,0,0,0,0, 
+              0,0,0,0,0,0,0,0,0,0,0,0,0,0,0, 
+              0,23,0,0,0,0,0,0,0,23,0,0,0,0,0, 
+              0,0,0,0,0,0,0,0,0,0,0,0,0,0,0, 
+              0,0,23,0,0,0,0,0,0,0,0,0,18,0,0, 
+              0,0,0,0,0,0,0,0,0,0,0,0,0,0,0, 
+ 
+            ]
+            this.background = [
+              0,0,0,0,0,0,0,0,0,0,0,0,0,4,0,
+              0,0,0,0,0,4,0,5,5,0,0,4,0,0,0, 
+              0,0,0,0,0,0,5,0,0,0,0,0,0,0,0, 
+              0,0,0,0,0,0,0,0,0,0,0,0,0,0,0, 
+              0,0,0,0,0,0,0,0,0,0,0,0,0,0,0, 
+              0,0,0,0,0,0,0,0,0,0,0,0,0,0,0, 
+              0,23,0,19,0,0,0,0,0,23,0,0,0,0,0, 
+              0,0,0,0,19,0,0,0,0,0,0,0,0,0,0, 
+              0,0,23,0,0,0,0,0,0,0,0,0,0,0,0, 
+              0,0,0,0,0,0,0,0,0,0,0,0,0,0,0, 
+  
             ]
             //for top layers
             
@@ -489,25 +527,38 @@ window.addEventListener('load', function () {
         getTile(levelImage, col, row) {
             return levelImage[row * COLUMNS + col]
         }
-        draw() {
+        drawBackground(ctx) {
             for (let row = 0; row < ROWS; row++) {
                 for (let col = 0; col < COLUMNS; col++) {
                     const tile = this.getTile(this.level, col, row);
+                    // const x = col * tileSize;
+                    // const y = row * tileSize;
                     ctx.drawImage(this.levelImage, ((tile - 1) * tileSize) % this.levelImage.width, Math.floor((tile - 1) / this.imageColumns) * tileSize, tileSize, tileSize, col * tileSize, row * tileSize, tileSize, tileSize);
-                    // example way i can pass a tile I want to animate
-                    //also using similar method to create top layer objects
-                                    //if the tile is a 4 (for example, a tree base), add a treetop object
-                // if (tile === 4 || tile === 5  ) {
-                //       // Treetop positioned above the tree base
-                //     this.game.topLayerObjects.push(new TreeTop(this.game, x, y - tileSize));  // Add it to the top layer array
-                // }
-            //             if (tile === 4) {
-            //         const newObject = new Rock(this.game, x, y);  // Example: creating a Rock object
-            //         this.game.gameObjects.push(newObject); // Add it to the game's object array
-                
-            // }
                 }
             }
+        }
+        draw(ctx){
+                        for (let row = 0; row < ROWS; row++) {
+                for (let col = 0; col < COLUMNS; col++) {
+                    const tile = this.getTile(this.groundObjects, col, row);
+                    // const x = col * tileSize;
+                    // const y = row * tileSize;
+                    ctx.drawImage(this.levelImage, ((tile - 1) * tileSize) % this.levelImage.width, Math.floor((tile - 1) / this.imageColumns) * tileSize, tileSize, tileSize, col * tileSize, row * tileSize, tileSize, tileSize);
+                }
+            }
+        }
+
+        
+        drawForGround(ctx){
+                    for (let row = 0; row < ROWS; row++) {
+                for (let col = 0; col < COLUMNS; col++) {
+                    const tile = this.getTile(this.background, col, row);
+                    // const x = col * tileSize;
+                    // const y = row * tileSize;
+                    ctx.drawImage(this.levelTOP, ((tile - 1) * tileSize) % this.levelImage.width, Math.floor((tile - 1) / this.imageColumns) * tileSize, tileSize, tileSize, col * tileSize, row * tileSize, tileSize, tileSize);
+                }
+            }
+        
         }
         update(deltaTime) {
 
@@ -695,6 +746,7 @@ window.addEventListener('load', function () {
         }
 
         render(ctx, deltaTime) {
+            this.tiles.forEach(tile => tile.drawBackground(ctx));
             this.gameObjects = [...this.tiles, ...this.portals, ...this.babyCarrots, ...this.carrots, ...this.enemies, this.rabbit];
             
             this.checkCollision();
@@ -711,10 +763,11 @@ window.addEventListener('load', function () {
                 // obj.hitbox(ctx);
                 obj.update(deltaTime);
             })
-            this.topLayerObjects.forEach(obj => {
-            obj.draw(ctx);
-            obj.update(deltaTime);
-        });
+            this.tiles.forEach(tile => tile.drawForGround(ctx));
+        //     this.topLayerObjects.forEach(obj => {
+        //     obj.draw(ctx);
+        //     obj.update(deltaTime);
+        // });
 
         }
         checkLevel() {
