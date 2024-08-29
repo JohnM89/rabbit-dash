@@ -545,26 +545,57 @@ window.addEventListener('load', function () {
         constructor(game) {
             super(game)
             this.image = new Image();
+            this.image1 = new Image();
+            this.image1.src = "tilemap1simpleTOP.png"
             this.image.src = "tilemap1simple.png"
+            this.levelTOP = this.image1
             this.levelImage = this.image
             this.imageColumns = this.levelImage.width / tileSize;
             this.level = [
-                14, 15, 14, 14, 14, 14, 9, 14, 14, 14, 14, 14, 14, 4, 14,
-                1, 2, 2, 2, 3, 4, 14, 5, 5, 14, 14, 4, 14, 9, 14,
-                6, 7, 7, 7, 8, 9, 5, 10, 10, 14, 14, 9, 14, 15, 14,
-                6, 7, 7, 7, 8, 15, 10, 14, 14, 14, 14, 14, 14, 14, 14,
-                6, 7, 7, 7, 21, 3,14 , 14, 1, 2, 2, 2, 3, 14, 14,
-                6, 7, 7, 7, 7, 21, 3, 14, 6, 7, 7, 7, 21, 3, 14,
-                6, 23, 7, 19, 7, 7, 8, 14, 6, 23, 7, 7, 7, 21, 3,
-                6, 7, 7, 24, 19, 7, 8, 14, 6, 7, 7, 7, 7, 7, 8,
-                6, 7, 23, 7, 24, 7, 8, 14, 6 , 7, 7, 7, 18, 7, 8,
-                11, 12, 12, 12, 12, 12, 13, 14, 11, 12, 12, 12, 12, 12, 13,
+                7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 19, 19,
+                17, 7, 7, 7, 7, 0, 0, 7, 7, 7, 7, 19, 7, 24, 24,
+                6, 7, 7, 7, 16, 12, 12, 12, 12, 17, 7, 0, 7, 0, 16,
+                6, 7, 7, 7, 8, 0, 10, 14, 14, 6, 7, 16, 12, 12, 13,
+                6, 7, 7, 7, 21, 3,14 , 14, 1, 22, 7, 21, 3, 14, 14,
+                6, 7, 7, 7, 7, 21, 2, 2, 22, 7, 7, 7, 21, 3, 14,
+                6, 0, 7, 7, 7, 7, 7, 7, 7, 0, 7, 7, 7, 21, 3,
+                22, 7, 7, 24, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 8,
+                7, 7, 0, 7, 24, 7, 7, 7, 7 , 7, 7, 7, 0, 7, 8,
+                7, 16, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 13,
             ]
+            this.groundObjects = [
+              0,0,0,23,0,0,0,0,0,0,0,0,0,0,0,
+              0,0,0,0,0,24,18,0,0,0,0,0,0,24,24, 
+              0,0,0,0,0,0,0,0,0,0,0,24,0,23,0, 
+              0,0,0,0,0,15,10,0,0,0,0,0,0,0,0, 
+              0,0,0,0,0,0,0,0,0,0,0,0,0,0,0, 
+              0,0,0,0,0,0,0,0,0,0,0,0,0,0,0, 
+              0,23,0,0,0,0,0,0,0,23,0,0,0,0,0, 
+              0,0,0,24,0,0,0,0,0,0,0,0,0,0,0, 
+              0,0,23,0,24,0,0,0,0,0,0,0,18,0,0, 
+              0,0,0,0,0,0,0,0,0,0,0,0,0,0,0, 
+ 
+            ]
+            this.animated = []
+            this.background = [
+              0,0,0,0,0,19,0,0,0,0,0,0,0,19,19,
+              0,0,0,0,0,0,0,0,0,0,0,19,0,0,0, 
+              0,0,0,0,0,0,5,0,0,0,0,0,0,0,0, 
+              0,0,0,0,0,0,0,0,0,0,0,0,0,0,0, 
+              0,0,0,0,0,0,0,0,0,0,0,0,0,0,0, 
+              0,0,0,0,0,0,0,0,0,0,0,0,0,0,0, 
+              0,23,0,19,0,0,0,0,0,23,0,0,0,0,0, 
+              0,0,0,0,19,0,0,0,0,0,0,0,0,0,0, 
+              0,0,23,0,0,0,0,0,0,0,0,0,0,0,0, 
+              0,0,0,0,0,0,0,0,0,0,0,0,0,0,0, 
+  
+            ]
+            //for top layers            
         }
         getTile(levelImage, col, row) {
             return levelImage[row * COLUMNS + col]
         }
-        draw() {
+        drawBackground(ctx) {
             for (let row = 0; row < ROWS; row++) {
                 for (let col = 0; col < COLUMNS; col++) {
                     const tile = this.getTile(this.level, col, row);
@@ -572,35 +603,98 @@ window.addEventListener('load', function () {
                 }
             }
         }
-        update(deltaTime) {
+        draw(ctx) {
+            this.game.impassable = [];
+            for (let row = 0; row < ROWS; row++) {
+                for (let col = 0; col < COLUMNS; col++) {
+                    const tile = this.getTile(this.groundObjects, col, row);
+                    // const x = col * tileSize;
+                    // const y = row * tileSize;
+                    ctx.drawImage(this.levelImage, ((tile - 1) * tileSize) % this.levelImage.width, Math.floor((tile - 1) / this.imageColumns) * tileSize, tileSize, tileSize, col * tileSize, row * tileSize, tileSize, tileSize);
+                    if (tile !== 0) {
 
+                        this.game.impassable.push([col * tileSize, row * tileSize, tileSize, tileSize])
+                    }
+                }
+            }
+        }
+        drawAnimatedTile(ctx) {
+            for (let row = 0; row < ROWS; row++) {
+                for (let col = 0; col < COLUMNS; col++) {
+                    const tile = this.getTile(this.animated, col, row);
+                    ctx.drawImage(this.levelTOP, ((tile - 1) * tileSize) % this.levelImage.width, Math.floor((tile - 1) / this.imageColumns) * tileSize, tileSize, tileSize, col * tileSize, row * tileSize, tileSize, tileSize);
+                }
+            }
+        }
+        drawForGround(ctx){
+                    for (let row = 0; row < ROWS; row++) {
+                for (let col = 0; col < COLUMNS; col++) {
+                    const tile = this.getTile(this.background, col, row);
+                    // const x = col * tileSize;
+                    // const y = row * tileSize;
+                    ctx.drawImage(this.levelTOP, ((tile - 1) * tileSize) % this.levelImage.width, Math.floor((tile - 1) / this.imageColumns) * tileSize, tileSize, tileSize, col * tileSize, row * tileSize, tileSize, tileSize);
+                }
+            }        
+        }
+        update(deltaTime) {
         }
 
     }
     class World2 extends Animation {
         constructor(game) {
-            super(game)
+                       super(game)
             this.image = new Image();
-            this.image.src = "tilemap1simple.png"
+            this.image1 = new Image();
+            this.image1.src = "spring.png"
+            this.image.src = "spring2.png"
+            this.levelTOP = this.image1
             this.levelImage = this.image
             this.imageColumns = this.levelImage.width / tileSize;
             this.level = [
-                14, 15, 14, 14, 14, 14, 9, 14, 14, 14, 14, 14, 14, 4, 14,
-                1, 2, 2, 2, 3, 4, 14, 5, 5, 14, 14, 4, 14, 9, 14,
-                6, 7, 7, 7, 8, 9, 5, 10, 10, 14, 14, 9, 14, 15, 14,
-                6, 7, 7, 7, 8, 15, 10, 14, 14, 14, 14, 14, 14, 14, 14,
-                6, 7, 7, 7, 21, 3,14 , 14, 1, 2, 2, 2, 3, 14, 14,
-                6, 7, 7, 7, 7, 21, 3, 14, 6, 7, 7, 7, 21, 3, 14,
-                6, 23, 7, 19, 7, 7, 8, 14, 6, 23, 7, 7, 7, 21, 3,
-                6, 7, 7, 24, 19, 7, 8, 14, 6, 7, 7, 7, 7, 7, 8,
-                6, 7, 23, 7, 24, 7, 8, 14, 6 , 7, 7, 7, 18, 7, 8,
-                11, 12, 12, 12, 12, 12, 13, 14, 11, 12, 12, 12, 12, 12, 13,
+                17, 2, 3, 4, 17, 7, 7, 7, 7, 7, 7, 7, 7, 19, 19,
+                17, 7, 7, 7, 7, 0, 0, 7, 7, 7, 7, 19, 7, 24, 24,
+                6, 7, 7, 7, 16, 12, 12, 12, 12, 17, 7, 0, 7, 0, 16,
+                6, 7, 7, 7, 8, 0, 10, 14, 14, 6, 7, 16, 12, 12, 13,
+                6, 7, 7, 7, 21, 3,14 , 14, 1, 22, 7, 21, 3, 14, 14,
+                6, 7, 7, 7, 7, 21, 2, 2, 22, 7, 7, 7, 21, 3, 14,
+                6, 0, 7, 7, 7, 7, 7, 7, 7, 0, 7, 7, 7, 21, 3,
+                22, 7, 7, 24, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 8,
+                7, 7, 0, 7, 24, 7, 7, 7, 7 , 7, 7, 7, 0, 7, 8,
+                7, 16, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 13,
             ]
+            this.groundObjects = [
+              0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+              0,0,0,0,0,0,0,0,0,0,0,0,0,0,0, 
+              0,0,0,0,0,0,0,0,0,0,0,0,0,0,0, 
+              0,0,0,0,0,0,0,0,0,0,0,0,0,0,0, 
+              0,0,0,0,0,0,0,0,0,0,0,0,0,0,0, 
+              0,0,0,0,0,0,0,0,0,0,0,0,0,0,0, 
+              0,0,0,0,0,0,0,0,0,0,0,0,0,0,0, 
+              0,0,0,0,0,0,0,0,0,0,0,0,0,0,0, 
+              0,0,0,0,0,0,0,0,0,0,0,0,0,0,0, 
+              0,0,0,0,0,0,0,0,0,0,0,0,0,0,0, 
+ 
+            ]
+            this.animated = []
+            this.background = [
+              0,0,0,0,0,19,0,0,0,0,0,0,0,19,19,
+              0,0,0,0,0,0,0,0,0,0,0,19,0,0,0, 
+              0,0,0,0,0,0,5,0,0,0,0,0,0,0,0, 
+              0,0,0,0,0,0,0,0,0,0,0,0,0,0,0, 
+              0,0,0,0,0,0,0,0,0,0,0,0,0,0,0, 
+              0,0,0,0,0,0,0,0,0,0,0,0,0,0,0, 
+              0,23,0,19,0,0,0,0,0,23,0,0,0,0,0, 
+              0,0,0,0,19,0,0,0,0,0,0,0,0,0,0, 
+              0,0,23,0,0,0,0,0,0,0,0,0,0,0,0, 
+              0,0,0,0,0,0,0,0,0,0,0,0,0,0,0, 
+  
+            ]
+            //for top layers            
         }
         getTile(levelImage, col, row) {
             return levelImage[row * COLUMNS + col]
         }
-        draw() {
+        drawBackground(ctx) {
             for (let row = 0; row < ROWS; row++) {
                 for (let col = 0; col < COLUMNS; col++) {
                     const tile = this.getTile(this.level, col, row);
@@ -608,8 +702,40 @@ window.addEventListener('load', function () {
                 }
             }
         }
-        update(deltaTime) {
+        draw(ctx) {
+            this.game.impassable = [];
+            for (let row = 0; row < ROWS; row++) {
+                for (let col = 0; col < COLUMNS; col++) {
+                    const tile = this.getTile(this.groundObjects, col, row);
+                    // const x = col * tileSize;
+                    // const y = row * tileSize;
+                    ctx.drawImage(this.levelImage, ((tile - 1) * tileSize) % this.levelImage.width, Math.floor((tile - 1) / this.imageColumns) * tileSize, tileSize, tileSize, col * tileSize, row * tileSize, tileSize, tileSize);
+                    if (tile !== 0) {
 
+                        this.game.impassable.push([col * tileSize, row * tileSize, tileSize, tileSize])
+                    }
+                }
+            }
+        }
+        drawAnimatedTile(ctx) {
+            for (let row = 0; row < ROWS; row++) {
+                for (let col = 0; col < COLUMNS; col++) {
+                    const tile = this.getTile(this.animated, col, row);
+                    ctx.drawImage(this.levelTOP, ((tile - 1) * tileSize) % this.levelImage.width, Math.floor((tile - 1) / this.imageColumns) * tileSize, tileSize, tileSize, col * tileSize, row * tileSize, tileSize, tileSize);
+                }
+            }
+        }
+        drawForGround(ctx){
+                    for (let row = 0; row < ROWS; row++) {
+                for (let col = 0; col < COLUMNS; col++) {
+                    const tile = this.getTile(this.background, col, row);
+                    // const x = col * tileSize;
+                    // const y = row * tileSize;
+                    ctx.drawImage(this.levelTOP, ((tile - 1) * tileSize) % this.levelImage.width, Math.floor((tile - 1) / this.imageColumns) * tileSize, tileSize, tileSize, col * tileSize, row * tileSize, tileSize, tileSize);
+                }
+            }        
+        }
+        update(deltaTime) {
         }
 
     }
@@ -720,7 +846,7 @@ window.addEventListener('load', function () {
         }
         render(ctx, deltaTime) {
             this.tiles.forEach(tile => tile.drawBackground(ctx));
-            this.gameObjects = [...this.tiles, ...this.portals, ...this.babyCarrots, ...this.carrots, ...this.enemies, this.rabbit];
+            this.gameObjects = [...this.tiles, ...this.babyCarrots, ...this.carrots, ...this.portals, ...this.enemies, this.rabbit];
             
             this.checkCollision();
             this.spawnCarrot(deltaTime)
@@ -742,7 +868,13 @@ window.addEventListener('load', function () {
             if (this.portalCount > 2 && this.portals.length === 0) {
                 let x = Math.floor(Math.random() * ROWS) * tileSize;
                 let y = Math.floor(Math.random() * COLUMNS) * tileSize;
-                this.portals.push(new Burrow(this, x, y))
+                let tileX = x / tileSize;
+                let tileY = y / tileSize;
+                let tile = this.tiles[0].getTile(this.tiles[0].groundObjects, tileX, tileY);
+                if (tile === 0) { 
+                    this.portals.push(new Burrow(this, x, y));
+                }
+                
             }
         }
 
@@ -753,9 +885,10 @@ window.addEventListener('load', function () {
                     this.rabbit.collisionX + this.rabbit.collisionWidth > obj.collisionX &&
                     this.rabbit.collisionY < obj.collisionY + obj.collisionHeight &&
                     this.rabbit.collisionY + this.rabbit.collisionHeight > obj.collisionY) {
+                    this.portalCount++;
                     this.countdownInterval += 2000;
                     this.score.textContent++;
-                    this.portalCount++;
+                    
                     this.carrots.splice(index, 1);
                 }
             });
