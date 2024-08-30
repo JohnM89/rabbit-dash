@@ -1761,19 +1761,77 @@ window.addEventListener('load', function () {
         }
 
     }
+    //////////////////
+            class StartScreen {
+            constructor(game) {
+                this.game = game;
+               
+                // this.lastKey = new InputHandler(this)
+            }
+
+            render(ctx ) {
+                ctx.clearRect(0, 0, this.game.width, this.game.height);
+                ctx.font = "30px Arial";
+                ctx.fillStyle = "black";
+                ctx.textAlign = "center";
+                ctx.fillText("Press Down to Start", this.game.width / 2, this.game.height / 2);
+            }
+
+            handleInput() {
+                if (this.game.lastKey === 'PArrowDown') {
+                    console.log("enter")
+                    
+
+                    this.game.currentState = null;
+                    // game = new Game(canvas.width, canvas.height)
+                    this.game.setTimer()
+                    
+                }
+            }
+        }
+
+        class EndGame {
+            constructor(game ) {
+                this.game = game;
+            }
+
+            render(ctx) {
+                ctx.clearRect(0, 0, this.game.width, this.game.height);
+                ctx.font = "30px Arial";
+                ctx.fillStyle = "black";
+                ctx.textAlign = "center";
+                ctx.fillText("Game Over", this.game.width / 2, this.game.height / 2);
+                ctx.fillText("Press Enter to Restart", this.game.width / 2, this.game.height / 2 + 40);
+            }
+
+            handleInput() {
+                if (this.game.lastKey === 'PEnter') {
+                    this.game.changeState(new StartScreen(game))
+ 
+                    
+                }
+            }
+        }
+
+    /////////////////
     class Game {
 
         constructor(width, height) {
             this.tileSize = tileSize * 2
             this.width = width;
             this.height = height;
+            //////
+            this.currentState = null;
+            
+            ///////
             this.gameObjects = [];
             this.gameTiles = [];
-            this.animatedTiles = []
-            this.staminaTile = []
+            // this.animatedTiles = []
+            // this.staminaTile = []
             this.level = 0
             this.carrotTimer = 0;
             this.carrotInterval = 1000;
+            this.currentState = null
             this.lastKey = undefined;
             this.input = new InputHandler(this);
             this.animation = new Animation(this);
@@ -1786,7 +1844,8 @@ window.addEventListener('load', function () {
             this.enemies = []
             this.portals = []
             this.impassable = []
-            this.gameOver = false
+            this.gameStart = false
+            // this.gameOver = false
 
             this.portalCount = 0
             this.randomInt = 0
@@ -1795,14 +1854,51 @@ window.addEventListener('load', function () {
             this.score = document.querySelector("#score");
             this.scoreIncrement = 0
             this.score.textContent = parseInt(0);
-            this.setTimer(ctx)
+            
         }
+        //////////
+        changeState(newState) {
+
+            // let previous = this.gameStart
+            // if(newState === new StartScreen(this) && previous === true){
+                // this.gameStart = false
+            this.level = 0
+            this.tiles = [];
+            this.animated = []
+            this.animatedOverlay = []
+            this.gameObjects = []
+            this.impassable = []
+            this.carrots = [];
+            this.enemies = [];
+            this.babyCarrots = [];
+            this.tiles.push(new World0(this));
+            this.portals = []
+            this.rabbit.x = 0
+            this.rabbit.y = 0
+            this.score.textContent = 0
+            this.carrotTimer = 0;
+            this.countdownInterval = 20000;
+            this.currentState = newState;
+
+            // } return
+        
+        }
+        // checkState(){
+
+        // }
+        /////////
         render(ctx, deltaTime) {
+             if (this.currentState) {
+            
+            this.currentState.render(ctx);
+            this.currentState.handleInput()
+            } else {
+                 
             this.tiles.forEach(tile => tile.drawBackground(ctx));
             this.gameObjects = [...this.tiles, ...this.babyCarrots, ...this.animated,...this.animatedOverlay, ...this.carrots, ...this.portals, ...this.enemies, this.rabbit];
 
             this.checkCollision();
-
+            
             this.spawnCarrot(deltaTime)
             this.spawnEnemy(deltaTime)
             this.carrotGrow();
@@ -1817,6 +1913,7 @@ window.addEventListener('load', function () {
             })
             this.tiles.forEach(tile => tile.drawForGround(ctx));
 
+        }
         }
         checkLevel() {
             if (this.portalCount > 2 && this.portals.length === 0) {
@@ -1877,6 +1974,7 @@ window.addEventListener('load', function () {
                     this.level++;
                     this.portals.splice(index, 1);
                     this.tiles = [];
+                    this.portals = []
                     this.carrots = [];
                     this.enemies = [];
                     this.babyCarrots = [];
@@ -1900,21 +1998,23 @@ window.addEventListener('load', function () {
         }
 
         init() {
-            this.tiles.push(new World1(this))
+            this.tiles.push(new World0(this))
         }
         setTimer() {
+
             const timer = setInterval(() => {
                 this.countdownInterval -= 10;
                 this.time.textContent = this.countdownInterval
-                if (this.countdownInterval <= 0) {
+                if (this.countdownInterval <= 0 && this.currentState === null) {
                     clearInterval(timer);
                     console.log("game over")
-                    this.gameOver = true
+                    this.changeState(new EndGame(this))
 
 
 
                 }
             })
+        
         }
 
         addScore() {
@@ -1969,7 +2069,10 @@ window.addEventListener('load', function () {
             }
         }
     }
-    const game = new Game(canvas.width, canvas.height);
+    let game = new Game(canvas.width, canvas.height);
+    //////////
+    game.changeState(new StartScreen(game))
+    ///////////
     game.init();
     let lastTime = 0;
     //timestamp is handled by requestAnimationFrame API
