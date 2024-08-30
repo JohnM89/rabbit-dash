@@ -1900,7 +1900,7 @@ window.addEventListener('load', function () {
         }
 
         init() {
-            this.tiles.push(new World0(this))
+            this.tiles.push(new World1(this))
         }
         setTimer() {
             const timer = setInterval(() => {
