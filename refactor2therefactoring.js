@@ -1761,29 +1761,154 @@ window.addEventListener('load', function () {
         }
 
     }
-    //////////////////
+        class OpenStageCharacter extends Animation {
+        constructor(game) {
+            super(game);
+            this.game = game;
+            this.image = new Image();
+            this.image.src = "bunnysheet.png"
+            this.spriteWidth = 36.2;
+            this.spriteHeight = 39.1;
+            this.width = tileSize * 2
+            this.height = tileSize * 2
+            
+            this.frameX = 0;
+            this.frameY = 0;
+            this.x = canvas.width / 4 
+            this.y = (canvas.height - canvas.height / 8) - 1.3
+            this.collisionWidth = this.tileSize / 4;
+            this.collisionHeight = this.tileSize / 4;
+            this.collisionX = this.x + (this.tileSize - this.collisionWidth) / 2;
+            this.collisionY = this.y + (this.tileSize - this.collisionHeight) / 2;
+            this.frameInterval = 4000 / this.fps;
+
+        }
+
+        update(deltaTime) {
+            this.maxFrame = 5;
+            this.frameY = 5;
+            if (this.frameTimer > this.frameInterval) {
+                // if(this.x > canvas.width && this.x < canvas.width / 2){
+                //     this.x = -16
+                // }
+                // this.x++
+                this.frameX < this.maxFrame ? this.frameX++ : this.frameX = 0;
+                this.frameTimer = 0;
+            } else {
+                this.frameTimer += deltaTime
+            }
+        }
+    }
+
+        class Layer extends Animation {
+        constructor(game, speedModifier) {
+            super(game);
+            this.game = game;
+            this.image = new Image();
+            this.image.src = ""
+            this.width = canvas.width 
+            this.height = canvas.height
+            this.spriteWidth = 928 /2;
+            this.spriteHeight = 928 /2; 
+            this.speedModifier = speedModifier;
+            this.speed = this.speedModifier;         
+            this.frameX = 0;
+            this.frameY = .65;
+            this.fps = 144;
+            this.x = 0
+            this.y = 0
+
+            this.frameInterval = 1200 / this.fps;
+
+
+        }
+            draw(ctx) {
+                ctx.drawImage(this.image, this.frameX * this.spriteWidth, this.frameY * this.spriteHeight, this.spriteWidth, this.spriteHeight, this.x, this.y, this.width, this.height);
+                //this works! render image again at x + width - 1 ( so its always redrawing at the end of the image and - 1 to hide the seam)
+                ctx.drawImage(this.image, this.frameX * this.spriteWidth, this.frameY * this.spriteHeight, this.spriteWidth, this.spriteHeight, this.x + this.width - 1, this.y, this.width, this.height)
+        }
+
+        update(deltaTime) {
+            this.maxFrame = 0;
+            // this.frameY = 0;
+            if (this.frameTimer > this.frameInterval) {
+                       this.x -= this.speed; 
+                    if (this.x <= -this.width) {
+                        this.x = 0;
+                    }
+                this.frameX < this.maxFrame ? this.frameX++ : this.frameX = 0;
+                this.frameTimer = 0;
+            } else {
+                this.frameTimer += deltaTime
+            }
+        }
+    }
             class StartScreen {
             constructor(game) {
                 this.game = game;
-               
-                // this.lastKey = new InputHandler(this)
+                this.bunny = new OpenStageCharacter(game)
+                this.frontLayer = new Image();
+                this.frontLayer.src = "layer0.png"
+                this.images = []
+                this.source = [ "layer11.png", "layer10.png", "layer9.png", "layer8.png", "layer7.png", "layer6.png", "layer5.png", "layer4.png", "layer3.png", "layer2.png", "layer1.png"]
+                this.source.forEach((src, index) => {
+                    //too much
+                    //invert the speed so the closest layer is slowest
+                    // let speedModifier = 0.5 + 0.2 * (this.source.length - index - 1)
+                    let speedModifier = Math.log10(2 + index) * 0.9;
+                    //better
+                    // let speedModifier = 0.2 + 0.05 * (this.source.length - index - 1);
+                    let img = new Layer(game, speedModifier)
+                    img.image.src = src;
+                    this.images.push(img)
+                })
+
+            this.width = canvas.width 
+            this.height = canvas.height
+            this.spriteWidth = 928;
+            this.spriteHeight = 793;
+            this.frameX = 0;
+            this.frameY = 0;
+            this.x = 0;
+            this.y = 0;
+            this.maxFrame = 0;
+            this.fps = 144;
+            this.frameInterval = 2000 / this.fps;
+            this.frameTimer = 0;
+            this.speedModifier =  1;
+            this.speed = this.speedModifier; 
             }
 
-            render(ctx ) {
-                ctx.clearRect(0, 0, this.game.width, this.game.height);
+            render(ctx, deltaTime ) {
+                console.log(this.images)
+                this.images.forEach((img) => {
+                    img.update(deltaTime);
+                    img.draw(ctx);
+                });
+                this.bunny.update(deltaTime)
+                this.bunny.draw(ctx)
+                ctx.drawImage(this.frontLayer, this.frameX * this.spriteWidth, this.frameY * this.spriteHeight, this.spriteWidth, this.spriteHeight, this.x, this.y, this.width, this.height);
+                ctx.drawImage(this.frontLayer, this.frameX * this.spriteWidth, this.frameY * this.spriteHeight, this.spriteWidth, this.spriteHeight, this.x + this.width - 1, this.y, this.width, this.height)
                 ctx.font = "30px Arial";
-                ctx.fillStyle = "black";
+                ctx.fillStyle = "white";
                 ctx.textAlign = "center";
                 ctx.fillText("Press Down to Start", this.game.width / 2, this.game.height / 2);
+
+                if (this.frameTimer > this.frameInterval) {
+                                           this.x-= this.speed; 
+                    if (this.x <= -this.width) {
+                        this.x = 0;
+                    }
+                this.frameX < this.maxFrame ? this.frameX++ : this.frameX = 0;
+                this.frameTimer = 0;
+            } else {
+                this.frameTimer += deltaTime
+            }
             }
 
             handleInput() {
                 if (this.game.lastKey === 'PArrowDown') {
-                    console.log("enter")
-                    
-
                     this.game.currentState = null;
-                    // game = new Game(canvas.width, canvas.height)
                     this.game.setTimer()
                     
                 }
@@ -1793,6 +1918,7 @@ window.addEventListener('load', function () {
         class EndGame {
             constructor(game ) {
                 this.game = game;
+                // this.highScore = sessionStorage.getItem("score");
             }
 
             render(ctx) {
@@ -1802,6 +1928,7 @@ window.addEventListener('load', function () {
                 ctx.textAlign = "center";
                 ctx.fillText("Game Over", this.game.width / 2, this.game.height / 2);
                 ctx.fillText("Press Enter to Restart", this.game.width / 2, this.game.height / 2 + 40);
+                // ctx.fillText(this.highScore, this.game.width / 2, this.game.height / 2 + 80);
             }
 
             handleInput() {
@@ -1813,21 +1940,15 @@ window.addEventListener('load', function () {
             }
         }
 
-    /////////////////
     class Game {
 
         constructor(width, height) {
             this.tileSize = tileSize * 2
             this.width = width;
             this.height = height;
-            //////
             this.currentState = null;
-            
-            ///////
             this.gameObjects = [];
             this.gameTiles = [];
-            // this.animatedTiles = []
-            // this.staminaTile = []
             this.level = 0
             this.carrotTimer = 0;
             this.carrotInterval = 1000;
@@ -1844,9 +1965,6 @@ window.addEventListener('load', function () {
             this.enemies = []
             this.portals = []
             this.impassable = []
-            this.gameStart = false
-            // this.gameOver = false
-
             this.portalCount = 0
             this.randomInt = 0
             this.countdownInterval = 50000;
@@ -1854,15 +1972,18 @@ window.addEventListener('load', function () {
             this.score = document.querySelector("#score");
             this.scoreIncrement = 0
             this.score.textContent = parseInt(0);
+            this.savedScore = 0
+            
             
         }
-        //////////
         changeState(newState) {
-
-            // let previous = this.gameStart
-            // if(newState === new StartScreen(this) && previous === true){
-                // this.gameStart = false
+            //work this out to save sessionStore then transition to localStorage
+            // this.savedScore = this.score.textContent
+            // sessionStorage.setItem( "score", this.savedScore)
             this.level = 0
+            this.portalCount = 0
+            this.randomInt = 0
+            this.portals = []
             this.tiles = [];
             this.animated = []
             this.animatedOverlay = []
@@ -1871,34 +1992,27 @@ window.addEventListener('load', function () {
             this.carrots = [];
             this.enemies = [];
             this.babyCarrots = [];
-            this.tiles.push(new World0(this));
-            this.portals = []
             this.rabbit.x = 0
             this.rabbit.y = 0
+            this.time.textContent = "00:00"
             this.score.textContent = 0
             this.carrotTimer = 0;
             this.countdownInterval = 20000;
-            this.currentState = newState;
-
-            // } return
-        
+            this.tiles.push(new World0(this));
+            this.currentState = newState;       
         }
-        // checkState(){
 
-        // }
-        /////////
         render(ctx, deltaTime) {
              if (this.currentState) {
             
-            this.currentState.render(ctx);
+            this.currentState.render(ctx , deltaTime);
+            
             this.currentState.handleInput()
             } else {
                  
             this.tiles.forEach(tile => tile.drawBackground(ctx));
             this.gameObjects = [...this.tiles, ...this.babyCarrots, ...this.animated,...this.animatedOverlay, ...this.carrots, ...this.portals, ...this.enemies, this.rabbit];
-
-            this.checkCollision();
-            
+            this.checkCollision();            
             this.spawnCarrot(deltaTime)
             this.spawnEnemy(deltaTime)
             this.carrotGrow();
@@ -1912,7 +2026,6 @@ window.addEventListener('load', function () {
                 obj.update(deltaTime);
             })
             this.tiles.forEach(tile => tile.drawForGround(ctx));
-
         }
         }
         checkLevel() {
@@ -1925,7 +2038,6 @@ window.addEventListener('load', function () {
                 if (tile === 0) {
                     this.portals.push(new Burrow(this, x, y));
                 }
-
             }
         }
 
@@ -1939,11 +2051,9 @@ window.addEventListener('load', function () {
                     this.portalCount++;
                     this.countdownInterval += 2000;
                     this.score.textContent++;
-
                     this.carrots.splice(index, 1);
                 }
             });
-
             this.impassable.forEach((obj) => {
                 const [tileX, tileY, tileWidth, tileHeight] = obj
                 if (this.rabbit.collisionX < tileX + tileWidth &&
@@ -1954,7 +2064,6 @@ window.addEventListener('load', function () {
 
                 }
             })
-
             this.enemies.forEach((obj) => {
                 if (this.rabbit.collisionX < obj.collisionX + obj.collisionWidth &&
                     this.rabbit.collisionX + this.rabbit.collisionWidth > obj.collisionX &&
@@ -1964,8 +2073,6 @@ window.addEventListener('load', function () {
                     this.score.textContent--;
                 }
             });
-
-
             this.portals.forEach((obj, index) => {
                 if (this.rabbit.collisionX < obj.collisionX + obj.collisionWidth &&
                     this.rabbit.collisionX + this.rabbit.collisionWidth > obj.collisionX &&
@@ -1996,7 +2103,6 @@ window.addEventListener('load', function () {
                 }
             });
         }
-
         init() {
             this.tiles.push(new World0(this))
         }
@@ -2009,14 +2115,10 @@ window.addEventListener('load', function () {
                     clearInterval(timer);
                     console.log("game over")
                     this.changeState(new EndGame(this))
-
-
-
                 }
             })
         
         }
-
         addScore() {
             this.score.textContent++
         }
@@ -2070,9 +2172,7 @@ window.addEventListener('load', function () {
         }
     }
     let game = new Game(canvas.width, canvas.height);
-    //////////
     game.changeState(new StartScreen(game))
-    ///////////
     game.init();
     let lastTime = 0;
     //timestamp is handled by requestAnimationFrame API
@@ -2082,7 +2182,6 @@ window.addEventListener('load', function () {
         ctx.clearRect(0, 0, canvas.width, canvas.height);
         game.render(ctx, deltaTime)
         requestAnimationFrame(animate);
-
     }
     requestAnimationFrame(animate);
 });
