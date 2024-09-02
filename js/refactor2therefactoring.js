@@ -63,7 +63,7 @@ window.addEventListener('load', function () {
         constructor(game) {
             super(game)
             this.image = new Image();
-            this.image.src = "bunnysheet.png";
+            this.image.src = "assets/characterSprite/bunnysheet.png";
             this.spriteWidth = 36.2;
             this.spriteHeight = 39;
             this.frameX = 0;
@@ -205,9 +205,9 @@ window.addEventListener('load', function () {
             this.image1 = new Image();
             this.image2 = new Image();
             this.image3 = new Image();
-            this.image1.src = "imnotevensure.png";
-            this.image2.src = "farmers12.png";
-            this.image3.src = "randomGen.png";
+            this.image1.src = "assets/characterSprite/imnotevensure.png";
+            this.image2.src = "assets/characterSprite/farmers12.png";
+            this.image3.src = "assets/characterSprite/randomGen.png";
             this.images.push(this.image1, this.image2, this.image3)
             this.randomIndex = Math.floor(Math.random() * this.images.length)
             this.image = this.images[this.randomIndex]
@@ -387,7 +387,7 @@ window.addEventListener('load', function () {
             super(game);
             this.game = game;
             this.image = new Image();
-            this.image.src = "carrot3.png"
+            this.image.src = "assets/enviornmentSprite/carrot3.png"
             this.spriteWidth = 40;
             this.spriteHeight = 60;
             this.frameX = 0;
@@ -511,7 +511,7 @@ window.addEventListener('load', function () {
             super(game);
             this.game = game;
             this.image = new Image();
-            this.image.src = "sparkle.png"
+            this.image.src = "assets/tileset/sparkle.png"
             this.spriteWidth = 16;
             this.spriteHeight = 16;
             this.frameX = 0;
@@ -545,7 +545,7 @@ window.addEventListener('load', function () {
             super(game);
             this.game = game;
             this.image = new Image();
-            this.image.src = "waterfall.png"
+            this.image.src = "assets/tileset/waterfall.png"
             this.spriteWidth = 16;
             this.spriteHeight = 16;
             this.frameX = 0;
@@ -579,7 +579,7 @@ window.addEventListener('load', function () {
             super(game);
             this.game = game;
             this.image = new Image();
-            this.image.src = "waterfall.png"
+            this.image.src = "assets/tileset/waterfall.png"
             this.spriteWidth = 16;
             this.spriteHeight = 16;
             this.frameX = 0;
@@ -613,7 +613,7 @@ window.addEventListener('load', function () {
             super(game);
             this.game = game;
             this.image = new Image();
-            this.image.src = "waterfall.png"
+            this.image.src = "assets/tileset/waterfall.png"
             this.spriteWidth = 16;
             this.spriteHeight = 16;
             this.frameX = 0;
@@ -647,7 +647,7 @@ window.addEventListener('load', function () {
             super(game);
             this.game = game;
             this.image = new Image();
-            this.image.src = "waterfall.png"
+            this.image.src = "assets/tileset/waterfall.png"
             this.spriteWidth = 16;
             this.spriteHeight = 16;
             this.frameX = 0;
@@ -681,7 +681,7 @@ window.addEventListener('load', function () {
             super(game);
             this.game = game;
             this.image = new Image();
-            this.image.src = "waterfall.png"
+            this.image.src = "assets/tileset/waterfall.png"
             this.spriteWidth = 16;
             this.spriteHeight = 16;
             this.frameX = 0;
@@ -716,7 +716,7 @@ window.addEventListener('load', function () {
             super(game);
             this.game = game;
             this.image = new Image();
-            this.image.src = "carrot3.png"
+            this.image.src = "assets/enviornmentSprite/carrot3.png"
             this.spriteWidth = 40;
             this.spriteHeight = 60;
             this.frameX = 0;
@@ -738,7 +738,7 @@ window.addEventListener('load', function () {
             super(game);
             this.game = game;
             this.image = new Image();
-            this.image.src = "crops32.png"
+            this.image.src = "assets/enviornmentSprites/crops32.png"
             this.spriteWidth = 32;
             this.spriteHeight = 32;
             this.frameX = 0;
@@ -762,8 +762,8 @@ window.addEventListener('load', function () {
             this.image1 = new Image();
 
 
-            this.image1.src = "spring2.png"
-            this.image.src = "spring2.png"
+            this.image1.src = "assets/tileset/spring2.png"
+            this.image.src = "assets/tileset/spring2.png"
             this.levelTOP = this.image1
             this.levelImage = this.image
             this.levelImage.width = 256
@@ -963,8 +963,8 @@ window.addEventListener('load', function () {
             this.image1 = new Image();
 
 
-            this.image1.src = "summer2.png"
-            this.image.src = "summer2.png"
+            this.image1.src = "assets/tileset/summer2.png"
+            this.image.src = "assets/tileset/summer2.png"
             this.levelTOP = this.image1
             this.levelImage = this.image
             this.levelImage.width = 256
@@ -1231,8 +1231,8 @@ window.addEventListener('load', function () {
             this.image1 = new Image();
 
 
-            this.image1.src = "fall2.png"
-            this.image.src = "fall2.png"
+            this.image1.src = "assets/tileset/fall2.png"
+            this.image.src = "assets/tileset/fall2.png"
             this.levelTOP = this.image1
             this.levelImage = this.image
             this.levelImage.width = 256
@@ -1499,8 +1499,8 @@ window.addEventListener('load', function () {
             this.image1 = new Image();
 
 
-            this.image1.src = "winter2.png"
-            this.image.src = "winter2.png"
+            this.image1.src = "assets/tileset/winter2.png"
+            this.image.src = "assets/tileset/winter2.png"
             this.levelTOP = this.image1
             this.levelImage = this.image
             this.levelImage.width = 256
@@ -1766,7 +1766,7 @@ window.addEventListener('load', function () {
             super(game);
             this.game = game;
             this.image = new Image();
-            this.image.src = "bunnysheet.png"
+            this.image.src = "assets/characterSprite/bunnysheet.png"
             this.spriteWidth = 36.2;
             this.spriteHeight = 39.1;
             this.width = tileSize * 2
@@ -1814,7 +1814,7 @@ window.addEventListener('load', function () {
             this.speed = this.speedModifier;         
             this.frameX = 0;
             this.frameY = .65;
-            this.fps = 144;
+            this.fps = 60;
             this.x = 0
             this.y = 0
 
@@ -1848,9 +1848,9 @@ window.addEventListener('load', function () {
                 this.game = game;
                 this.bunny = new OpenStageCharacter(game)
                 this.frontLayer = new Image();
-                this.frontLayer.src = "layer0.png"
+                this.frontLayer.src = "assets/cinematic/layer0.png"
                 this.images = []
-                this.source = [ "layer11.png", "layer10.png", "layer9.png", "layer8.png", "layer7.png", "layer6.png", "layer5.png", "layer4.png", "layer3.png", "layer2.png", "layer1.png"]
+                this.source = [ "assets/cinematic/layer11.png", "assets/cinematic/layer10.png", "assets/cinematic/layer9.png", "assets/cinematic/layer8.png", "assets/cinematic/layer7.png", "assets/cinematic/layer6.png", "assets/cinematic/layer5.png", "assets/cinematic/layer4.png", "assets/cinematic/layer3.png", "assets/cinematic/layer2.png", "assets/cinematic/layer1.png"]
                 this.source.forEach((src, index) => {
                     //too much
                     //invert the speed so the closest layer is slowest
@@ -1872,7 +1872,7 @@ window.addEventListener('load', function () {
             this.x = 0;
             this.y = 0;
             this.maxFrame = 0;
-            this.fps = 144;
+            this.fps = 60;
             this.frameInterval = 2000 / this.fps;
             this.frameTimer = 0;
             this.speedModifier =  1;
@@ -1997,7 +1997,7 @@ window.addEventListener('load', function () {
             this.time.textContent = "00:00"
             this.score.textContent = 0
             this.carrotTimer = 0;
-            this.countdownInterval = 20000;
+            this.countdownInterval = 200000;
             this.tiles.push(new World0(this));
             this.currentState = newState;       
         }
