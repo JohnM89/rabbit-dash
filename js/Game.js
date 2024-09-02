@@ -1,6 +1,6 @@
 import { Animation } from './Animator.js';
 import { Rabbit, Farmer } from './Characters.js';
-import { Carrot, BabyCarrot, Burrow, Pot, Chest, OpenChest } from './Objects.js';
+import { Carrot, BabyCarrot, Burrow, Pot, Chest, OpenChest, ScoreSymbol } from './Objects.js';
 import { InputHandler } from './InputHandler.js';
 import { World0, World1, World2, World3, World4 } from './Worlds.js';
 import { tileSize, ROWS, COLUMNS} from './Constants.js';
@@ -57,6 +57,7 @@ export    class Game {
             this.carrots = [];
             this.enemies = [];
             this.babyCarrots = [];
+            this.scoreAnimate = [];
             this.rabbit.x = 0
             this.rabbit.y = 0
             this.time.textContent = "00:00"
@@ -76,12 +77,18 @@ export    class Game {
             } else {
                  
             this.tiles.forEach(tile => tile.drawBackground(ctx));
-            this.gameObjects = [...this.tiles, ...this.babyCarrots, ...this.animated,...this.animatedOverlay, ...this.carrots, ...this.portals, ...this.enemies, this.rabbit];
+            this.gameObjects = [...this.tiles, ...this.babyCarrots,...this.scoreAnimate, ...this.animated,...this.animatedOverlay, ...this.carrots, ...this.portals, ...this.enemies, this.rabbit];
             this.checkCollision();            
             this.spawnCarrot(deltaTime)
             this.spawnEnemy(deltaTime)
             this.carrotGrow();
             this.checkLevel();
+            this.scoreAnimate.forEach( (obj, index) =>{
+                if (obj.markedForDeletion) {
+            this.scoreAnimate.splice(index, 1);
+                }
+            }
+            )
             this.gameObjects.sort((a, b) => {
                 return (a.y + a.height) - (b.y + b.height);
             });
@@ -89,6 +96,7 @@ export    class Game {
                 obj.draw(ctx);
                 // obj.hitbox(ctx);
                 obj.update(deltaTime);
+
             })
             this.tiles.forEach(tile => tile.drawForGround(ctx));
         }
@@ -113,6 +121,7 @@ export    class Game {
                     this.rabbit.collisionX + this.rabbit.collisionWidth > obj.collisionX &&
                     this.rabbit.collisionY < obj.collisionY + obj.collisionHeight &&
                     this.rabbit.collisionY + this.rabbit.collisionHeight > obj.collisionY) {
+                    this.scoreDisplay(obj.x, obj.y - 10)
                     this.portalCount++;
                     this.countdownInterval += 2000;
                     this.score.textContent++;
@@ -203,6 +212,12 @@ export    class Game {
             } else {
                 this.carrotTimer += deltaTime;
             }
+        }
+        scoreDisplay(x , y){
+
+            this.scoreAnimate.push(new ScoreSymbol(this, x , y))
+
+
         }
         carrotGrow() {
             this.babyCarrots.forEach((carrot, index) => {

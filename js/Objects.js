@@ -30,6 +30,40 @@ export     class BabyCarrot extends Animation {
             }
         }
     }
+    export     class ScoreSymbol extends Animation {
+        constructor(game, x, y) {
+            super(game);
+            this.game = game;
+            this.image = new Image();
+            this.image.src = "assets/enviornmentSprite/+1.png"
+            this.spriteWidth = 32;
+            this.spriteHeight = 32;
+            this.frameX = 0;
+            this.frameY = 0;
+            this.x = x
+            this.y = y
+            this.speed = 5
+            this.collisionWidth = this.tileSize / 4;
+            this.collisionHeight = this.tileSize / 4;
+            this.collisionX = this.x + (this.tileSize - this.collisionWidth) / 2;
+            this.collisionY = this.y + (this.tileSize - this.collisionHeight) / 2;
+            this.frameInterval = 20000 / this.fps;
+            this.markedForDeletion = false;
+
+        }
+
+        update(deltaTime) {
+            this.maxFrame = 6;
+            this.frameY = 0;
+            if (this.frameTimer > this.frameInterval) {
+                this.frameX < this.maxFrame ? this.frameX++ : this.markedForDeletion = true;;
+                this.y -= this.speed
+                this.frameTimer = 0;
+            } else {
+                this.frameTimer += deltaTime
+            }
+        }
+    }
  export            class Pot extends Animation {
         constructor(game, x, y) {
             super(game);
