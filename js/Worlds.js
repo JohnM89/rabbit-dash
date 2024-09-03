@@ -184,7 +184,7 @@ import { Animation } from './Animator.js';
                     if (tile !== 0) {
 
                         this.game.animated.push(new WaterSparkle(this, x, y))
-                        console.log(this.game.animated)
+
                     }
                 }
             }

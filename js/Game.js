@@ -8,7 +8,7 @@ import {EndGame } from './Screens.js';
 export    class Game {
 
         constructor(width, height) {
-            this.tileSize = tileSize * 2
+            this.tileSize = tileSize 
             this.width = width;
             this.height = height;
             this.currentState = null;
@@ -58,14 +58,17 @@ export    class Game {
             this.enemies = [];
             this.babyCarrots = [];
             this.scoreAnimate = [];
+            this.collectables = []
             this.rabbit.x = 0
             this.rabbit.y = 0
             this.time.textContent = "00:00"
-            this.score.textContent = 0
+            this.score.textContent;
             this.carrotTimer = 0;
             this.countdownInterval = 200000;
             this.tiles.push(new World0(this));
-            this.currentState = newState;       
+            this.currentState = newState;
+            this.savedScore = this.score.textContent  
+
         }
 
         render(ctx, deltaTime) {
@@ -75,20 +78,36 @@ export    class Game {
             
             this.currentState.handleInput()
             } else {
+
                  
             this.tiles.forEach(tile => tile.drawBackground(ctx));
-            this.gameObjects = [...this.tiles, ...this.babyCarrots,...this.scoreAnimate, ...this.animated,...this.animatedOverlay, ...this.carrots, ...this.portals, ...this.enemies, this.rabbit];
+            this.gameObjects = [...this.tiles,...this.collectables, ...this.babyCarrots,...this.scoreAnimate, ...this.animated,...this.animatedOverlay, ...this.carrots, ...this.portals, ...this.enemies, this.rabbit];
             this.checkCollision();            
             this.spawnCarrot(deltaTime)
             this.spawnEnemy(deltaTime)
             this.carrotGrow();
             this.checkLevel();
+            this.dropChest()
             this.scoreAnimate.forEach( (obj, index) =>{
                 if (obj.markedForDeletion) {
             this.scoreAnimate.splice(index, 1);
                 }
             }
             )
+                 this.collectables.forEach((obj, index) => {
+                     if (obj.markedForDeletion) {
+                         setTimeout(() => {
+                             this.collectables.splice(index, 1);
+                         }, 500);
+                     }
+                 }
+            )
+            // this.enemies.forEach( (obj, index) =>{
+            //     if (obj.markedForDeletion) {
+            // this.enemies.splice(index, 1);
+            //     }
+            // }
+            // )
             this.gameObjects.sort((a, b) => {
                 return (a.y + a.height) - (b.y + b.height);
             });
@@ -102,18 +121,33 @@ export    class Game {
         }
         }
         checkLevel() {
+            console.log(this.portalCount)
+            console.log(this.portals.length)
             if (this.portalCount > 2 && this.portals.length === 0) {
-                let x = Math.floor(Math.random() * ROWS) * tileSize * 1.5;
-                let y = Math.floor(Math.random() * COLUMNS) * tileSize * 1.5;
-                let tileX = x / tileSize;
-                let tileY = y / tileSize;
+                let x = Math.floor(Math.random() * ROWS) * this.tileSize ;
+                let y = Math.floor(Math.random() * COLUMNS) * this.tileSize ;
+                let tileX = x / this.tileSize;
+                let tileY = y / this.tileSize;
                 let tile = this.tiles[0].getTile(this.tiles[0].groundObjects, tileX, tileY);
                 if (tile === 0) {
                     this.portals.push(new Burrow(this, x, y));
                 }
             }
         }
-
+        dropChest(){
+                let lootChance = Math.floor(Math.random() * 999) + 1
+                    if (lootChance > 998 && this.collectables.length === 0) {
+                let x = Math.floor(Math.random() * ROWS) * this.tileSize ;
+                let y = Math.floor(Math.random() * COLUMNS) * this.tileSize ;
+                let tileX = x / this.tileSize;
+                let tileY = y / this.tileSize;
+                let tile = this.tiles[0].getTile(this.tiles[0].groundObjects, tileX, tileY);
+                if (tile === 0) {
+                    this.collectables.push(new Chest(this, x, y));
+                }
+            }
+            
+        }
         checkCollision() {
             this.carrots.forEach((obj, index) => {
                 //useing colission coordinates for hitbox
@@ -122,10 +156,21 @@ export    class Game {
                     this.rabbit.collisionY < obj.collisionY + obj.collisionHeight &&
                     this.rabbit.collisionY + this.rabbit.collisionHeight > obj.collisionY) {
                     this.scoreDisplay(obj.x, obj.y - 10)
-                    this.portalCount++;
-                    this.countdownInterval += 2000;
+                    this.portalCount+= 1;
+                    this.countdownInterval + 2000;
                     this.score.textContent++;
                     this.carrots.splice(index, 1);
+                }
+            });
+                        this.collectables.forEach((obj, index) => {
+                //useing colission coordinates for hitbox
+                if (this.rabbit.collisionX < obj.collisionX + obj.collisionWidth &&
+                    this.rabbit.collisionX + this.rabbit.collisionWidth > obj.collisionX &&
+                    this.rabbit.collisionY < obj.collisionY + obj.collisionHeight &&
+                    this.rabbit.collisionY + this.rabbit.collisionHeight > obj.collisionY) {
+                    this.collectables.splice(index, 1);
+                    this.collectables.push(new OpenChest(this, obj.x, obj.y))
+                    
                 }
             });
             this.impassable.forEach((obj) => {
@@ -143,8 +188,10 @@ export    class Game {
                     this.rabbit.collisionX + this.rabbit.collisionWidth > obj.collisionX &&
                     this.rabbit.collisionY < obj.collisionY + obj.collisionHeight &&
                     this.rabbit.collisionY + this.rabbit.collisionHeight > obj.collisionY) {
-                    this.countdownInterval -= 4000;
-                    this.score.textContent--;
+                    this.savedScore = this.score.textContent;
+                    sessionStorage.setItem( "score", this.savedScore)
+                    this.changeState(new EndGame(this))
+                    // this.score.textContent--;
                 }
             });
             this.portals.forEach((obj, index) => {
@@ -155,7 +202,7 @@ export    class Game {
                     this.level++;
                     this.portals.splice(index, 1);
                     this.tiles = [];
-                    this.portals = []
+                    this.portalCount = 0
                     this.carrots = [];
                     this.enemies = [];
                     this.babyCarrots = [];
@@ -188,6 +235,8 @@ export    class Game {
                 if (this.countdownInterval <= 0 && this.currentState === null) {
                     clearInterval(timer);
                     console.log("game over")
+                    this.savedScore = this.score.textContent;
+                    sessionStorage.setItem( "score", this.savedScore)
                     this.changeState(new EndGame(this))
                 }
             })
@@ -198,15 +247,17 @@ export    class Game {
         }
         spawnCarrot(deltaTime) {
             if (this.carrotTimer > this.carrotInterval && this.carrots.length < 10) {
-                let x = Math.floor(Math.random() * ROWS) * tileSize * 2;
-                let y = Math.floor(Math.random() * COLUMNS) * tileSize * 2;
-                let tileX = x / tileSize;
-                let tileY = y / tileSize;
+                let x = Math.floor(Math.random() * ROWS) * this.tileSize ;
+                let y = Math.floor(Math.random() * COLUMNS) * this.tileSize ;
+                let tileX = x / this.tileSize;
+                let tileY = y / this.tileSize;
                 let tile = this.tiles[0].getTile(this.tiles[0].groundObjects, tileX, tileY);
 
                 if (tile === 0) {
                     this.babyCarrots.push(new BabyCarrot(this, x, y));
+                    console.log(this.babyCarrots.length)
                     this.carrotTimer = 0;
+
                 }
 
             } else {
@@ -228,10 +279,10 @@ export    class Game {
         }
         spawnEnemy(deltaTime) {
             if (this.enemies.length < 2 && !this.spawnScheduled) {
-                let x = Math.floor(Math.random() * ROWS) * tileSize * 2;
-                let y = Math.floor(Math.random() * COLUMNS) * tileSize * 2;
-                let tileX = x / tileSize;
-                let tileY = y / tileSize;
+                let x = Math.floor(Math.random() * ROWS) * this.tileSize;
+                let y = Math.floor(Math.random() * COLUMNS) * this.tileSize;
+                let tileX = x / this.tileSize;
+                let tileY = y / this.tileSize;
                 let tile = this.tiles[0].getTile(this.tiles[0].groundObjects, tileX, tileY);
                 if (tile === 0) {
                     this.spawnScheduled = true;

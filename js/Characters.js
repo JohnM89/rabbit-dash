@@ -164,12 +164,15 @@ export    class Farmer extends Animation {
             this.collisionY = this.y + (this.height - this.collisionHeight) / 1.5;
             this.frameInterval = 48000 / this.fps;
             this.randomInt = 0
+            this.lastInt = 0
             this.steps = 0;
-            this.loop = 0
+            this.loop = 0;
+            this.markedForDeletion = false;
         }
         random(deltaTime) {
             if (this.frameTimer > this.frameInterval) {
                 this.frameX < this.maxFrame ? this.frameX++ : this.frameX = 0;
+                this.lastInt = this.randomInt
                 this.randomInt = Math.floor(Math.random() * 4) + 1
                 this.steps = Math.floor(Math.random() * 10) + 1
                 this.frameTimer = 0;
@@ -180,7 +183,7 @@ export    class Farmer extends Animation {
         update(deltaTime) {
             const prevX = this.x;
             const prevY = this.y;
-            if (this.randomInt == 1) {
+            if (this.randomInt == 1 && this.lastInt != 2) {
                 if (this.frameTimer > this.frameInterval) {
                     if (this.loop < this.steps) {
                         this.setSpeed(-this.tileSize / 80, 0)
@@ -198,7 +201,7 @@ export    class Farmer extends Animation {
                 } else {
                     this.frameTimer += deltaTime
                 }
-            } else if (this.randomInt == 2) {
+            } else if (this.randomInt == 2 && this.lastInt != 1) {
 
                 if (this.frameTimer > this.frameInterval) {
                     if (this.loop < this.steps) {
@@ -216,7 +219,7 @@ export    class Farmer extends Animation {
                 } else {
                     this.frameTimer += deltaTime
                 }
-            } else if (this.randomInt == 3) {
+            } else if (this.randomInt == 3 && this.lastInt != 4) {
 
                 if (this.frameTimer > this.frameInterval) {
                     if (this.loop < this.steps) {
@@ -235,7 +238,7 @@ export    class Farmer extends Animation {
                 } else {
                     this.frameTimer += deltaTime
                 }
-            } else if (this.randomInt == 4) {
+            } else if (this.randomInt == 4 && this.lastInt != 3) {
                 if (this.frameTimer > this.frameInterval) {
                     if (this.loop < this.steps) {
                         this.setSpeed(0, this.tileSize / 80 * 0.6)
@@ -296,18 +299,31 @@ export    class Farmer extends Animation {
             // horizontal boundaries
             if (this.x < 0) {
                 this.x = 0;
+                this.randomInt = 2
+                // this.x - 16
+                // this.markedForDeletion = true
                 //STOP ANIMATING IF HIT BORDER
                 this.maxFrame = 0;
             } else if (this.x > this.game.width - this.width) {
                 this.x = this.game.width - this.width;
                 this.maxFrame = 0;
+                this.randomInt = 1
+                // this.x + 16
+                // this.markedForDeletion = true
             }
             //vertical
             if (this.y < 0) {
-                this.y = 0;
+                this.y = 0
+                this.randomInt = 4
+                // this.y - 16;
+                // this.markedForDeletion = true
                 this.maxFrame = 0;
             } else if (this.y > this.game.height - this.height) {
                 this.y = this.game.height - this.height;
+                this.randomInt = 3
+                // this.y = 0
+                // this.y + 16
+                // this.markedForDeletion = true
                 this.maxFrame = 0;
             }
             if (this.frameTimer > this.frameInterval) {

@@ -8,7 +8,7 @@ window.addEventListener('load', function () {
     ctx.imageSmoothingEnabled = false
     canvas.height = gameHeight
     canvas.width = gameWidth
-
+    
 
     let game = new Game(canvas.width, canvas.height);
     game.changeState(new StartScreen(game))
@@ -20,6 +20,7 @@ window.addEventListener('load', function () {
         lastTime = timeStamp;
         ctx.clearRect(0, 0, canvas.width, canvas.height);
         game.render(ctx, deltaTime)
+        
         requestAnimationFrame(animate);
     }
     requestAnimationFrame(animate);

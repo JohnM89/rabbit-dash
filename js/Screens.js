@@ -118,7 +118,7 @@ export class StartScreen {
     }
 
     render(ctx, deltaTime) {
-        console.log(this.images)
+        
         this.images.forEach((img) => {
             img.update(deltaTime);
             img.draw(ctx);
@@ -156,7 +156,7 @@ export class StartScreen {
 export class EndGame {
     constructor(game) {
         this.game = game;
-        // this.highScore = sessionStorage.getItem("score");
+        this.highScore = sessionStorage.getItem("score");
     }
 
     render(ctx) {
@@ -166,7 +166,7 @@ export class EndGame {
         ctx.textAlign = "center";
         ctx.fillText("Game Over", gameWidth / 2, gameHeight / 2);
         ctx.fillText("Press Enter to Restart", gameWidth / 2, gameHeight / 2 + 40);
-        // ctx.fillText(this.highScore, this.game.width / 2, this.game.height / 2 + 80);
+        ctx.fillText(`${this.highScore} Carrot(s) Collected`, this.game.width / 2, this.game.height / 2 + 80);
     }
 
     handleInput() {
