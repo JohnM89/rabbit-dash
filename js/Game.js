@@ -214,14 +214,11 @@ export    class Game {
             }
         }
         scoreDisplay(x , y){
-
             this.scoreAnimate.push(new ScoreSymbol(this, x , y))
-
-
         }
         carrotGrow() {
             this.babyCarrots.forEach((carrot, index) => {
-                if (carrot.frameY === 3) {
+                if (carrot.frameY === 5) {
                     let x = carrot.x
                     let y = carrot.y
                     this.carrots.push(new Carrot(this, x, y))

@@ -4,11 +4,12 @@ export     class BabyCarrot extends Animation {
             super(game);
             this.game = game;
             this.image = new Image();
-            this.image.src = "assets/enviornmentSprite/carrot3.png"
-            this.spriteWidth = 40;
-            this.spriteHeight = 60;
-            this.frameX = 0;
-            this.frameY = 0;
+            this.image.src = "assets/enviornmentSprite/cropsNew.png"
+            this.spriteWidth = 32;
+            this.spriteHeight = 32;
+            // this.height = 32
+            this.frameX = 5;
+            this.frameY = 1;
             this.x = x
             this.y = y
             this.collisionWidth = this.tileSize / 4;
@@ -20,8 +21,8 @@ export     class BabyCarrot extends Animation {
         }
 
         update(deltaTime) {
-            this.maxFrame = 3;
-            this.frameX = 0;
+            this.maxFrame = 5;
+            this.frameX = 5;
             if (this.frameTimer > this.frameInterval) {
                 this.frameY < this.maxFrame ? this.frameY++ : this.frameY = 0;
                 this.frameTimer = 0;
@@ -163,11 +164,11 @@ export     class Carrot extends Animation {
             super(game);
             this.game = game;
             this.image = new Image();
-            this.image.src = "assets/enviornmentSprite/carrot3.png"
-            this.spriteWidth = 40;
-            this.spriteHeight = 60;
-            this.frameX = 0;
-            this.frameY = 3;
+            this.image.src = "assets/enviornmentSprite/cropsNew.png"
+            this.spriteWidth = 32;
+            this.spriteHeight = 32;
+            this.frameX = 5;
+            this.frameY = 0;
             this.x = x
             this.y = y
             this.collisionWidth = this.tileSize / 4;
@@ -185,7 +186,7 @@ export    class Burrow extends Animation {
             super(game);
             this.game = game;
             this.image = new Image();
-            this.image.src = "assets/enviornmentSprite/crops32.png"
+            this.image.src = "assets/enviornmentSprite/cropsNew.png"
             this.spriteWidth = 32;
             this.spriteHeight = 32;
             this.frameX = 0;

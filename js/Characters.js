@@ -3,11 +3,11 @@ export    class Rabbit extends Animation {
         constructor(game) {
             super(game)
             this.image = new Image();
-            this.image.src = "assets/characterSprite/bunnysheet.png";
-            this.spriteWidth = 36.2;
-            this.spriteHeight = 39;
+            this.image.src = "assets/characterSprite/newrabbitsheet.png";
+            this.spriteWidth = 32;
+            this.spriteHeight = 32;
             this.frameX = 0;
-            this.frameY = 1;
+            this.frameY = 0;
             this.x = 0;
             this.y = 0;
             this.maxSpeed = 2
@@ -27,39 +27,40 @@ export    class Rabbit extends Animation {
 
             const prevX = this.x;
             const prevY = this.y;
+            
             let previousKey = this.game.lastKey
             if (this.game.lastKey == 'PArrowLeft') {
                 this.setSpeed(-this.maxSpeed, 0);
-                this.maxFrame = 3;
-                this.frameY = 7;
+                this.maxFrame = 7;
+                this.frameY = 3;
             } else if (this.game.lastKey == 'RArrowLeft' && this.speedX < 0) {
                 this.setSpeed(0, 0);
                 this.maxFrame = 0;
-                this.frameY = 7;
+                this.frameY = 3;
             } else if (this.game.lastKey == 'PArrowRight') {
                 this.setSpeed(this.maxSpeed, 0);
-                this.maxFrame = 3;
-                this.frameY = 5;
+                this.maxFrame = 7;
+                this.frameY = 2;
             } else if (this.game.lastKey == 'RArrowRight' && this.speedX > 0) {
                 this.setSpeed(0, 0);
                 this.maxFrame = 0;
-                this.frameY = 5;
+                this.frameY = 2;
             } else if (this.game.lastKey == 'PArrowUp') {
                 this.setSpeed(0, -this.maxSpeed);
-                this.maxFrame = 7;
-                this.frameY = 3;
+                this.maxFrame = 6;
+                this.frameY = 1;
             } else if (this.game.lastKey == 'RArrowUp' && this.speedY < 0) {
                 this.setSpeed(0, 0);
                 this.maxFrame = 0;
-                this.frameY = 3;
+                this.frameY = 1;
             } else if (this.game.lastKey == 'PArrowDown') {
                 this.setSpeed(0, this.maxSpeed);
                 this.maxFrame = 7;
-                this.frameY = 1;
+                this.frameY = 0;
             } else if (this.game.lastKey == 'RArrowDown' && this.speedY > 0) {
                 this.setSpeed(0, 0);
                 this.maxFrame = 0;
-                this.frameY = 1;
+                this.frameY = 0;
             }
 
             this.x += this.speedX;
@@ -128,7 +129,7 @@ export    class Rabbit extends Animation {
 
             //frame animation
             if (this.frameTimer > this.frameInterval) {
-                this.frameX < this.maxFrame ? this.frameX++ : this.frameX = 0;
+                this.frameX < this.maxFrame  ? this.frameX++ : this.frameX = 0;
                 this.frameTimer = 0;
             } else {
                 this.frameTimer += deltaTime
@@ -170,7 +171,7 @@ export    class Farmer extends Animation {
             if (this.frameTimer > this.frameInterval) {
                 this.frameX < this.maxFrame ? this.frameX++ : this.frameX = 0;
                 this.randomInt = Math.floor(Math.random() * 4) + 1
-                this.steps = Math.floor(Math.random() * 5) + 1
+                this.steps = Math.floor(Math.random() * 10) + 1
                 this.frameTimer = 0;
             } else {
                 this.frameTimer += deltaTime

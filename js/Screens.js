@@ -6,12 +6,9 @@ export class OpenStageCharacter extends Animation {
         super(game);
         this.game = game;
         this.image = new Image();
-        this.image.src = "assets/characterSprite/bunnysheet.png"
-        this.spriteWidth = 36.2;
-        this.spriteHeight = 39.1;
-        this.width = tileSize * 2
-        this.height = tileSize * 2
-
+        this.image.src = "assets/characterSprite/newrabbitsheet.png"
+        this.spriteWidth = 32;
+        this.spriteHeight = 32.5;
         this.frameX = 0;
         this.frameY = 0;
         this.x = gameWidth / 4
@@ -26,7 +23,7 @@ export class OpenStageCharacter extends Animation {
 
     update(deltaTime) {
         this.maxFrame = 5;
-        this.frameY = 5;
+        this.frameY = 2;
         if (this.frameTimer > this.frameInterval) {
             // if(this.x > canvas.width && this.x < canvas.width / 2){
             //     this.x = -16
