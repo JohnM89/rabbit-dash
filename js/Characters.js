@@ -136,6 +136,143 @@ export    class Rabbit extends Animation {
             }
         }
     }
+    export    class Sedan extends Animation {
+        constructor(game, x, y) {
+            super(game)
+            this.image = new Image();
+            this.image.src = "assets/characterSprite/sedan.png";
+            this.spriteWidth = 64;
+            this.spriteHeight = 64;
+            this.frameX = 0;
+            this.frameY = 0;
+            this.x = x;
+            this.y = y;
+            this.maxSpeed = 2
+            this.collisionWidth = this.tileSize / 2;
+            this.collisionHeight = this.tileSize / 2;
+            this.collisionX = this.x + (this.tileSize - this.collisionWidth) / 2;
+            this.collisionY = this.y + (this.tileSize - this.collisionHeight) / 2
+            this.hitBox = {
+                x: this.collisionX,
+                y: this.collisionY,
+                w: this.collisionWidth,
+                h: this.collisionHeight,
+            }
+        }
+
+        update(deltaTime) {
+
+            const prevX = this.x;
+            const prevY = this.y;
+            
+            let previousKey = this.game.lastKey
+            if (this.game.lastKey == 'PArrowLeft') {
+                this.setSpeed(-this.maxSpeed, 0);
+                this.maxFrame = 7;
+                this.frameY = 3;
+            } else if (this.game.lastKey == 'RArrowLeft' && this.speedX < 0) {
+                this.setSpeed(0, 0);
+                this.maxFrame = 0;
+                this.frameY = 3;
+            } else if (this.game.lastKey == 'PArrowRight') {
+                this.setSpeed(this.maxSpeed, 0);
+                this.maxFrame = 7;
+                this.frameY = 2;
+            } else if (this.game.lastKey == 'RArrowRight' && this.speedX > 0) {
+                this.setSpeed(0, 0);
+                this.maxFrame = 0;
+                this.frameY = 2;
+            } else if (this.game.lastKey == 'PArrowUp') {
+                this.setSpeed(0, -this.maxSpeed);
+                this.maxFrame = 6;
+                this.frameY = 1;
+            } else if (this.game.lastKey == 'RArrowUp' && this.speedY < 0) {
+                this.setSpeed(0, 0);
+                this.maxFrame = 0;
+                this.frameY = 1;
+            } else if (this.game.lastKey == 'PArrowDown') {
+                this.setSpeed(0, this.maxSpeed);
+                this.maxFrame = 7;
+                this.frameY = 0;
+            } else if (this.game.lastKey == 'RArrowDown' && this.speedY > 0) {
+                this.setSpeed(0, 0);
+                this.maxFrame = 0;
+                this.frameY = 0;
+            }
+
+            this.x += this.speedX;
+            this.y += this.speedY;
+            this.collisionX = this.x + (this.tileSize - this.collisionWidth) / 2;
+            this.collisionY = this.y + (this.tileSize - this.collisionHeight) / 2;
+
+            const collides = this.game.impassable.some((obj) => {
+                const [tileX, tileY, tileWidth, tileHeight] = obj;
+                return (this.collisionX + .5) < tileX + tileWidth &&
+                    (this.collisionX + .5) + (this.collisionWidth + .5) > tileX &&
+                    (this.collisionY + .5) < tileY + tileHeight &&
+                    (this.collisionY + .5) + (this.collisionHeight + .5) > tileY;
+            });
+
+            if (collides) {
+                this.maxFrame = 0
+                this.setSpeed(0, 0);
+                if (previousKey === 'PArrowLeft') {
+                    this.x = prevX + 2
+                    this.y = prevY
+                }
+                if (previousKey === 'PArrowRight') {
+                    this.x = prevX - 2
+                    this.y = prevY
+                }
+                if (previousKey === 'PArrowUp') {
+                    this.y = prevY + 2
+                    this.x = prevX
+                }
+                if (previousKey === 'PArrowDown') {
+                    this.y = prevY - 2
+                    this.x = prevX
+                }
+                if (previousKey === 'RArrowLeft') {
+                    this.x = prevX + 2
+                    this.y = prevY
+                }
+                if (previousKey === 'RArrowRight') {
+                    this.x = prevX - 2
+                    this.y = prevY
+                }
+                if (previousKey === 'RArrowUp') {
+                    this.y = prevY + 2
+                    this.x = prevX
+                }
+                if (previousKey === 'RArrowDown') {
+                    this.y = prevY - 2
+                    this.x = prevX
+                }
+
+            }
+            this.collisionX = this.x + (this.tileSize - this.collisionWidth) / 2;
+            this.collisionY = this.y + (this.tileSize - this.collisionHeight) / 2;
+            if (this.x < 0) {
+                this.x = 0;
+            } else if (this.x > this.game.width - this.width) {
+                this.x = this.game.width - this.width;
+            }
+            //vertical
+            if (this.y < 0) {
+                this.y = 0;
+            } else if (this.y > this.game.height - this.height) {
+                this.y = this.game.height - this.height;
+            }
+
+            //frame animation
+            if (this.frameTimer > this.frameInterval) {
+                this.frameX < this.maxFrame  ? this.frameX++ : this.frameX = 0;
+                this.frameTimer = 0;
+            } else {
+                this.frameTimer += deltaTime
+            }
+        }
+    }
 export    class Farmer extends Animation {
         constructor(game, x, y) {
             super(game)

@@ -6,14 +6,11 @@ import { Animation } from './Animator.js';
             super(game)
             this.image = new Image();
             this.image1 = new Image();
-
-
             this.image1.src = "assets/tileset/spring2.png"
             this.image.src = "assets/tileset/spring2.png"
             this.levelTOP = this.image1
             this.levelImage = this.image
             this.levelImage.width = 256
-
             this.imageColumns = this.levelImage.width / tileSize;
             console.log(this.imageColumns)
             console.log(this.levelImage)
@@ -159,7 +156,6 @@ import { Animation } from './Animator.js';
                 }
             }
         }
-
         draw(ctx) {
             this.game.impassable = [];
             for (let row = 0; row < ROWS; row++) {

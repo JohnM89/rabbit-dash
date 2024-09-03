@@ -17,7 +17,6 @@ export     class BabyCarrot extends Animation {
             this.collisionX = this.x + (this.tileSize - this.collisionWidth) / 2;
             this.collisionY = this.y + (this.tileSize - this.collisionHeight) / 2;
             this.frameInterval = 50000 / this.fps;
-
         }
 
         update(deltaTime) {
@@ -28,6 +27,41 @@ export     class BabyCarrot extends Animation {
                 this.frameTimer = 0;
                 if(this.frameY === 4){
 
+                }
+            } else {
+                this.frameTimer += deltaTime
+            }
+        }
+    }
+    export    class Dig extends Animation {
+        constructor(game, x, y) {
+            super(game);
+            this.game = game;
+            this.image = new Image();
+            this.image.src = "assets/enviornmentSprite/burrowDraw1.png"
+            this.spriteWidth = 32;
+            this.spriteHeight = 32;
+            // this.height = 32
+            this.frameX = 0;
+            this.frameY = 0;
+            this.x = x
+            this.y = y
+            this.collisionWidth = this.tileSize / 4;
+            this.collisionHeight = this.tileSize / 4;
+            this.collisionX = this.x + (this.tileSize - this.collisionWidth) / 2;
+            this.collisionY = this.y + (this.tileSize - this.collisionHeight) / 2;
+            this.frameInterval = 50000 / this.fps;
+            this.markedForDeletion = false
+        }
+
+        update(deltaTime) {
+            this.maxFrame = 11;
+
+            if (this.frameTimer > this.frameInterval) {
+                this.frameX < this.maxFrame ? this.frameX++ : this.frameX = 0;
+                this.frameTimer = 0;
+                if(this.frameX === 11){
+                this.markedForDeletion = true
                 }
             } else {
                 this.frameTimer += deltaTime
@@ -58,6 +92,42 @@ export     class BabyCarrot extends Animation {
 
         update(deltaTime) {
             this.maxFrame = 6;
+            this.frameY = 0;
+            if (this.frameTimer > this.frameInterval) {
+                this.frameX < this.maxFrame ? this.frameX++ : this.markedForDeletion = true;
+                this.y -= this.speed
+                this.frameTimer = 0;
+            } else {
+                this.frameTimer += deltaTime
+            }
+        }
+    }
+        export   class CoinUp extends Animation {
+        constructor(game, x, y) {
+            super(game);
+            this.game = game;
+            this.image = new Image();
+            this.image.src = "assets/enviornmentSprite/coinspin.png"
+            this.spriteWidth = 16;
+            this.spriteHeight = 16;
+            this.height = this.tileSize /1.5
+            this.width = this.tileSize /1.5
+            this.frameX = 0;
+            this.frameY = 0;
+            this.x = x + this.spriteWidth / 3;
+            this.y = y ;
+            this.speed = 3
+            this.collisionWidth = this.tileSize / 4;
+            this.collisionHeight = this.tileSize / 4;
+            this.collisionX = this.x + (this.tileSize - this.collisionWidth) / 2;
+            this.collisionY = this.y + (this.tileSize - this.collisionHeight) / 2;
+            this.frameInterval = 2000 / this.fps;
+            this.markedForDeletion = false;
+
+        }
+
+        update(deltaTime) {
+            this.maxFrame = 15;
             this.frameY = 0;
             if (this.frameTimer > this.frameInterval) {
                 this.frameX < this.maxFrame ? this.frameX++ : this.markedForDeletion = true;
@@ -108,7 +178,7 @@ export         class Chest extends Animation {
             this.spriteWidth = 32;
             this.spriteHeight = 32;
             this.randomChest = Math.floor(Math.random() * 4)
-            this.frameX = 0;
+            this.frameX = this.randomChest;
             this.frameY = 4;
             this.x = x
             this.y = y
@@ -126,7 +196,7 @@ export         class Chest extends Animation {
     }
 }
 export         class OpenChest extends Animation {
-        constructor(game, x, y) {
+        constructor(game, x, y, frameX) {
             super(game);
             this.game = game;
             this.image = new Image();
@@ -134,7 +204,7 @@ export         class OpenChest extends Animation {
             this.spriteWidth = 32;
             this.spriteHeight = 32;
             this.randomChest = Math.floor(Math.random() * 4)
-            this.frameX = 0;
+            this.frameX = frameX;
             this.frameY = 5;
             this.x = x
             this.y = y
@@ -149,7 +219,7 @@ export         class OpenChest extends Animation {
 
         update(deltaTime) {
             this.maxFrame = 0;
-            this.frameX = 0;
+            // this.frameX = 0;
             this.frameY = 5
             if (this.frameTimer > this.frameInterval) {
                 this.frameY < this.maxFrame ? this.frameY++ : this.markedForDeletion = true;
@@ -187,11 +257,11 @@ export    class Burrow extends Animation {
             super(game);
             this.game = game;
             this.image = new Image();
-            this.image.src = "assets/enviornmentSprite/cropsNew.png"
+            this.image.src = "assets/enviornmentSprite/burrowDrawFlag.png"
             this.spriteWidth = 32;
             this.spriteHeight = 32;
             this.frameX = 0;
-            this.frameY = 9;
+            this.frameY = 0;
 
             this.x = x
             this.y = y
@@ -202,5 +272,15 @@ export    class Burrow extends Animation {
             this.frameInterval = 50000 / this.fps;
         }
         update(deltaTime) {
+            this.maxFrame = 8;
+            
+            if (this.frameTimer > this.frameInterval) {
+                this.frameX < this.maxFrame ? this.frameX++ : this.frameY = 0;
+
+                this.frameTimer = 0;
+
+            } else {
+                this.frameTimer += deltaTime
+            }
         }
     }

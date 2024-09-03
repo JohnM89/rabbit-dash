@@ -1,6 +1,6 @@
 import { Animation } from './Animator.js';
-import { Rabbit, Farmer } from './Characters.js';
-import { Carrot, BabyCarrot, Burrow, Pot, Chest, OpenChest, ScoreSymbol } from './Objects.js';
+import { Rabbit, Farmer, Sedan } from './Characters.js';
+import { Carrot, BabyCarrot, Burrow, Pot, Chest, OpenChest, ScoreSymbol, CoinUp, Dig } from './Objects.js';
 import { InputHandler } from './InputHandler.js';
 import { World0, World1, World2, World3, World4 } from './Worlds.js';
 import { tileSize, ROWS, COLUMNS} from './Constants.js';
@@ -22,6 +22,9 @@ export    class Game {
             this.input = new InputHandler(this);
             this.animation = new Animation(this);
             this.rabbit = new Rabbit(this);
+            
+            this.introAnimate = []
+            this.deleteIntro = false
             this.tiles = []
             this.animated = []
             this.animatedOverlay = []
@@ -32,6 +35,7 @@ export    class Game {
             this.impassable = []
             this.portalCount = 0
             this.randomInt = 0
+            this.coins = 0
             this.countdownInterval = 50000;
             this.time = document.querySelector("#time");
             this.score = document.querySelector("#score");
@@ -58,7 +62,9 @@ export    class Game {
             this.enemies = [];
             this.babyCarrots = [];
             this.scoreAnimate = [];
-            this.collectables = []
+            this.collectables = [];
+            this.prevX;
+            this.prevY;
             this.rabbit.x = 0
             this.rabbit.y = 0
             this.time.textContent = "00:00"
@@ -78,22 +84,28 @@ export    class Game {
             
             this.currentState.handleInput()
             } else {
-
-                 
+            // this.spawnIntro()                
             this.tiles.forEach(tile => tile.drawBackground(ctx));
-            this.gameObjects = [...this.tiles,...this.collectables, ...this.babyCarrots,...this.scoreAnimate, ...this.animated,...this.animatedOverlay, ...this.carrots, ...this.portals, ...this.enemies, this.rabbit];
+            this.gameObjects = [...this.tiles,...this.collectables,...this.carrots, ...this.babyCarrots,...this.scoreAnimate, ...this.animated,...this.animatedOverlay, ...this.carrots, ...this.portals, ...this.enemies, this.rabbit,...this.introAnimate];
             this.checkCollision();            
             this.spawnCarrot(deltaTime)
             this.spawnEnemy(deltaTime)
             this.carrotGrow();
             this.checkLevel();
-            this.dropChest()
+            this.dropChest();
+            // this.turnIntoSedan();
             this.scoreAnimate.forEach( (obj, index) =>{
                 if (obj.markedForDeletion) {
             this.scoreAnimate.splice(index, 1);
                 }
             }
             )
+                 this.introAnimate.forEach((obj, index) => {
+                     if (obj.markedForDeletion) {
+                         this.introAnimate.splice(index, 1);
+                     }
+                 }
+                 )
                  this.collectables.forEach((obj, index) => {
                      if (obj.markedForDeletion) {
                          setTimeout(() => {
@@ -121,8 +133,6 @@ export    class Game {
         }
         }
         checkLevel() {
-            console.log(this.portalCount)
-            console.log(this.portals.length)
             if (this.portalCount > 2 && this.portals.length === 0) {
                 let x = Math.floor(Math.random() * ROWS) * this.tileSize ;
                 let y = Math.floor(Math.random() * COLUMNS) * this.tileSize ;
@@ -135,8 +145,8 @@ export    class Game {
             }
         }
         dropChest(){
-                let lootChance = Math.floor(Math.random() * 999) + 1
-                    if (lootChance > 998 && this.collectables.length === 0) {
+                let lootChance = Math.floor(Math.random() * 9) + 1
+                    if (lootChance > 8 && this.collectables.length === 0) {
                 let x = Math.floor(Math.random() * ROWS) * this.tileSize ;
                 let y = Math.floor(Math.random() * COLUMNS) * this.tileSize ;
                 let tileX = x / this.tileSize;
@@ -162,14 +172,15 @@ export    class Game {
                     this.carrots.splice(index, 1);
                 }
             });
-                        this.collectables.forEach((obj, index) => {
+                this.collectables.forEach((obj, index) => {
                 //useing colission coordinates for hitbox
                 if (this.rabbit.collisionX < obj.collisionX + obj.collisionWidth &&
                     this.rabbit.collisionX + this.rabbit.collisionWidth > obj.collisionX &&
                     this.rabbit.collisionY < obj.collisionY + obj.collisionHeight &&
                     this.rabbit.collisionY + this.rabbit.collisionHeight > obj.collisionY) {
                     this.collectables.splice(index, 1);
-                    this.collectables.push(new OpenChest(this, obj.x, obj.y))
+                    this.collectables.push(new OpenChest(this, obj.x, obj.y, obj.frameX))
+                    this.coinUp(obj.x, obj.y - 10)
                     
                 }
             });
@@ -194,6 +205,20 @@ export    class Game {
                     // this.score.textContent--;
                 }
             });
+            //use nested forEach loops to check enemy colission with each other
+            this.enemies.forEach((obj1, index1) => {
+                this.enemies.forEach((obj2, index2) => {
+                    //ensure it's not checking collision of the same object
+                    if (index1 !== index2) {
+                        if (obj1.collisionX < obj2.collisionX + obj2.collisionWidth &&
+                            obj1.collisionX + obj1.collisionWidth > obj2.collisionX &&
+                            obj1.collisionY < obj2.collisionY + obj2.collisionHeight &&
+                            obj1.collisionY + obj1.collisionHeight > obj2.collisionY) {
+                            console.log('collision');
+                        }
+                    }
+                });
+            });
             this.portals.forEach((obj, index) => {
                 if (this.rabbit.collisionX < obj.collisionX + obj.collisionWidth &&
                     this.rabbit.collisionX + this.rabbit.collisionWidth > obj.collisionX &&
@@ -209,6 +234,7 @@ export    class Game {
                     this.impassable = [];
                     this.animated = []
                     this.animatedOverlay = []
+                    this.collectables = []
                     this.rabbit.x = 0
                     this.rabbit.y = 0
                     if (this.level === 1) {
@@ -227,6 +253,7 @@ export    class Game {
         init() {
             this.tiles.push(new World0(this))
         }
+
         setTimer() {
 
             const timer = setInterval(() => {
@@ -267,6 +294,21 @@ export    class Game {
         scoreDisplay(x , y){
             this.scoreAnimate.push(new ScoreSymbol(this, x , y))
         }
+        coinUp(x , y){
+            if(this.prevX != x && this.prevY != y){
+            this.scoreAnimate.push(new CoinUp(this, x , y))
+            this.coins++
+            }
+            this.prevY = y;
+            this.prevX = x;
+        }
+        turnIntoSedan(){
+            let x = this.rabbit.x
+            let y = this.rabbit.y
+            if(this.coins === 1){
+                this.rabbit = new Sedan(this,x, y )
+            }
+        }
         carrotGrow() {
             this.babyCarrots.forEach((carrot, index) => {
                 if (carrot.frameY === 5) {
@@ -276,6 +318,15 @@ export    class Game {
                     this.babyCarrots.splice(index, 1)
                 }
             })
+        }
+        spawnIntro(){
+            
+            if(this.introAnimate.length === 0){
+                if(this.deleteIntro === false){
+                this.introAnimate.push(new Dig(this, 0, 0))
+                this.deleteIntro = true
+                }
+            }
         }
         spawnEnemy(deltaTime) {
             if (this.enemies.length < 2 && !this.spawnScheduled) {
