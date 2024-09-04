@@ -21,6 +21,7 @@ window.addEventListener('load', function () {
         ctx.clearRect(0, 0, canvas.width, canvas.height);
         game.render(ctx, deltaTime)
         
+        
         requestAnimationFrame(animate);
     }
     requestAnimationFrame(animate);

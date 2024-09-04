@@ -24,10 +24,10 @@ export class Animation {
         draw(ctx) {
             ctx.drawImage(this.image, this.frameX * this.spriteWidth, this.frameY * this.spriteHeight, this.spriteWidth, this.spriteHeight, this.x, this.y, this.width, this.height);
         }
-        // hitbox(ctx) {
-        //     ctx.fillStyle = 'black';
-        //     ctx.fillRect(this.collisionX, this.collisionY, this.collisionWidth, this.collisionHeight);
-        // }
+        hitbox(ctx) {
+            ctx.fillStyle = 'black';
+            ctx.fillRect(this.collisionX, this.collisionY, this.collisionWidth, this.collisionHeight);
+        }
         setSpeed(speedX, speedY) {
             this.speedX = speedX;
             this.speedY = speedY;

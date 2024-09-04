@@ -413,22 +413,22 @@ import { Animation } from './Animator.js';
                     if (tile !== 0) {
 
                         this.game.animated.push(new WaterSparkle(this, x, y))
-                        console.log(this.game.animated)
+
                     }
                     if (tile === 277) {
 
                         this.game.animated.push(new WaterFallTop(this, x, y))
-                        console.log(this.game.animated)
+
                     }
                     if (tile === 285) {
 
                         this.game.animated.push(new WaterFallMid(this, x, y))
-                        console.log(this.game.animated)
+
                     }
                     if (tile === 293) {
 
                         this.game.animated.push(new WaterFallBot(this, x, y))
-                        console.log(this.game.animated)
+
                     }
                 }
             }
