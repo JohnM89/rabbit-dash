@@ -163,8 +163,8 @@ export class Game {
 
     // }
     dropChest() {
-        let lootChance = Math.floor(Math.random() * 9) + 1
-        if (lootChance > 8 && this.collectables.length === 0) {
+        let lootChance = Math.floor(Math.random() * 998) + 1
+        if (lootChance > 988 && this.collectables.length === 0) {
             let x = Math.floor(Math.random() * ROWS) * this.tileSize;
             let y = Math.floor(Math.random() * COLUMNS) * this.tileSize;
             let tileX = x / this.tileSize;
