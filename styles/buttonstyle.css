@@ -2,7 +2,7 @@
 
 button {
   --bg: #e74c3c;
-  --text-color: #fff;
+  --text-color: #000000;
   position: relative;
   width: 150px;
   border: none;
