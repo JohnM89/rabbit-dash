@@ -329,7 +329,7 @@ export class Game {
     turnIntoSedan() {
         let x = this.rabbit.x
         let y = this.rabbit.y
-        if (this.coins === 1) {
+        if (this.coins === 40) {
             this.coins++
             this.rabbit = new Sedan(this, x, y)
         }
