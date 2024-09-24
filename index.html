@@ -7,17 +7,27 @@
     <link rel="stylesheet" href="styles/styles.css"> 
     <link rel="stylesheet" href="styles/buttonstyle.css">
 </head>
-<div class="title-div" ><h1 id="game-title">Rabbit Dash</h1><p id="instructions">Use arrow keys to play</p></div>
-<section>
-    <section id="progress"><div id="time&score">
+<body>
+<div class="title-div" ><h1 id="game-title">Rabbit Dash</h1></div>
+    <!-- <canvas class="score" id="canvasScores"></canvas> -->
+<section id="progress">
+        <div id="time&score">
         <p id="time-title">Time: <strong id="time" >00:00</strong></p>
         <p id="score-title">Score: <strong id="score"></strong></p>
-    </div></section>
-<section id="canvas-section"><div id="overlay" class ="visible"><div class ="highscores"><h2>High Scores</h2><ol><li>1</li></ol></div><canvas class="gameScreen" id="canvasId" width="400" height="400"></canvas></div>
+    </div>
+    
 </section>
-<div class="button-container"><button type='button' title="reset" class="button" id="resetGame"><p></p></button></div>
-<body>
+    <!-- <div class ="highscores"><h2>High Scores</h2><ol><li>1</li></ol></div> -->
+<section id="canvas-section">
+<canvas class="score" id="canvasScores"></canvas>
+<canvas class="gameScreen" id="canvasId"></canvas> 
+<!-- </div> -->
+</section>
+
+<!-- <div class="button-container"><button type='button' title="reset" class="button" id="play"><p>Play</p></button></div> -->
+
     
 </body>
+<script type="module" src="js/canvasOverlay.js"></script>
 <script type="module" src="js/main.js"></script>
 </html>
