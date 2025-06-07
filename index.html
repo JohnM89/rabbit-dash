@@ -1,61 +1,71 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Rabbit-Dash</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link rel="stylesheet" href="styles/styles.css"> 
+    <link rel="stylesheet" href="styles/styles.css">
     <link rel="stylesheet" href="styles/buttonstyle.css">
 </head>
+
 <body class="bg-gray-900 min-h-screen flex items-center justify-center p-4">
     <div class="max-w-4xl w-full">
-        <h1 class="text-center mb-6 text-4xl md:text-5xl font-bold text-yellow-400 font-press-start" style="font-family: 'Press Start 2P', cursive;">
+        <h1 class="text-center mb-6 text-4xl md:text-5xl font-bold text-yellow-400 font-press-start"
+            style="font-family: 'Press Start 2P', cursive;">
             HTML CANVAS
         </h1>
-        
+
         <div class="arcade-machine p-6 md:p-10">
-            
+
             <div class="flex justify-between items-center mb-4">
                 <div class="marquee text-sm md:text-lg text-center flex-grow">
                     ★★★ Rabbit Dash ★★★
                 </div>
                 <div class="coin-slot"></div>
             </div>
-            
-            
+
+
             <div class="screen-border mb-6">
                 <div class="screen aspect-w-4 aspect-h-3">
-                    
+                    <section id="progress">
+                        <div id="time&score">
+                            <p id="time-title">Time: <strong id="time">00:00</strong></p>Add commentMore actions
+                            <p id="score-title">Score: <strong id="score"></strong></p>
+                        </div>
+
+                    </section>
+
                     <section id="canvas-section">
-<canvas class="score" id="canvasScores"></canvas>
-<canvas class="gameScreen" id="canvasId"></canvas> 
-<!-- </div> -->
-</section>
+                        <canvas class="score" id="canvasScores"></canvas>
+                        <canvas class="gameScreen" id="canvasId"></canvas>
+                        <!-- </div> -->
+                    </section>
                     <div class="pixel-overlay"></div>
                 </div>
             </div>
-            
-            
+
+
             <div class="flex flex-col md:flex-row items-center justify-between">
-                
-               <div class="button bg-red-600"><span>START</span></div>
-                
-                
+
+                <div class="button bg-red-600"><span>START</span></div>
+
+
                 <div class="flex space-x-4">
                     <div class="button"><span>A</span></div>
                     <div class="button"><span>B</span></div>
-                  
+
                 </div>
             </div>
-            
+
             <div class="side-art"></div>
-            
+
 
         </div>
-        
-        
+
+
 
     </div>
 
