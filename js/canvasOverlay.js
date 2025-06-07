@@ -1,6 +1,6 @@
 import { gameHeight , gameWidth } from './Constants.js';
 window.addEventListener('load', function () {
-    const canvas = document.querySelector('#canvasScores');
+    // const canvas = document.querySelector('#canvasScores');
     const ctx = canvas.getContext("2d");
 
     
